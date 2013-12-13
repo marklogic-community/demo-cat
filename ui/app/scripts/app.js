@@ -10,6 +10,10 @@ angular.module('demoCatApp', ['ngRoute'])
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/create', {
+        templateUrl: 'views/create.html',
+        controller: 'CreateCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
