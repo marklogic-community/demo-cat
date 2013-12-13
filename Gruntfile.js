@@ -22,7 +22,7 @@ module.exports = function (grunt) {
   // configurable paths
   var yeomanConfig = {
     app: 'ui/app',
-    dist: 'src'
+    dist: 'src/public'
   };
 
   try {
@@ -60,7 +60,8 @@ module.exports = function (grunt) {
         hostname: 'localhost'
       },
       rules: {
-        '^/login$': '/'
+        '^/login$': '/',
+        '^/create$': '/'
       },
       proxies: [
         /*{
