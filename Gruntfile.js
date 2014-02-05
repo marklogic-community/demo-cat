@@ -274,6 +274,11 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'karma.conf.js',
         singleRun: true
+      },
+      unitAuto: {
+        configFile: 'karma.conf.js',
+        autoWatch: true,
+        singleRun: false
       }
     },
     ngmin: {
@@ -317,7 +322,11 @@ module.exports = function (grunt) {
     'clean:server',
     'concurrent:test',
     'connect:test',
-    'karma'
+    'karma:unit'
+  ]);
+
+  grunt.registerTask('autotest', [
+    'karma:unitAuto'
   ]);
 
   grunt.registerTask('build', [
