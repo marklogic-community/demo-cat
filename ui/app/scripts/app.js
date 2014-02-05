@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('demoCatApp', ['ngRoute'])
+angular.module('demoCat', ['ngRoute'])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
     $locationProvider.html5Mode(true);

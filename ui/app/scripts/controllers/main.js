@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('demoCatApp')
+  angular.module('demoCat')
     .controller('MainCtrl', ['$scope', function ($scope) {
       var model = {
         awesomeThings: [

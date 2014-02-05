@@ -1,15 +1,18 @@
 (function () {
   'use strict';
 
-  angular.module('demoCatApp')
+  angular.module('demoCat')
     .controller('CreateCtrl', ['$scope', function ($scope) {
       var model = {
-        awesomeThings: [
-          'HTML5 Boilerplate',
-          'AngularJS',
-          'Karma'
+        name: '',
+        description: '',
+        host: '',
+        hostType: 'internal',
+        browsers: [
+          { name: 'Firefox', selected: false },
+          { name: 'Chrome', selected: false },
+          { name: 'IE', selected: false }
         ]
-        // your model stuff here
       };
 
       angular.extend($scope, {
