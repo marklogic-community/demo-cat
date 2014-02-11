@@ -2,18 +2,20 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', function ($scope) {
+    .controller('CreateCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
       var model = {
-        name: '',
-        description: '',
-        host: '',
-        hostType: 'internal',
-        browsers: [
-          { name: 'Firefox', selected: false },
-          { name: 'Chrome', selected: false },
-          { name: 'IE', selected: false }
-        ],
-        features: []
+        demo: {
+          name: '',
+          description: '',
+          host: '',
+          hostType: 'internal',
+          browsers: [
+            { name: 'Firefox', selected: false },
+            { name: 'Chrome', selected: false },
+            { name: 'IE', selected: false }
+          ],
+          features: []
+        }
       };
 
       angular.extend($scope, {
@@ -29,6 +31,9 @@
           if (index !== -1) {
             $scope.model.features.splice(index, 1);
           }
+        },
+        submit: function() {
+          mlRest.createDocument($scope.model.demo, null);
         }
       });
     }]);
