@@ -33,7 +33,9 @@
           }
         },
         submit: function() {
-          mlRest.createDocument($scope.model.demo, null);
+          mlRest.createDocument($scope.model.demo, null).then(function(data) {
+            window.location.href = '/detail?uri=' + data.replace(/(.*\?uri=)/, "");
+          });
         }
       });
     }]);
