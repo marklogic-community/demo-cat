@@ -204,6 +204,13 @@
           <range-value-positions>false</range-value-positions>
         </range-element-index>
 -->
+        <range-element-index>
+          <scalar-type>string</scalar-type>
+          <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
+          <localname>version</localname>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <range-value-positions>false</range-value-positions>
+        </range-element-index>
       </range-element-indexes>
       <range-element-attribute-indexes>
 <!--

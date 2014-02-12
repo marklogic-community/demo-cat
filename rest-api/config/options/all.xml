@@ -25,6 +25,11 @@
     <search:joiner strength="50" apply="constraint" compare="GE" tokenize="word">GE</search:joiner>
     <search:joiner strength="50" apply="constraint" compare="NE" tokenize="word">NE</search:joiner>
   </search:grammar>
+  <search:constraint name="version">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
+    </search:range>
+  </search:constraint>
   <search:sort-order direction="descending">
     <search:score/>
   </search:sort-order>
