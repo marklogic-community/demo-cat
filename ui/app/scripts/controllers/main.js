@@ -8,7 +8,7 @@
       };
 
       var results = mlRest.search().then(function(data) {
-        model.results = data;
+        model.search = data;
       });
 
       angular.extend($scope, {

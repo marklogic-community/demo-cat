@@ -1,0 +1,8 @@
+<div ng-repeat="result in results">
+  <h4><a href="{{result.href}}">{{result.uri}}</a></h4>
+  <div class="matches">
+    <div ng-repeat="match in result.matches">
+      <div ng-repeat="text in match['match-text']">{{text}}</div>
+    </div>
+  </div>
+</div>
