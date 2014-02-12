@@ -30,6 +30,11 @@
       <search:element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
     </search:range>
   </search:constraint>
+  <search:constraint name="maintainer">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:element ns="http://marklogic.com/xdmp/json/basic" name="maintainer"/>
+    </search:range>
+  </search:constraint>
   <search:sort-order direction="descending">
     <search:score/>
   </search:sort-order>
