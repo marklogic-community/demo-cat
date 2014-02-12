@@ -4,6 +4,47 @@
   angular.module('demoCat')
     .provider('MLRest', function() {
 
+      // Rewrite the data.results part of the response from /v1/search so that the metadata section in each is easier
+      // to work with.
+      function rewriteResults(results) {
+        var rewritten = [];
+        var revised = {};
+        var metadata, j, key, prop;
+
+        for (var i in results) {
+          if (results.hasOwnProperty(i)) {
+            revised = {};
+            for (prop in results[i]) {
+              if (results[i].hasOwnProperty(prop)) {
+                if (prop === 'metadata') {
+                  metadata = {};
+                  for (j in results[i].metadata) {
+                    if (results[i].metadata.hasOwnProperty(j)) {
+                      for (key in results[i].metadata[j]) {
+                        if (results[i].metadata[j].hasOwnProperty(key)) {
+                          if (metadata[key]) {
+                            metadata[key].push(results[i].metadata[j][key]);
+                          } else {
+                            metadata[key] = [ results[i].metadata[j][key] ];
+                          }
+                        }
+                      }
+                    }
+                  }
+                  revised.metadata = metadata;
+                } else {
+                  revised[prop] = results[i][prop];
+                }
+              }
+            }
+
+            rewritten.push(revised);
+          }
+        }
+
+        return rewritten;
+      }
+
       this.$get = function($q, $http) {
         var service = {
           search: function() {
@@ -17,6 +58,7 @@
                 }
               })
             .success(function(data) {
+              data.results = rewriteResults(data.results);
               d.resolve(data);
             })
             .error(function(reason) {
