@@ -2,15 +2,14 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('MainCtrl', ['$scope', function ($scope) {
+    .controller('MainCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
       var model = {
-        awesomeThings: [
-          'HTML5 Boilerplate',
-          'AngularJS',
-          'Karma'
-        ]
         // your model stuff here
       };
+
+      var results = mlRest.search().then(function(data) {
+        model.results = data;
+      });
 
       angular.extend($scope, {
         model: model

@@ -8,12 +8,12 @@
     return {
       restrict: 'E',
       scope: {
-        facets: '@ngModel',
+        facets: '=facetList',
         updateQuery: '&updateQuery'
       },
-      template: '<div class="facet-list"></div>',
+      templateUrl: '/scripts/directives/facets.html',
       link: function() {
-
+        console.log('facets link');
       }
     };
   }]);
