@@ -253,6 +253,10 @@
           <namespace-uri>http://marklogic.com/ns/sample</namespace-uri>
         </path-namespace>
 -->
+        <path-namespace>
+          <prefix>jbasic</prefix>
+          <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
+        </path-namespace>
       </path-namespaces>
 
       <range-path-indexes>
@@ -265,6 +269,13 @@
           <invalid-values>reject</invalid-values>
         </range-path-index>
 -->
+        <range-path-index>
+          <scalar-type>string</scalar-type>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <path-expression>jbasic:features/jbasic:item</path-expression>
+          <range-value-positions>false</range-value-positions>
+          <invalid-values>reject</invalid-values>
+        </range-path-index>
       </range-path-indexes>
 
       <geospatial-element-indexes>
