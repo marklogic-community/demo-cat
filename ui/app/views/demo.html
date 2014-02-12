@@ -1,0 +1,28 @@
+<div>
+  <h2>{{model.demo.name}}</h2>
+  <div class="desc">{{model.demo.description}}</div>
+  <div>
+    <label>Hosted at</label>
+    <a ng-href="model.demo.host">{{model.demo.host}}</a>
+    (<span>{{model.demo.hostType}}</span>)
+  </div>
+  <div class="credentials">
+    <label>Credentials</label>
+    <span>{{model.demo.username}}</span>
+    /
+    <span>{{model.demo.password}}</span>
+  </div>
+  <div class="repo">
+    <label>Code repo</label>
+    <span>{{model.demo.repo}}</span>
+  </div>
+  <div class="maintainer">
+    <label>Maintainer</label>
+    <span>{{model.demo.maintainer}}</span>
+    (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
+  </div>
+  <div class="versions">
+    <label>MarkLogic version</label>
+    <span>{{model.demo.version}}</span>
+  </div>
+</div>

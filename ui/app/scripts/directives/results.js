@@ -13,7 +13,6 @@
       },
       templateUrl: '/scripts/directives/results.html',
       link: function() {
-        console.log('results');
       }
     };
   }]);

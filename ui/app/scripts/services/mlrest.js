@@ -25,7 +25,22 @@
             return d.promise;
           },
           getDocument: function(uri) {
-
+            var d = $q.defer();
+            $http.get(
+              '/v1/documents',
+              {
+                params: {
+                  format: 'json',
+                  uri: uri
+                }
+              })
+            .success(function(data) {
+              d.resolve(data);
+            })
+            .error(function(reason) {
+              d.reject(reason);
+            });
+            return d.promise;
           },
           createDocument: function(doc, options) {
             // send a POST request to /v1/documents
@@ -40,8 +55,8 @@
                   extension: '.json'
                 }
               })
-              .success(function(data) {
-                d.resolve(data);
+              .success(function(data, status, headers, config) {
+                d.resolve(headers('location'));
               }).error(function(reason) {
                 d.reject(reason);
               });
