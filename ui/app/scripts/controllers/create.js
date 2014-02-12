@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
+    .controller('CreateCtrl', ['$scope', 'MLRest', 'Features', function ($scope, mlRest, features) {
       var model = {
         demo: {
           name: '',
@@ -14,22 +14,32 @@
             { name: 'Chrome', selected: false },
             { name: 'IE', selected: false }
           ],
-          features: []
-        }
+          features: [],
+          languages: []
+        },
+        featureChoices: features.list(),
+        selFeature: '',
+        optFeature: 'Select...'
       };
 
       angular.extend($scope, {
         model: model,
         addFeature: function() {
-          if ($scope.model.features.indexOf($scope.model.selFeature) === -1) {
-            $scope.model.features.push($scope.model.selFeature);
+          var chosen = null;
+          if ($scope.model.selFeature === '') {
+            chosen = $scope.model.optFeature;
+          } else {
+            chosen = $scope.model.selFeature;
+          }
+          if ($scope.model.demo.features.indexOf(chosen) === -1) {
+            $scope.model.demo.features.push(chosen);
           }
           $scope.model.selFeature = '';
         },
         removeFeature: function(feature) {
-          var index = $scope.model.features.indexOf(feature);
+          var index = $scope.model.demo.features.indexOf(feature);
           if (index !== -1) {
-            $scope.model.features.splice(index, 1);
+            $scope.model.demo.features.splice(index, 1);
           }
         },
         submit: function() {
