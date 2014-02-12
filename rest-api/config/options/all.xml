@@ -63,5 +63,8 @@
       </search:transform-results>
     </search:state>
   </search:operator>
+  <search:extract-metadata>
+    <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="name"/>
+  </search:extract-metadata>
   <annotation xmlns="http://marklogic.com/appservices/search">Delta options here</annotation>
 </search:options>
