@@ -103,6 +103,22 @@
                 d.reject(reason);
               });
             return d.promise;
+          },
+          patch: function(uri, patch) {
+            var d = $q.defer();
+            $http.post(
+              '/v1/documents',
+              patch,
+              {
+                params: {
+                  uri: uri
+                },
+                headers: {
+                  'X-HTTP-Method-Override': 'PATCH',
+                  'Content-Type': 'application/json'
+                }
+              }
+            );
           }
         };
 
