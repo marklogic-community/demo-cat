@@ -1,3 +1,12 @@
+# Demo Catalog
+
+    $ npm install
+    $ bower install
+    $ ml local bootstrap
+    $ ml local deploy modules
+    $ grunt server
+
+
 # Roxy
 Roxy (RObust XQuerY Framework) is a lightweight framework for quickly developing well-structured, easily maintained XQuery applications. Roxy was heavily inspired by Ruby On Rails and CakePHP.
 
