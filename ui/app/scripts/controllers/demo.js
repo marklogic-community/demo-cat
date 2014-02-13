@@ -16,22 +16,7 @@
 
       angular.extend($scope, {
         model: model,
-        saveDesc: function() {
-          mlRest.patch(
-            uri,
-            {
-              "patch": [
-                {
-                  "replace": {
-                    "select": "$.description",
-                    "content": model.demo.description
-                  }
-                }
-              ]
-            }
-          );
-          model.edit = '';
-        },
+
         saveField: function(field, value) {
           mlRest.patch(
             uri,
