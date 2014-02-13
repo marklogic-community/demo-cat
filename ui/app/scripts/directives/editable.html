@@ -4,3 +4,8 @@
   <a href="#" ng-click="mode = 'view'">Cancel</a>
   <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
 </div>
+<div ng-show="mode == 'edit' &amp;&amp; editType === 'text'">
+  <input type="text" ng-model="editModel"/>
+  <a href="#" ng-click="mode = 'view'">Cancel</a>
+  <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
+</div>
