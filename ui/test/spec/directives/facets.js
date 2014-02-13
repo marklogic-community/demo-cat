@@ -1,3 +1,5 @@
+/* global xit */
+
 'use strict';
 
 describe('Facet directive', function () {
@@ -12,7 +14,7 @@ describe('Facet directive', function () {
     $rootScope = _$rootScope_;
   }));
 
-  it(' should create facet list element', function () {
+  xit(' should create facet list element', function () {
     var $scope = $rootScope.$new();
     // The passing a template into $ compile returns a "linking" function that can
     // be used to take a scope and apply it to the template
