@@ -10,19 +10,19 @@
     <label>Credentials</label>
     <editable edit-model="model.demo.username" edit-type="text" save="saveField('username', model.demo.username)"/>
     /
-    <editable edit-model="model.demo.password" edit-type="text" save="saveField('username', model.demo.username)"/>
+    <editable edit-model="model.demo.password" edit-type="text" save="saveField('password', model.demo.password)"/>
   </div>
   <div class="repo col-md-12">
     <label>Code repo</label>
-    <span>{{model.demo.repo}}</span>
+    <editable edit-model="model.demo.repo" edit-type="text" save="saveField('repo', model.demo.repo)"/>
   </div>
   <div class="maintainer col-md-12">
     <label>Maintainer</label>
     <span>{{model.demo.maintainer}}</span>
     (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
   </div>
-  <div class="versions col-md-12">
+  <div class="version col-md-12">
     <label>MarkLogic version</label>
-    <span>{{model.demo.version}}</span>
+    <editable edit-model="model.demo.version" edit-type="text" save="saveField('version', model.demo.version)"/>
   </div>
 </div>

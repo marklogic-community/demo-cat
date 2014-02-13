@@ -31,6 +31,22 @@
             }
           );
           model.edit = '';
+        },
+        saveField: function(field, value) {
+          mlRest.patch(
+            uri,
+            {
+              "patch": [
+                {
+                  "replace": {
+                    "select": "$." + field,
+                    "content": value
+                  }
+                }
+              ]
+            }
+          );
+          model.edit = '';
         }
       });
     }]);
