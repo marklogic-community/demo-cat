@@ -2,3 +2,5 @@ node_modules
 bower_components
 .tmp
 ui/app/styles/main.css
+deploy/prod.properties
+deploy/dev.properties
