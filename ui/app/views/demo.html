@@ -1,27 +1,32 @@
-<div>
-  <h2>{{model.demo.name}}</h2>
-  <div class="desc">{{model.demo.description}}</div>
-  <div>
+<div class="row detail">
+  <h2 class="col-md-12">{{model.demo.name}}</h2>
+  <div class="desc col-md-12" ng-if="model.edit === 'description'">
+    <textarea ng-model="model.demo.description" rows="10"></textarea>
+    <a href="#" ng-click="model.edit = ''">Cancel</a>
+    <button class="btn btn-primary" ng-click="saveDesc()">Save</button>
+  </div>
+  <div class="desc col-md-12" ng-if="model.edit !== 'description'" ng-click="model.edit = 'description'">{{model.demo.description}}</div>
+  <div class="col-md-12">
     <label>Hosted at</label>
     <a ng-href="model.demo.host">{{model.demo.host}}</a>
     (<span>{{model.demo.hostType}}</span>)
   </div>
-  <div class="credentials">
+  <div class="credentials col-md-12">
     <label>Credentials</label>
     <span>{{model.demo.username}}</span>
     /
     <span>{{model.demo.password}}</span>
   </div>
-  <div class="repo">
+  <div class="repo col-md-12">
     <label>Code repo</label>
     <span>{{model.demo.repo}}</span>
   </div>
-  <div class="maintainer">
+  <div class="maintainer col-md-12">
     <label>Maintainer</label>
     <span>{{model.demo.maintainer}}</span>
     (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
   </div>
-  <div class="versions">
+  <div class="versions col-md-12">
     <label>MarkLogic version</label>
     <span>{{model.demo.version}}</span>
   </div>
