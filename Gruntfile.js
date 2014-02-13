@@ -69,7 +69,8 @@ module.exports = function (grunt) {
           context: ['/v1'],
           host: 'localhost',
           // host: 'dmlc.demo.marklogic.com',
-          port: 8070,
+          // port: 8070,
+          port: grunt.option('ml-port') || 8070,
           https: false,
           changeOrigin: false
         }
