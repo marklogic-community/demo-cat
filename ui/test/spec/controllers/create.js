@@ -19,26 +19,26 @@ describe('Controller: CreateCtrl', function () {
   it('should add a feature only once', function () {
     scope.model.selFeature = 'foo';
     scope.addFeature();
-    expect(scope.model.features.length).toBe(1);
+    expect(scope.model.demo.features.length).toBe(1);
     scope.model.selFeature = 'foo';
     scope.addFeature();
-    expect(scope.model.features.length).toBe(1);
+    expect(scope.model.demo.features.length).toBe(1);
   });
 
   it('should add multiple features', function () {
     scope.model.selFeature = 'foo';
     scope.addFeature();
-    expect(scope.model.features.length).toBe(1);
+    expect(scope.model.demo.features.length).toBe(1);
     scope.model.selFeature = 'bar';
     scope.addFeature();
-    expect(scope.model.features.length).toBe(2);
+    expect(scope.model.demo.features.length).toBe(2);
   });
 
   it('should remove features', function() {
-    scope.model.features = ['a', 'b', 'c'];
+    scope.model.demo.features = ['a', 'b', 'c'];
     scope.removeFeature('a');
-    expect(scope.model.features.length).toBe(2);
-    expect(scope.model.features[0]).toBe('b');
-    expect(scope.model.features[1]).toBe('c');
+    expect(scope.model.demo.features.length).toBe(2);
+    expect(scope.model.demo.features[0]).toBe('b');
+    expect(scope.model.demo.features[1]).toBe('c');
   });
 });
