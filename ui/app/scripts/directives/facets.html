@@ -1,5 +1,5 @@
 <div class="facet-list">
-  <div ng-repeat="(name, facet) in facets">
+  <div class="facet" ng-repeat="(name, facet) in facets">
     <h3>{{ name }}</h3>
     <div ng-repeat="value in facet.facetValues">
       <a>{{value.name}} ({{value.count}})</a>
