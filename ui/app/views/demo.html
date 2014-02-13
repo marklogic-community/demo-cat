@@ -1,11 +1,6 @@
 <div class="row detail">
   <h2 class="col-md-12">{{model.demo.name}}</h2>
-  <div class="desc col-md-12" ng-if="model.edit === 'description'">
-    <textarea ng-model="model.demo.description" rows="10"></textarea>
-    <a href="#" ng-click="model.edit = ''">Cancel</a>
-    <button class="btn btn-primary" ng-click="saveDesc()">Save</button>
-  </div>
-  <div class="desc col-md-12" ng-if="model.edit !== 'description'" ng-click="model.edit = 'description'">{{model.demo.description}}</div>
+  <editable class="desc col-md-12" edit-model="model.demo.description" edit-type="textarea" save="saveDesc()"/>
   <div class="col-md-12">
     <label>Hosted at</label>
     <a ng-href="model.demo.host">{{model.demo.host}}</a>
@@ -13,9 +8,9 @@
   </div>
   <div class="credentials col-md-12">
     <label>Credentials</label>
-    <span>{{model.demo.username}}</span>
+    <editable edit-model="model.demo.username" edit-type="text" save="saveField('username', model.demo.username)"/>
     /
-    <span>{{model.demo.password}}</span>
+    <editable edit-model="model.demo.password" edit-type="text" save="saveField('username', model.demo.username)"/>
   </div>
   <div class="repo col-md-12">
     <label>Code repo</label>

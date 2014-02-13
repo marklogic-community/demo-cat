@@ -1,0 +1,6 @@
+<span ng-show="mode == 'view'" ng-click="mode = 'edit'">{{editModel}}</span>
+<div ng-show="mode == 'edit' &amp;&amp; editType === 'textarea'">
+  <textarea ng-model="editModel" rows="10"></textarea>
+  <a href="#" ng-click="mode = 'view'">Cancel</a>
+  <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
+</div>
