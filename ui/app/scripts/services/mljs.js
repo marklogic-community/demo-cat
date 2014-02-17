@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .provider('MLRest', function() {
+    .provider('MLJS', function() {
 
       // Rewrite the data.results part of the response from /v1/search so that the metadata section in each is easier
       // to work with.
@@ -46,46 +46,30 @@
       }
 
       this.$get = function($q, $http) {
+
+        var db = new mljs();
+
         var service = {
-          updateSearch: function(query) {
-
-
-            return search();
-          },
           search: function() {
             var d = $q.defer();
-            $http.get(
-              '/v1/search',
-              {
-                params: {
-                  format: 'json',
-                  options: 'all'
-                }
-              })
-            .success(function(data) {
-              data.results = rewriteResults(data.results);
-              d.resolve(data);
-            })
-            .error(function(reason) {
-              d.reject(reason);
+            db.search("", "all", function(result) {
+              if (result.inError) {
+                d.reject(result.details);
+              } else {
+                result.doc.results = rewriteResults(result.doc.results);
+                d.resolve(result.doc);
+              }
             });
             return d.promise;
           },
-          getDocument: function(uri) {
+          getDocument: function(uri, options) {
             var d = $q.defer();
-            $http.get(
-              '/v1/documents',
-              {
-                params: {
-                  format: 'json',
-                  uri: uri
-                }
-              })
-            .success(function(data) {
-              d.resolve(data);
-            })
-            .error(function(reason) {
-              d.reject(reason);
+            db.get(uri, options, function(result) {
+              if (result.inError) {
+                d.reject(result.details);
+              } else {
+                d.resolve(result.doc);
+              }
             });
             return d.promise;
           },

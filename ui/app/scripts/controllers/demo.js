@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('DemoCtrl', ['$scope', 'MLRest', '$routeParams', function ($scope, mlRest, $routeParams) {
+    .controller('DemoCtrl', ['$scope', 'MLJS', '$routeParams', function ($scope, mljs, $routeParams) {
       var uri = $routeParams.uri;
       var model = {
         // your model stuff here
@@ -10,7 +10,7 @@
       };
 
       console.log('DemoCtrl: uri=' + $routeParams.uri);
-      mlRest.getDocument(uri).then(function(data) {
+      mljs.getDocument(uri).then(function(data) {
         model.demo = data;
       });
 

@@ -2,17 +2,20 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('MainCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
+    .controller('MainCtrl', ['$scope', 'MLJS', function ($scope, mljs) {
       var model = {
         // your model stuff here
       };
 
-      var results = mlRest.search().then(function(data) {
+      var results = mljs.search().then(function(data) {
         model.search = data;
       });
 
       angular.extend($scope, {
-        model: model
+        model: model,
+        updateQuery: function() {
+          console.log('updateQuery');
+        }
       });
     }]);
 }());
