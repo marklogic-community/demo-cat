@@ -13,8 +13,11 @@
 
       angular.extend($scope, {
         model: model,
-        updateQuery: function() {
-          console.log('updateQuery');
+        selectFacet: function(facet, value) {
+          console.log('selected facet ' + facet + ' with value ' + value);
+        },
+        clearFacet: function(facet) {
+          console.log('clearing facet ' + facet);
         }
       });
     }]);
