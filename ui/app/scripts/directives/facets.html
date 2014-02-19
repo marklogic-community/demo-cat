@@ -2,7 +2,7 @@
   <div class="facet" ng-repeat="(name, facet) in facets">
     <h3 ng-click="update()">{{ name }}</h3>
     <div ng-repeat="value in facet.facetValues">
-      <a ng-click="selectFacet(name, value.name)">{{value.name}} ({{value.count}})</a>
+      <a ng-click="select({facet: name, value: value.name})">{{value.name}} ({{value.count}})</a>
     </div>
   </div>
 </div>
