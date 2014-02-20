@@ -698,7 +698,7 @@ mljs.prototype.__doreq_node = function(reqname,options,content,callback_opt) {
  * @private
  */
 mljs.prototype.__doreq = function(reqname,options,content,callback_opt) {
-  //this.logger.debug("__doreq: reqname: " + reqname + ", method: " + options.method + ", uri: " + options.path);
+  this.logger.debug("__doreq: reqname: " + reqname + ", method: " + options.method + ", uri: " + options.path);
   if (undefined == options.host) {
     options.host = this.dboptions.host;
   }
@@ -1601,38 +1601,44 @@ mljs.prototype._applyTransformProperties = function(url,sprops_opt) {
  */
 mljs.prototype._applySearchProperties = function(url,sprops_opt) {
   // apply properties
-  var format = "";
-  if (-1 != url.indexOf("?")) {
-    format += "&";
-  } else {
-    format += "?";
-  }
-  format += "format=json";
+  var gotQM = (-1 != url.indexOf("?"));
+  var prepend = function(param) {
+    if (gotQM) {
+      return "&" + param;
+    } else {
+      gotQM = true;
+      return "?" + param;
+    }
+  };
   
   if (undefined != sprops_opt) {
     if (undefined != sprops_opt.collection) {
       var cols = sprops_opt.collection.split(",");
       for (var c = 0;c < cols.length;c++) {
-        url += "&collection=" + encodeURI(cols[c]);
+        url += prepend("collection=" + encodeURI(cols[c]));
       }
     }
     if (undefined != sprops_opt.directory) {
-      url += "&directory=" + sprops_opt.directory;
+      url += prepend("directory=" + sprops_opt.directory);
     }
     if (undefined != sprops_opt.transform) {
-      url = this._applyTransformProperties(url,sprops_opt); // equals not append
+      url = this._applyTransformProperties(url,sprops_opt); // equals not append - the function returns the whole altered URL
     }
     if (undefined != sprops_opt.format) {
-      format = "&format=" + sprops_opt.format;
+      url += prepend("format=" + sprops_opt.format);
+    } else {
+      url += prepend("format=json");
     }
     if (undefined != sprops_opt.start_opt) {
-      url += "&start=" + sprops_opt.start_opt; // SHOULD THIS BE REMOVED? IT HAS _opt. IS A BIT RANDOM
+      url += prepend("start=" + sprops_opt.start_opt); // SHOULD THIS BE REMOVED? IT HAS _opt. IS A BIT RANDOM
     }
     if (undefined != sprops_opt.start) {
-      url += "&start=" + sprops_opt.start;
+      this.logger.debug("mljs._applySearchProperties: start prop: " + sprops_opt.start);
+      url += prepend("start=" + sprops_opt.start);
     }
+  } else {
+    url += prepend("format=json");
   }
-  url += format;
   
   return url;
 };
@@ -5373,6 +5379,8 @@ mljs.prototype.searchcontext = function() {
   
   this._facetSelection = new Array();
   
+  this._nextRequestId = 1; // used to discard old requests that are returned by MarkLogic late. Also used by promise code to determine it's own request
+  
   // set up event handlers
   this.optionsPublisher = new com.marklogic.events.Publisher(); // updated search options JSON object, for parsing not storing a copy
   this.resultsPublisher = new com.marklogic.events.Publisher(); // publishes search results (including facet values)
@@ -5730,10 +5738,105 @@ mljs.prototype.searchcontext.prototype._queryToText = function(parsed) {
  */
 mljs.prototype.searchcontext.prototype.doSuggest = function(q,additional_properties_opt) {
   var self = this;
-  this.db.suggest(q,this.optionsName,additional_properties_opt,function(result) {
+  this.db.suggest(q,this.optionsName,additional_properties_opt,function(result){self._callbackOrDiscard(result,function(result) {
     self.suggestionPublisher.publish(result.doc);
-  });
+  },self._nextRequestId++)});
 };
+
+mljs.prototype.searchcontext.prototype._callbackOrDiscard = function(data,callback,requestId) {
+  if (this._nextRequestId - requestId != 1) {
+    // old request
+    // discard request (and discard associated promise)
+    this.__d("searchcontext._callbackOrDiscard: Discarding old callback. It's requestId: " + requestId + ", nextRequestId: " + this._nextRequestId);
+  } else {
+    callback(data,requestId);
+  }
+};
+
+/**
+ * Generate a promise for use with frameworks like Angular JS. This method should be called prior to
+ * any individual method that fires a search from a context. Note: Caller MUST use the object returned
+ * by this function, which is a proxy for the underlying search context, rather than call this method
+ * then another on the search context. I.e. use chaining like sc.promise().doStructuredQuery(...)
+ * 
+ * @see {https://github.com/kriskowal/uncommonjs/blob/master/promises/specification.md}
+ * 
+ * @param {object} prom - Promise object with notify, resolve, reject
+ */
+mljs.prototype.searchcontext.prototype.promise = function(prom) {
+  var reqId = 0;
+  var self = this;
+  var retProm = function(retObject,requestId) {
+    if (true === retObject) {
+      return;
+    }
+    // this next line is the important promise magic part
+    if (reqId != requestId) {
+      self.__d("searchcontext.promise: Dropping return call - promiseId: " + reqId + ", requestId: " + requestId);
+      return;
+    }
+    this.resultsPublisher.unsubscribe(retProm);
+    this.valuesPublisher.unsubscribe(retProm);
+    this.suggestionPublisher.unsubscribe(retProm);
+    
+    if (false === retObject) {
+      prom.reject(retObject);
+    } else {
+      prom.resolve(retObject);
+    }
+  };
+  
+  this.resultsPublisher.subscribe(retProm);
+  this.valuesPublisher.subscribe(retProm);
+  this.suggestionPublisher.subscribe(retProm);
+  
+  return {
+    doStructuredQuery: function(args) {
+      reqId = self._nextRequestId;
+      self.doStructuredQuery(args);
+    }, doCombinedQuery: function(args) {
+      reqId = self._nextRequestId;
+      self.doCombinedQuery(args);
+    }, contributeStructuredQuery: function(args) {
+      reqId = self._nextRequestId;
+      self.contributeStructuredQuery(args);
+    }, updateGeoHeatmap: function(args) {
+      reqId = self._nextRequestId;
+      self.updateGeoHeatmap(args);
+    }, updateGeoSelection: function(args) {
+      reqId = self._nextRequestId;
+      self.updateGeoSelection(args);
+    }, doSimpleQuery: function(args) {
+      reqId = self._nextRequestId;
+      self.doSimpleQuery(args);
+    }, deselectFacet: function(args) {
+      reqId = self._nextRequestId;
+      self.deselectFacet(args);
+    }, contributeFacet: function(args) {
+      reqId = self._nextRequestId;
+      self.contributeFacet(args);
+    }, contributeFacets: function(args) {
+      reqId = self._nextRequestId;
+      self.contributeFacets(args);
+    }, updateFacets: function(args) {
+      reqId = self._nextRequestId;
+      self.updateFacets(args);
+    }, updateSelection: function(args) {
+      reqId = self._nextRequestId;
+      self.updateSelection(args);
+    }, updateHighlight: function(args) {
+      reqId = self._nextRequestId;
+      self.updateHighlight(args);
+    }, updatePage: function(args) {
+      reqId = self._nextRequestId;
+      self.updatePage(args);
+    }, updateSort: function(args) {
+      reqId = self._nextRequestId;
+      self.updateSort(args);
+    }
+  };
+};
+
 
 /**
  * Performs a structured query against this search context.
@@ -5768,7 +5871,7 @@ mljs.prototype.searchcontext.prototype._doQuery = function(structured_opt,text_o
       self.resultsPublisher.publish(true); // forces refresh glyph to show
       self.facetsPublisher.publish(true);
   
-      self.db.structuredSearch(structured_opt,self.optionsName,{start: ourstart},function(result) { 
+      self.db.structuredSearch(structured_opt,self.optionsName,{start: ourstart},function(result){self._callbackOrDiscard(result,function(result,requestId) { 
         if (result.inError) {
           // report error on screen somewhere sensible (e.g. under search bar)
           self.__d(result.error);
@@ -5778,12 +5881,12 @@ mljs.prototype.searchcontext.prototype._doQuery = function(structured_opt,text_o
           self.resultsPublisher.publish(result.doc);
           self.facetsPublisher.publish(result.doc.facets);
         }
-      });
+      },self._nextRequestId++)});
   };
   var valuesF = function() {
       self.valuesPublisher.publish(true);
       for (var i = 0;i < self._tuples.length;i++) {
-        self.db.values(structured_opt,self._tuples[i],self.optionsName,null,function(result) {
+        self.db.values(structured_opt,self._tuples[i],self.optionsName,null,function(result){self._callbackOrDiscard(result,function(result,requestId) {
           if (result.inError) {
             // report error on screen somewhere sensible (e.g. under search bar)
             self.__d(result.error);
@@ -5791,14 +5894,14 @@ mljs.prototype.searchcontext.prototype._doQuery = function(structured_opt,text_o
           } else {
             self.valuesPublisher.publish(result.doc);
           }
-        });
+        },self._nextRequestId++)});
       }
     
   };
   var combinedF = function() {
       self.resultsPublisher.publish(true); // forces refresh glyph to show
       self.facetsPublisher.publish(true);
-      self.db.combined(structured_opt,text_opt,self._options,{start: ourstart},function(result) { 
+      self.db.combined(structured_opt,text_opt,self._options,{start: ourstart},function(result){self._callbackOrDiscard(result,function(result,requestId) { 
         if (result.inError) {
           // report error on screen somewhere sensible (e.g. under search bar)
           self.__d(result.error);
@@ -5808,11 +5911,11 @@ mljs.prototype.searchcontext.prototype._doQuery = function(structured_opt,text_o
           self.resultsPublisher.publish(result.doc);
           self.facetsPublisher.publish(result.doc.facets);
         }
-      });
+      },self._nextRequestId++)});
   };
   var customF = function() {
       // custom endpoint - must perform all valuesPublisher and resultsPublisher calls itself!!!
-      self._customEndpointFunction(self,null, q, self.optionsName, 1, null);
+      self._customEndpointFunction(self,null, q, self.optionsName, 1, null); // TODO make it support promises
   };
   
   var dos = function() {
@@ -6040,7 +6143,7 @@ mljs.prototype.searchcontext.prototype.doSimpleQuery = function(q,start) {
     if ("search" == self._searchEndpoint) {
       self.resultsPublisher.publish(true); // forces refresh glyph to show
       self.facetsPublisher.publish(true);
-      self.db.search(q,self.optionsName,ourstart,sprops,function(result) { 
+      self.db.search(q,self.optionsName,ourstart,sprops,function(result){self._callbackOrDiscard(result,function(result) { 
         if (result.inError) {
           // report error on screen somewhere sensible (e.g. under search bar)
           self.__d(result.error);
@@ -6050,11 +6153,11 @@ mljs.prototype.searchcontext.prototype.doSimpleQuery = function(q,start) {
           self.resultsPublisher.publish(result.doc);
           self.facetsPublisher.publish(result.doc.facets);
         }
-      });
+      },self._nextRequestId++)});
     } else if ("values" == self._searchEndpoint) { // values
       self.valuesPublisher.publish(true);
       for (var i = 0;i < self._tuples.length;i++) {
-        self.db.values(q,self._tuples[i],self.optionsName,null,function(result) {
+        self.db.values(q,self._tuples[i],self.optionsName,null,function(result){self._callbackOrDiscard(result,function(result) {
           if (result.inError) {
             // report error on screen somewhere sensible (e.g. under search bar)
             self.__d(result.error);
@@ -6062,11 +6165,11 @@ mljs.prototype.searchcontext.prototype.doSimpleQuery = function(q,start) {
           } else {
             self.valuesPublisher.publish(result.doc);
           }
-        });
+        },self._nextRequestId++)});
       }
     } else {
       // custom endpoint - must perform all valuesPublisher and resultsPublisher calls itself!!!
-      self._customEndpointFunction(self,q, null, self.optionsName, ourstart || 1, sprops);
+      self._customEndpointFunction(self,q, null, self.optionsName, ourstart || 1, sprops); // TODO support promises
     }
   };
   
@@ -8162,6 +8265,129 @@ mljs.prototype.geocontext.prototype._fireLocaleUpdate = function() {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+mljs.prototype.alertcontext = function() {
+  this.supported = false;
+  this.state = "initialising"; // also testing, connected, disconnected, connection_error
+  this.socket = null;
+  
+  this._alertPublisher = new com.marklogic.events.Publisher();
+  this._statePublisher = new com.marklogic.events.Publisher();
+  
+  this._init();
+};
+
+mljs.prototype.alertcontext.prototype._init = function() {
+  
+  if("WebSocket" in window) {  // TODO handle use within Node.js too
+    //The user has WebSockets  
+    this.supported = true;
+    this._connect();  
+  }
+};
+
+mljs.prototype.alertcontext.prototype._connect = function() {  
+  try {  
+    var self = this;
+    //var host = "ws://localhost:8080/"; // choose same as current window host/port
+    var host = window.location;
+    var startPos = host.indexOf("://") + 3;
+    var colonPos = host.indexOf(":",startPos);
+    var port = 80;
+    var slashPos = host.indexOf("/",startPos);
+    if (-1 != colonPos) {
+      if (-1 == slashPos) {
+        // no ending slash or :, so assume port 80
+      } else {
+        port = 1 * host.substring(colonPos + 1,slashPos);
+        host = host.substring(startPos,colonPos);
+      }
+    } else {
+      // assume port 80, find end of host
+      if (-1 != slashPos) {
+        host = host.substring(startPos,slashPos);
+      } // else host is whole thing
+      else {
+        host = host.substring(startPos);
+      }
+    }
+    host = "ws://" + host + ":" + port;
+    
+    this.socket = new WebSocket(host,"mljs-alerts"); // TODO handle use within Node.js too
+     
+  /* msg.data = 
+   {
+     response: "test|alert|search",
+     content: json | textAsxml 
+   }
+  
+  
+  */
+  
+  
+  
+    //message('<p class="event">Socket Status: '+socket.readyState);  
+    this.socket.onopen = function() {  
+      //message('<p class="event">Socket Status: '+socket.readyState+' (open)');  
+      // send message to login once connected
+      self.state = "testing";
+      self.socket.send(JSON.stringify({request:"test"}));
+    };
+    this.socket.onmessage = function(msg) {   
+      //console.log("MSG: " + msg.data);
+         
+         // TODO anything else with msg.* ?
+         
+         var json = JSON.parse(msg.data);
+         if (json.response == "test") {
+           // test works - we're connected
+           self._changeState("connected");
+         } else {
+           // fire message off to listeners
+           self._alertPublisher.publish(json);
+         }
+         
+    };
+    this.socket.onclose = function(){  
+         //message('<p class="event">Socket Status: '+socket.readyState+' (Closed)'); 
+         self._changeState("disconnected"); 
+    }; 
+    
+    
+  } catch(exception){  
+     //message('<p>Error'+exception);  
+     self._changeState("connection_error");
+  }
+
+};
+
+mljs.prototype.alertcontext.prototype.getState = function() {
+  return this.state;
+};
+
+mljs.prototype.alertcontext.prototype._changeState = function(newState) {
+  this.state = newState;
+  this._statePublisher.publish(newState);
+};
+
+mljs.prototype.alertcontext.prototype.register = function(wgt) {
+  if (undefined != wgt.updateAlert) {
+    this._alertPublisher.subscribe(function(alert) {wgt.updateAlert(alert);});
+  }
+  if (undefined != wgt.updateAlertState) {
+    this._statePublisher.subscribe(function(state) {wgt.updateAlertState(state);});
+  }
+};
 
 
 
