@@ -50,6 +50,14 @@
         var db = new mljs();
 
         var service = {
+          getSearchContext: function() {
+            return db.createSearchContext();
+          },
+          selectFacet: function(ctx, name, value) {
+            var d = $q.defer();
+            ctx.promise(d.promise).contributeFacet(name, value);
+            return d.promise;
+          },
           search: function() {
             var d = $q.defer();
             db.search("", "all", function(result) {
