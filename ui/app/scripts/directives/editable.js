@@ -14,7 +14,6 @@
       },
       templateUrl: '/scripts/directives/editable.html',
       link: function($scope) {
-        console.log('editable');
         $scope.mode = 'view';
       }
     };
