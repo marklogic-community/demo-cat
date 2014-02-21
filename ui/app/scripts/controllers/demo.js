@@ -18,7 +18,7 @@
         model: model,
 
         saveField: function(field, value) {
-          mlRest.patch(
+          mljs.patch(
             uri,
             {
               "patch": [
