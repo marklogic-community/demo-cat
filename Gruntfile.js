@@ -67,20 +67,11 @@ module.exports = function (grunt) {
       proxies: [
         {
           context: ['/v1'],
-          host: 'localhost',
-          // host: 'dmlc.demo.marklogic.com',
-          // port: 8070,
+          host: grunt.option('ml-host') || 'localhost',
           port: grunt.option('ml-port') || 8070,
           https: false,
           changeOrigin: false
         }
-        /*{
-          context: '/v1',
-          host: 'ml-hostname',
-          port: ml-port,
-          https: false,
-          changeOrigin: false
-        }*/
       ],
       livereload: {
         options: {
