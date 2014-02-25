@@ -48,12 +48,18 @@
       this.$get = function($q, $http) {
 
         var db = new mljs();
+        db.logger.setLogLevel('info');
 
         var service = {
           getSearchContext: function() {
             return db.createSearchContext();
           },
           selectFacet: function(ctx, name, value) {
+            var d = $q.defer();
+            ctx.promise(d.promise).contributeFacet(name, value);
+            return d.promise;
+          },
+          clearFacet: function(ctx, name) {
             var d = $q.defer();
             ctx.promise(d.promise).contributeFacet(name, value);
             return d.promise;
