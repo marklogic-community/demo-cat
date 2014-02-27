@@ -6,6 +6,12 @@
     $ ml local deploy modules
     $ grunt server
 
+If the app-port specified in build.properties is already occupied and you want to change it for your local environment, do the follow:
+
+* create and edit deploy/local.properties and set app-port to the port where you want it (you may need to change xcc-port as well)
+* pass --ml-port=???? to the grunt server command. So if you set the port to 8123, run "grunt server --ml-port=8123"
+
+Likewise, if you are running MarkLogic on a different host than where you are running the user interface, pass --ml-host to the grunt server command.
 
 # Roxy
 Roxy (RObust XQuerY Framework) is a lightweight framework for quickly developing well-structured, easily maintained XQuery applications. Roxy was heavily inspired by Ruby On Rails and CakePHP.
