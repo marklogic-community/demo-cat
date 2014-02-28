@@ -5,3 +5,4 @@ ui/app/styles/main.css
 deploy/prod.properties
 deploy/dev.properties
 src/public
+mlcp.conf
