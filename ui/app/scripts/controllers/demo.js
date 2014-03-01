@@ -2,11 +2,12 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('DemoCtrl', ['$scope', 'MLJS', '$routeParams', function ($scope, mljs, $routeParams) {
+    .controller('DemoCtrl', ['$scope', 'MLJS', 'Features', '$routeParams', function ($scope, mljs, features, $routeParams) {
       var uri = $routeParams.uri;
       var model = {
         // your model stuff here
-        edit: ''
+        edit: '',
+        featureChoices: features.list()
       };
 
       console.log('DemoCtrl: uri=' + $routeParams.uri);
