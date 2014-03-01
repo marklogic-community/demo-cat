@@ -1,8 +1,8 @@
 <div class="facet-list">
   <div class="chiclets">
-    <div class="btn btn-primary disabled" ng-repeat="chiclet in selected">
+    <div class="btn btn-primary" ng-repeat="chiclet in selected">
       <span>{{chiclet.facet}}: {{chiclet.value}}</span>
-      <span class="glyphicon glyphicon-remove-circle icon-white"></span>
+      <span class="glyphicon glyphicon-remove-circle icon-white" ng-click="clear(chiclet)"></span>
     </div>
   </div>
   <div class="facet" ng-repeat="(name, facet) in facets">
