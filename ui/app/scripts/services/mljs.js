@@ -59,9 +59,9 @@
             ctx.promise(d.promise).contributeFacet(name, value);
             return d.promise;
           },
-          clearFacet: function(ctx, name) {
+          clearFacet: function(ctx, name, value) {
             var d = $q.defer();
-            ctx.promise(d.promise).contributeFacet(name, value);
+            ctx.promise(d.promise).deselectFacet(name, value);
             return d.promise;
           },
           search: function() {
