@@ -10,7 +10,6 @@
         featureChoices: features.list()
       };
 
-      console.log('DemoCtrl: uri=' + $routeParams.uri);
       mljs.getDocument(uri).then(function(data) {
         model.demo = data;
       });
@@ -22,11 +21,11 @@
           mljs.patch(
             uri,
             {
-              "patch": [
+              'patch': [
                 {
-                  "replace": {
-                    "select": "$." + field,
-                    "content": value
+                  'replace': {
+                    'select': '$.' + field,
+                    'content': value
                   }
                 }
               ]

@@ -1,3 +1,5 @@
+/* global mljs */
+
 (function () {
   'use strict';
 
@@ -66,7 +68,7 @@
           },
           search: function() {
             var d = $q.defer();
-            db.search("", "all", function(result) {
+            db.search('', 'all', function(result) {
               if (result.inError) {
                 d.reject(result.details);
               } else {
@@ -108,7 +110,7 @@
             return d.promise;
           },
           patch: function(uri, patch) {
-            var d = $q.defer();
+            $q.defer();
             $http.post(
               '/v1/documents',
               patch,
