@@ -14,10 +14,7 @@
         clear: '&clear'
       },
       templateUrl: '/scripts/directives/facets.html',
-      link: function(scope, element, attrs) {
-        scope.sayHello = function() {
-          console.log('hello');
-        };
+      link: function() {
       }
     };
   }]);

@@ -1,7 +1,5 @@
 {
-  "node": true,
-  "esnext": true,
-  "bitwise": true,
+  "browser": true,
   "camelcase": true,
   "curly": true,
   "eqeqeq": true,
@@ -9,19 +7,14 @@
   "indent": 2,
   "latedef": true,
   "newcap": true,
-  "noarg": true,
   "quotmark": "single",
-  "regexp": true,
   "undef": true,
-  "unused": true,
+  "unused": "vars",
   "strict": true,
   "trailing": true,
-  "smarttabs": true,
-  "white": false,
   "globals": {
     "angular": false,
     "google": false,
-    "$": false,
-    "document": false
+    "$": false
   }
 }

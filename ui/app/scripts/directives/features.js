@@ -11,11 +11,11 @@
         editFeatures: '=editFeatures',
         featureChoices: '=featureChoices',
         editType: '@editType',
-        mode: "@mode",
+        mode: '@mode',
         save: '&save'
       },
       templateUrl: '/scripts/directives/features.html',
-      link: function($scope, element, attrs) {
+      link: function($scope) {
 
         $scope.addFeature = function() {
           var chosen = null;
@@ -28,14 +28,14 @@
             $scope.editFeatures.push(chosen);
           }
           $scope.featureChoices.selFeature = '';
-        }
+        };
 
         $scope.removeFeature = function(feature) {
           var index = $scope.editFeatures.indexOf(feature);
           if (index !== -1) {
             $scope.editFeatures.splice(index, 1);
           }
-        }
+        };
       }
     };
   }]);

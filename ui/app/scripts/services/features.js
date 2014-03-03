@@ -50,7 +50,7 @@
         optFeature: 'Select...'
       };
 
-      this.$get = function($q, $http) {
+      this.$get = function() {
         var service = {
           list: function() {
             return features;

@@ -50,7 +50,7 @@
           updateSearch: function(query) {
 
 
-            return search();
+            // return search();
           },
           search: function() {
             var d = $q.defer();
@@ -62,13 +62,15 @@
                   options: 'all'
                 }
               })
-            .success(function(data) {
-              data.results = rewriteResults(data.results);
-              d.resolve(data);
-            })
-            .error(function(reason) {
-              d.reject(reason);
-            });
+            .success(
+              function(data) {
+                data.results = rewriteResults(data.results);
+                d.resolve(data);
+              })
+            .error(
+              function(reason) {
+                d.reject(reason);
+              });
             return d.promise;
           },
           getDocument: function(uri) {
@@ -81,12 +83,14 @@
                   uri: uri
                 }
               })
-            .success(function(data) {
-              d.resolve(data);
-            })
-            .error(function(reason) {
-              d.reject(reason);
-            });
+            .success(
+              function(data) {
+                d.resolve(data);
+              })
+            .error(
+              function(reason) {
+                d.reject(reason);
+              });
             return d.promise;
           },
           createDocument: function(doc, options) {
@@ -110,7 +114,7 @@
             return d.promise;
           },
           patch: function(uri, patch) {
-            var d = $q.defer();
+            // var d = $q.defer();
             $http.post(
               '/v1/documents',
               patch,

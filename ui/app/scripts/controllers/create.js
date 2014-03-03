@@ -24,7 +24,7 @@
         model: model,
         submit: function() {
           mljs.createDocument($scope.model.demo, null).then(function(data) {
-            window.location.href = '/detail?uri=' + data.replace(/(.*\?uri=)/, "");
+            window.location.href = '/detail?uri=' + data.replace(/(.*\?uri=)/, '');
           });
         }
       });
