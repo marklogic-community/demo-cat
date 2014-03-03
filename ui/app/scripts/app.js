@@ -1,5 +1,5 @@
 
-angular.module('demoCat', ['ngRoute'])
+angular.module('demoCat', ['ngRoute', 'ngCkeditor'])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
     'use strict';
