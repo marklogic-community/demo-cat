@@ -41,9 +41,10 @@
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Targeted Browser(s)</label>
-      <div class="col-sm-3" ng-repeat="browser in model.demo.browsers">
+      <div class="col-sm-3" ng-repeat="browser in model.browserChoices">
         <label class="checkbox-inline">
-          <input type="checkbox" id="inlineCheckbox1" value="{{browser.name}}">{{browser.name}}
+          <input type="checkbox" value="{{browser}}" ng-checked="model.demo.browsers.indexOf(browser) > 1"
+                 ng-click="updateBrowsers(browser)">{{browser}}
         </label>
       </div>
     </div>

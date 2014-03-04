@@ -12,6 +12,12 @@
     /
     <editable edit-model="model.demo.password" edit-type="text" save="saveField('password', model.demo.password)"/>
   </div>
+  <div class="browsers col-md-12">
+    <label>Browsers</label>
+    <ul>
+      <li ng-repeat="browser in model.demo.browsers">{{browser}}</li>
+    </ul>
+  </div>
   <features edit-features="model.demo.features" feature-choices="model.featureChoices"
             edit-type="inline" mode="view" save="saveField('features', model.demo.features)"/>
   <div class="repo col-md-12">
