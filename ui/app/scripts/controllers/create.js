@@ -22,6 +22,16 @@
 
       angular.extend($scope, {
         model: model,
+        editorOptions: {
+          height: "100px",
+          toolbarGroups: [
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] }
+          ],
+          //override default options
+          toolbar: "",
+          toolbar_full: ""
+        },
         submit: function() {
           mljs.createDocument($scope.model.demo, null).then(function(data) {
             window.location.href = '/detail?uri=' + data.replace(/(.*\?uri=)/, '');

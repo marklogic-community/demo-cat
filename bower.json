@@ -2,15 +2,20 @@
   "name": "demoCat",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "1.2.0-rc.3",
-    "angular-route": "1.2.0-rc.3",
-    "angular-cookies": "1.2.0-rc.3",
+    "angular": "1.2.14",
+    "angular-route": "1.2.14",
+    "angular-cookies": "1.2.14",
     "font-awesome": "~4.0.0",
     "bootstrap": "~3.0.0",
-    "jquery": "~2.0.3"
+    "jquery": "~2.0.3",
+    "ckeditor": "4.3.3",
+    "ng-ckeditor": "latest"
   },
   "devDependencies": {
-    "angular-mocks": "1.2.0-rc.3",
-    "angular-scenario": "1.2.0-rc.3"
+    "angular-mocks": "1.2.14",
+    "angular-scenario": "1.2.14"
+  },
+  "resolutions": {
+    "angular": "1.2.14"
   }
 }
