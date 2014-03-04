@@ -9,15 +9,12 @@
           description: '',
           host: '',
           hostType: 'internal',
-          browsers: [
-            { name: 'Firefox', selected: false },
-            { name: 'Chrome', selected: false },
-            { name: 'IE', selected: false }
-          ],
+          browsers: [],
           features: [],
           languages: []
         },
-        featureChoices: features.list()
+        featureChoices: features.list(),
+        browserChoices: ['Firefox', 'Chrome', 'IE']
       };
 
       angular.extend($scope, {
@@ -31,6 +28,14 @@
           //override default options
           toolbar: "",
           toolbar_full: ""
+        },
+        updateBrowsers: function(browser) {
+          var index = $scope.model.demo.browsers.indexOf(browser);
+          if (index > -1) {
+            $scope.model.demo.browsers.splice(index, 1);
+          } else {
+            $scope.model.demo.browsers.push(browser);
+          }
         },
         submit: function() {
           mljs.createDocument($scope.model.demo, null).then(function(data) {
