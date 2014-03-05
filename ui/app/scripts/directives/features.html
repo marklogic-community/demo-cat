@@ -8,10 +8,10 @@
     <div class="col-sm-10">
       <select ng-model="featureChoices.optFeature">
         <option>Select...</option>
-        <option ng-repeat="feature in featureChoices.list">{{feature}}</option>
+        <option class="selected-feature" ng-repeat="feature in featureChoices.list">{{feature}}</option>
       </select>
       <input type="text" ng-model="featureChoices.selFeature"/>
-      <button ng-click="addFeature()">Add</button>
+      <button class="add-feature" ng-click="addFeature()">Add</button>
     </div>
     <div class="col-sm-10">
       <div class="feature btn btn-info" ng-repeat="feature in editFeatures">
@@ -20,7 +20,7 @@
       </div>
       <div class="inline-controls" ng-show="editType === 'inline'">
         <a href="#" ng-click="mode = 'view'">Cancel</a>
-        <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
+        <button class="inline-save btn btn-primary" ng-click="mode='view'; save()">Save</button>
       </div>
     </div>
   </div>
