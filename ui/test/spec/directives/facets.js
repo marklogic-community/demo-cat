@@ -1,26 +1,52 @@
-/* global xit */
-
 'use strict';
 
-describe('Facet directive', function () {
-  var $compile, $rootScope;
+describe('Directive: facets', function () {
+  var scope, element;
 
-  var facetTmpl = '<facet ng-model="model.facets"';
+  beforeEach(module('demoCat', 'app-templates'));
 
-  beforeEach(module('demoCat'));
+  beforeEach(inject( function($compile, $rootScope) {
+    element = '<facets facet-list="model.search.facets" selected="model.selected"/>';
+    element = $compile(element)($rootScope);
+    $rootScope.$digest();
+    scope = element.isolateScope();
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
-    $compile = _$compile_;
-    $rootScope = _$rootScope_;
+    angular.extend(scope, {
+      facets: [],
+      selected: []
+    });
   }));
 
-  xit(' should create facet list element', function () {
-    var $scope = $rootScope.$new();
-    // The passing a template into $ compile returns a "linking" function that can
-    // be used to take a scope and apply it to the template
-    var $element = $compile(facetTmpl)($scope);
-    // Now the actual test
-    expect($element.html()).toContain('class="facet-list"');
+  it('should create facet list element', function() {
+    expect(element.html()).toContain('class="facet-list"');
   });
+
+  it('should display facets', function() {
+    expect( $( element ).find('.facet div').length ).toBe(0);
+
+    scope.facets = {
+      feature: {
+        facetValues: ['forms'],
+        type: 'xs:string'
+      }
+    };
+    scope.$digest();
+
+    expect( $( element ).find('.facet div').length ).toBe(1);
+  });
+
+  it('should display selected facets', function() {
+    expect( $( element ).find('.chiclets div').length ).toBe(0);
+
+    scope.selected = [
+      {
+        name: 'feature',
+        value: 'buttons'
+      }
+    ];
+    scope.$digest();
+
+    expect( $( element ).find('.chiclets div').length ).toBe(1);
+  })
 
 });
