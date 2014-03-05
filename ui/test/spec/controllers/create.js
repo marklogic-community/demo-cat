@@ -4,10 +4,9 @@ describe('Controller: CreateCtrl', function () {
   var CreateCtrl, scope, win, q;
 
   beforeEach(function() {
-    var mljs, features;
+    var mljs;
 
     win = { location: { href: '' } };
-    features = { list: jasmine.createSpy() };
     mljs = {
       createDocument: function () {
         var deferred = q.defer();
@@ -19,7 +18,6 @@ describe('Controller: CreateCtrl', function () {
     module('demoCat');
     module(function($provide) {
       $provide.value('$window', win);
-      $provide.value('Features', features);
       $provide.value('MLJS', mljs);
     });
   });
@@ -58,5 +56,5 @@ describe('Controller: CreateCtrl', function () {
     scope.submit();
     scope.$apply();
     expect(win.location.href).toEqual('/detail?uri=blah');
-  })
+  });
 });

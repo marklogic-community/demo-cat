@@ -47,6 +47,6 @@ describe('Directive: facets', function () {
     scope.$digest();
 
     expect( $( element ).find('.chiclets div').length ).toBe(1);
-  })
+  });
 
 });

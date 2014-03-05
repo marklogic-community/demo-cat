@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Directive: features', function () {
-  var scope, element, link;
+  var scope, element;
 
   beforeEach(module('demoCat', 'app-templates'));
 
