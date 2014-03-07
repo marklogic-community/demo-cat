@@ -17,11 +17,22 @@ module.exports = function(config) {
       'ui/app/bower_components/angular-cookies/angular-cookies.js',
       'ui/app/bower_components/angular-mocks/angular-mocks.js',
       'ui/app/bower_components/jquery/jquery.js',
-      'ui/app/scripts/*.js',
+      'ui/app/bower_components/ckeditor/ckeditor.js',
+      'ui/app/bower_components/ng-ckeditor/ng-ckeditor.js',
+      'ui/app/scripts/**/*.html',
       'ui/app/scripts/**/*.js',
-      'ui/test/mock/**/*.js',
-      'ui/test/spec/**/*.js'
+      'ui/test/**/*.js'
     ],
+
+    // generate js files from html templates
+    preprocessors: {
+      'ui/app/scripts/**/*.html': 'ng-html2js'
+    },
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'ui/app',
+      moduleName: "app-templates"
+    },
 
     // list of files / patterns to exclude
     exclude: [],
