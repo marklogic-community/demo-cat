@@ -10,7 +10,7 @@
         featureChoices: features.list()
       };
 
-      mljs.getDocument(uri).then(function(data) {
+      mljs.getDocument(uri, { format: 'json' }).then(function(data) {
         model.demo = data;
       });
 
