@@ -1,9 +1,11 @@
+/* global require, module */
+
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
-'use strict';
 
 var LIVERELOAD_PORT = 35779;
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var mountFolder = function (connect, dir) {
+  'use strict';
   return connect.static(require('path').resolve(dir));
 };
 var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
@@ -16,6 +18,9 @@ var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequ
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
+
+  'use strict';
+
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -100,6 +105,9 @@ module.exports = function (grunt) {
         options: {
           middleware: function (connect) {
             return [
+              rewriteRulesSnippet,
+              proxySnippet,
+              lrSnippet,
               mountFolder(connect, yeomanConfig.dist)
             ];
           }
@@ -204,7 +212,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>',
-          src: ['*.html', 'views/**/*.html'],
+          src: ['*.html', 'views/**/*.html', 'scripts/directives/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -306,7 +314,13 @@ module.exports = function (grunt) {
 
   grunt.registerTask('server', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+      return grunt.task.run([
+        'build',
+        'configureRewriteRules',
+        'configureProxies',
+        'open',
+        'connect:dist:keepalive'
+      ]);
     }
 
     grunt.task.run([
