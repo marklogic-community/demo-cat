@@ -49,6 +49,7 @@
         options = options || {};
 
         var facetSelections = {};
+        var textQuery = null;
 
         (function init(){
           options.queryOptions = options.queryOptions ? options.queryOptions : 'all';
@@ -91,6 +92,13 @@
                 );
               }
             }
+            if (textQuery !== null) {
+              structured.query['and-query'].queries.push({
+                'term-query': {
+                  text: textQuery
+                }
+              });
+            }
             return structured;
           },
           search: function() {
@@ -114,6 +122,13 @@
                 d.reject(reason);
               });
             return d.promise;
+          },
+          setText: function(text) {
+            if (text !== '') {
+              textQuery = text;
+            } else {
+              textQuery = null;
+            }
           }
         };
       }
@@ -137,6 +152,10 @@
             // return search();
           },
           search: function(searchContext) {
+            return searchContext.search();
+          },
+          textSearch: function(searchContext, text) {
+            searchContext.setText(text);
             return searchContext.search();
           },
           getDocument: function(uri) {

@@ -5,7 +5,8 @@
     .controller('MainCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
       var model = {
         // your model stuff here
-        selected: []
+        selected: [],
+        text: ''
       };
 
       var searchContext = mlRest.createSearchContext();
@@ -36,6 +37,9 @@
             }
           }
           mlRest.clearFacet(searchContext, facet, value).then(updateSearchResults);
+        },
+        textSearch: function() {
+          mlRest.textSearch(searchContext, model.text).then(updateSearchResults);
         }
       });
     }]);
