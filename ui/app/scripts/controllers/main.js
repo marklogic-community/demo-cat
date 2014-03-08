@@ -2,19 +2,19 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('MainCtrl', ['$scope', 'MLJS', function ($scope, mljs) {
+    .controller('MainCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
       var model = {
         // your model stuff here
         selected: []
       };
 
-      var searchContext = mljs.getSearchContext();
+      var searchContext = mlRest.createSearchContext();
 
       function updateSearchResults(data) {
         model.search = data;
       }
 
-      mljs.search().then(updateSearchResults);
+      mlRest.search(searchContext).then(updateSearchResults);
 
       angular.extend($scope, {
         model: model,
@@ -24,7 +24,7 @@
           });
           if ( existing.length === 0 ) {
             model.selected.push({facet: facet, value: value});
-            mljs.selectFacet(searchContext, facet, value).then(updateSearchResults);
+            mlRest.selectFacet(searchContext, facet, value).then(updateSearchResults);
           }
         },
         clearFacet: function(facet, value) {
@@ -35,7 +35,7 @@
               break;
             }
           }
-          mljs.clearFacet(searchContext, facet, value).then(updateSearchResults);
+          mlRest.clearFacet(searchContext, facet, value).then(updateSearchResults);
         }
       });
     }]);
