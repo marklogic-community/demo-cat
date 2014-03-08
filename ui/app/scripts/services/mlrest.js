@@ -45,12 +45,53 @@
         return rewritten;
       }
 
-      this.$get = function($q, $http) {
-        var service = {
-          updateSearch: function(query) {
+      function SearchContext(options, $q, $http) {
+        options = options || {};
 
+        var facetSelections = {};
 
-            // return search();
+        (function init(){
+          options.queryOptions = options.queryOptions ? options.queryOptions : 'all';
+        })();
+
+        return {
+          addFacet: function(facet, value) {
+            if (facetSelections.facet === undefined) {
+              facetSelections[facet] = [value];
+            } else {
+              facetSelections[facet].push(value);
+            }
+          },
+          clearFacet: function(facet, value) {
+            facetSelections[facet] = facetSelections[facet].filter( function( facetValue ) {
+              return facetValue !== value;
+            });
+          },
+          getQueryOptions: function() {
+            return options.queryOptions;
+          },
+          getStructuredQuery: function() {
+            var structured = {
+              query: {
+                'and-query': {
+                  'queries': []
+                }
+              }
+            };
+            var facet;
+            for (facet in facetSelections) {
+              if (facetSelections.hasOwnProperty(facet)) {
+                structured.query['and-query'].queries.push(
+                  {
+                    'range-constraint-query': {
+                      'constraint-name': facet,
+                      'value': facetSelections[facet]
+                    }
+                  }
+                );
+              }
+            }
+            return structured;
           },
           search: function() {
             var d = $q.defer();
@@ -59,7 +100,8 @@
               {
                 params: {
                   format: 'json',
-                  options: 'all'
+                  options: this.getQueryOptions(),
+                  structuredQuery: this.getStructuredQuery()
                 }
               })
             .success(
@@ -72,6 +114,30 @@
                 d.reject(reason);
               });
             return d.promise;
+          }
+        };
+      }
+
+      this.$get = function($q, $http) {
+        var service = {
+          createSearchContext: function(options) {
+            return new SearchContext(options, $q, $http);
+          },
+          clearFacet: function(searchContext, facet, value) {
+            searchContext.clearFacet(facet, value);
+            return searchContext.search();
+          },
+          selectFacet: function(searchContext, facet, value) {
+            searchContext.addFacet(facet, value);
+            return searchContext.search();
+          },
+          updateSearch: function(query) {
+
+
+            // return search();
+          },
+          search: function(searchContext) {
+            return searchContext.search();
           },
           getDocument: function(uri) {
             var d = $q.defer();
