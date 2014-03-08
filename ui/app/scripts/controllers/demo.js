@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('DemoCtrl', ['$scope', 'MLJS', 'Features', '$routeParams', function ($scope, mljs, features, $routeParams) {
+    .controller('DemoCtrl', ['$scope', 'MLRest', 'Features', '$routeParams', function ($scope, mlRest, features, $routeParams) {
       var uri = $routeParams.uri;
       var model = {
         // your model stuff here
@@ -10,7 +10,7 @@
         featureChoices: features.list()
       };
 
-      mljs.getDocument(uri, { format: 'json' }).then(function(data) {
+      mlRest.getDocument(uri, { format: 'json' }).then(function(data) {
         model.demo = data;
       });
 
@@ -18,7 +18,7 @@
         model: model,
 
         saveField: function(field, value) {
-          mljs.patch(
+          mlRest.patch(
             uri,
             {
               'patch': [
