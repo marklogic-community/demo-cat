@@ -4,9 +4,13 @@
   angular.module('demoCat')
     .controller('MainCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
       var model = {
-        // your model stuff here
         selected: [],
-        text: ''
+        text: '',
+        user: {
+          name: '',
+          password: '',
+          authenticated: false
+        }
       };
 
       var searchContext = mlRest.createSearchContext();
@@ -40,6 +44,20 @@
         },
         textSearch: function() {
           mlRest.textSearch(searchContext, model.text).then(updateSearchResults);
+        },
+        login: function(username, password) {
+          mlRest.login(username, password).then(function (result) {
+            if (result === 'success') {
+              model.user.authenticated = true;
+            }
+          });
+        },
+        logout: function() {
+          mlRest.logout().then(function() {
+            model.user.name = '';
+            model.user.password = '';
+            model.user.authenticated = false;
+          });
         }
       });
     }]);
