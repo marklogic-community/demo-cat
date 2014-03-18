@@ -19,7 +19,7 @@
         model.search = data;
       }
 
-      mlRest.search(searchContext).then(updateSearchResults);
+      searchContext.search().then(updateSearchResults);
 
       angular.extend($scope, {
         model: model,
@@ -29,7 +29,7 @@
           });
           if ( existing.length === 0 ) {
             model.selected.push({facet: facet, value: value});
-            mlRest.selectFacet(searchContext, facet, value).then(updateSearchResults);
+            searchContext.selectFacet(facet, value).then(updateSearchResults);
           }
         },
         clearFacet: function(facet, value) {
@@ -40,10 +40,10 @@
               break;
             }
           }
-          mlRest.clearFacet(searchContext, facet, value).then(updateSearchResults);
+          searchContext.clearFacet(facet, value).then(updateSearchResults);
         },
         textSearch: function() {
-          mlRest.textSearch(searchContext, model.text).then(updateSearchResults);
+          searchContext.textSearch(model.text).then(updateSearchResults);
         },
         login: function(username, password) {
           mlRest.login(username, password).then(function (result) {
