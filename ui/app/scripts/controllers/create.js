@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', 'MLJS', 'Features', '$window', function ($scope, mljs, features, win) {
+    .controller('CreateCtrl', ['$scope', 'MLRest', 'Features', '$window', function ($scope, mlRest, features, win) {
       var model = {
         demo: {
           name: '',
@@ -39,7 +39,7 @@
           }
         },
         submit: function() {
-          mljs.createDocument($scope.model.demo, null).then(function(data) {
+          mlRest.createDocument($scope.model.demo, null).then(function(data) {
             win.location.href = '/detail?uri=' + data.replace(/(.*\?uri=)/, '');
           });
         }
