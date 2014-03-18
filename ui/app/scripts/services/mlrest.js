@@ -55,73 +55,81 @@
           options.queryOptions = options.queryOptions ? options.queryOptions : 'all';
         })();
 
+        function runSearch() {
+          var d = $q.defer();
+          $http.get(
+            '/v1/search',
+            {
+              params: {
+                format: 'json',
+                options: options.queryOptions,
+                structuredQuery: getStructuredQuery()
+              }
+            })
+          .success(
+            function(data) {
+              data.results = rewriteResults(data.results);
+              d.resolve(data);
+            })
+          .error(
+            function(reason) {
+              d.reject(reason);
+            });
+          return d.promise;
+        }
+
+        function getStructuredQuery() {
+          var structured = {
+            query: {
+              'and-query': {
+                'queries': []
+              }
+            }
+          };
+          var facet;
+          for (facet in facetSelections) {
+            if (facetSelections.hasOwnProperty(facet)) {
+              structured.query['and-query'].queries.push(
+                {
+                  'range-constraint-query': {
+                    'constraint-name': facet,
+                    'value': facetSelections[facet]
+                  }
+                }
+              );
+            }
+          }
+          if (textQuery !== null) {
+            structured.query['and-query'].queries.push({
+              'term-query': {
+                text: textQuery
+              }
+            });
+          }
+          return structured;
+        }
+
         return {
-          addFacet: function(facet, value) {
+          selectFacet: function(facet, value) {
             if (facetSelections.facet === undefined) {
               facetSelections[facet] = [value];
             } else {
               facetSelections[facet].push(value);
             }
+            return runSearch();
           },
           clearFacet: function(facet, value) {
             facetSelections[facet] = facetSelections[facet].filter( function( facetValue ) {
               return facetValue !== value;
             });
+            return runSearch();
           },
           getQueryOptions: function() {
             return options.queryOptions;
           },
-          getStructuredQuery: function() {
-            var structured = {
-              query: {
-                'and-query': {
-                  'queries': []
-                }
-              }
-            };
-            var facet;
-            for (facet in facetSelections) {
-              if (facetSelections.hasOwnProperty(facet)) {
-                structured.query['and-query'].queries.push(
-                  {
-                    'range-constraint-query': {
-                      'constraint-name': facet,
-                      'value': facetSelections[facet]
-                    }
-                  }
-                );
-              }
-            }
-            if (textQuery !== null) {
-              structured.query['and-query'].queries.push({
-                'term-query': {
-                  text: textQuery
-                }
-              });
-            }
-            return structured;
-          },
+          getStructuredQuery: getStructuredQuery,
           search: function() {
-            var d = $q.defer();
-            $http.get(
-              '/v1/search',
-              {
-                params: {
-                  format: 'json',
-                  options: this.getQueryOptions(),
-                  structuredQuery: this.getStructuredQuery()
-                }
-              })
-            .success(
-              function(data) {
-                data.results = rewriteResults(data.results);
-                d.resolve(data);
-              })
-            .error(
-              function(reason) {
-                d.reject(reason);
-              });
-            return d.promise;
+            return runSearch();
           },
           setText: function(text) {
             if (text !== '') {
@@ -129,6 +137,7 @@
             } else {
               textQuery = null;
             }
+            return runSearch();
           }
         };
       }
@@ -172,26 +181,6 @@
           },
           createSearchContext: function(options) {
             return new SearchContext(options, $q, $http);
-          },
-          clearFacet: function(searchContext, facet, value) {
-            searchContext.clearFacet(facet, value);
-            return searchContext.search();
-          },
-          selectFacet: function(searchContext, facet, value) {
-            searchContext.addFacet(facet, value);
-            return searchContext.search();
-          },
-          updateSearch: function(query) {
-
-
-            // return search();
-          },
-          search: function(searchContext) {
-            return searchContext.search();
-          },
-          textSearch: function(searchContext, text) {
-            searchContext.setText(text);
-            return searchContext.search();
           },
           getDocument: function(uri) {
             var d = $q.defer();
