@@ -209,11 +209,7 @@
               '/v1/documents',
               doc,
               {
-                params: {
-                  format: 'json',
-                  directory: '/demos/',
-                  extension: '.json'
-                }
+                params: options
               })
               .success(function(data, status, headers, config) {
                 d.resolve(headers('location'));
