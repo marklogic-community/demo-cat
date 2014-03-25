@@ -419,6 +419,7 @@
       <role-name>@ml.app-role</role-name>
       <description>A role for users of the @ml.app-name application</description>
       <role-names>
+        <role-name>rest-reader</role-name>
       </role-names>
       <permissions>
         <permission>
@@ -455,7 +456,22 @@
         </privilege>
       </privileges>
     </role>
-  </roles>
+    <role>
+      <role-name>@ml.app-name-registered-role</role-name>
+      <description>A role for users of the @ml.app-name application</description>
+      <role-names>
+        <role-name>@ml.app-role</role-name>
+      </role-names>
+      <permissions>
+      </permissions>
+      <collections>
+      </collections>
+      <privileges>
+        <privilege>
+          <privilege-name>rest-writer</privilege-name>
+        </privilege>
+      </privileges>
+    </role>  </roles>
   <users xmlns="http://marklogic.com/xdmp/security">
     <user>
       <user-name>@ml.app-name-user</user-name>
@@ -463,6 +479,16 @@
       <password>@ml.appuser-password</password>
       <role-names>
         <role-names>@ml.app-role</role-names>
+      </role-names>
+      <permissions/>
+      <collections/>
+    </user>
+    <user>
+      <user-name>bob</user-name>
+      <description>A user for the @ml.app-name application</description>
+      <password>bobspassword</password>
+      <role-names>
+        <role-names>@ml.app-name-registered-role</role-names>
       </role-names>
       <permissions/>
       <collections/>

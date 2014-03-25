@@ -39,7 +39,13 @@
           }
         },
         submit: function() {
-          mlRest.createDocument($scope.model.demo, null).then(function(data) {
+          mlRest.createDocument($scope.model.demo, {
+            format: 'json',
+            directory: '/demos/',
+            extension: '.json',
+            'perm:demo-cat-role': 'read',
+            'perm:demo-cat-registered-role': 'update'
+          }).then(function(data) {
             win.location.href = '/detail?uri=' + data.replace(/(.*\?uri=)/, '');
           });
         }
