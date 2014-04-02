@@ -18,6 +18,10 @@ angular.module('demoCat', ['ngRoute', 'ngCkeditor'])
         templateUrl: '/views/demo.html',
         controller: 'DemoCtrl'
       })
+      .when('/profile', {
+        templateUrl: '/views/profile.html',
+        controller: 'ProfileCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
