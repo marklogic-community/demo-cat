@@ -67,7 +67,8 @@ module.exports = function (grunt) {
       rules: {
         '^/login$': '/',
         '^/create$': '/',
-        '^/detail': '/'
+        '^/detail': '/',
+        '^/profile': '/'
       },
       proxies: [
         {
