@@ -420,6 +420,7 @@
       <description>A role for users of the @ml.app-name application</description>
       <role-names>
         <role-name>rest-reader</role-name>
+        <role-name>security</role-name>
       </role-names>
       <permissions>
         <permission>
@@ -443,6 +444,12 @@
       </collections>
       <privileges>
         <privilege>
+          <privilege-name>admin-module-read</privilege-name>
+        </privilege>
+        <privilege>
+          <privilege-name>get-user-names</privilege-name>
+        </privilege>
+        <privilege>
           <privilege-name>xdmp:value</privilege-name>
         </privilege>
         <privilege>
@@ -453,6 +460,12 @@
         </privilege>
         <privilege>
           <privilege-name>xdmp:with-namespaces</privilege-name>
+        </privilege>
+        <privilege>
+          <privilege-name>xdmp:eval</privilege-name>
+        </privilege>
+        <privilege>
+          <privilege-name>xdmp:eval-in</privilege-name>
         </privilege>
       </privileges>
     </role>
