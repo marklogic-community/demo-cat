@@ -19,7 +19,17 @@
         model.search = data;
       }
 
-      searchContext.search().then(updateSearchResults);
+      function updateUser(data) {
+        if (data.authenticated === true) {
+          model.user.name = data.username;
+          model.user.authenticated = true;
+        }
+      }
+
+      (function init() {
+        mlRest.checkLoginStatus().then(updateUser);
+        searchContext.search().then(updateSearchResults);
+      })();
 
       angular.extend($scope, {
         model: model,
