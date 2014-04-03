@@ -38,6 +38,7 @@
 		<add-comment add-model="model.additionalComment.msg" authenticated="model.user.authenticated" save="addComment(model.additionalComment)"></add-comment>
 		<article class="comment" ng-repeat="comment in model.demo.comments | orderBy:'-dateTime'">
 			<h4>Comment by {{comment.username}}</h4>
+			<p class="dateTime">on {{comment.dateTime}}</p>
 			{{comment.msg}}
 		</article>
 	</section>
