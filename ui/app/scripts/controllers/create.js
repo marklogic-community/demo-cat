@@ -12,7 +12,7 @@
           browsers: [],
           features: [],
           languages: [],
-		  comments: []
+          comments: []
         },
         featureChoices: features.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
