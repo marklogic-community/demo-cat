@@ -19,7 +19,10 @@
         if (data.authenticated === true) {
           model.user.name = data.username;
           model.user.authenticated = true;
-          model.user.email = data.email;
+          if (data.profile !== undefined) {
+            model.user.hasProfile = true;
+            model.user.email = data.profile.email;
+          }
         }
       }
 
@@ -57,9 +60,12 @@
           mlRest.login(username, password).then(function (result) {
             if (result === 'success') {
               model.user.authenticated = true;
+              if (model.user.hasProfile === false) {
+                $location.path('/profile');
+              }
             } else {
-              model.loginError = true;
-              alert('authentication failed');
+              model.user.loginError = true;
+              //alert('authentication failed');
             }
           });
         },
