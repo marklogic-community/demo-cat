@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('ProfileCtrl', ['$scope', 'MLRest', 'User', '$window', function ($scope, mlRest, user, win) {
+    .controller('ProfileCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
       var model = {
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
@@ -10,14 +10,18 @@
       angular.extend($scope, {
         model: model,
         submit: function() {
-          mlRest.createDocument($scope.model.user, {
+          mlRest.updateDocument({
+            user: {
+              "name": $scope.model.user.name,
+              "email": $scope.model.user.email
+            }
+          }, {
             format: 'json',
-            directory: '/users/',
-            extension: '.json',
+            uri: '/users/' + $scope.model.user.name + '.json',
             'perm:demo-cat-role': 'read',
             'perm:demo-cat-registered-role': 'update'
           }).then(function(data) {
-            win.location.href = '/';
+            $location.path('/');
           });
         }
       });
