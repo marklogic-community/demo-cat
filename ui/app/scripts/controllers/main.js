@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('MainCtrl', ['$scope', 'MLRest', function ($scope, mlRest) {
+    .controller('MainCtrl', ['$scope', 'MLRest', '$location', function ($scope, mlRest, $location) {
       var model = {
         selected: [],
         text: '',
@@ -54,6 +54,7 @@
         },
         textSearch: function() {
           searchContext.setText(model.text).then(updateSearchResults);
+          $location.path('/');
         },
         login: function(username, password) {
           mlRest.login(username, password).then(function (result) {
