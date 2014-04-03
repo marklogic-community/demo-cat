@@ -33,4 +33,12 @@
     <label>MarkLogic version</label>
     <editable edit-model="model.demo.version" edit-type="text" save="saveField('version', model.demo.version)"/>
   </div>
+  <section class="comments">
+		<h3>Comments</h3>
+		<add-comment add-model="model.additionalComment.msg" authenticated="model.user.authenticated" save="addComment(model.additionalComment)"></add-comment>
+		<article class="comment" ng-repeat="comment in model.demo.comments | orderBy:'-dateTime'">
+			<h4>Comment by {{comment.username}}</h4>
+			{{comment.msg}}
+		</article>
+	</section>
 </div>
