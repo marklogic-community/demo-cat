@@ -82,7 +82,7 @@
 					}
 					// set the username and dateTime
 					comment.username = $scope.model.user.name;
-					comment.dateTime = new Date();
+					comment.dateTime = (new Date()).toISOString();
 					// add the comment to the demo model to update UI
 					$scope.model.demo.comments.push(angular.copy(comment));
 					// send comment to server
