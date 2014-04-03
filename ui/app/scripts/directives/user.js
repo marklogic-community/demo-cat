@@ -4,7 +4,7 @@
 
   var module = angular.module('demoCat');
 
-  module.directive('mlUser', [function () {
+  module.directive('mlUser', ['User', function (user) {
     return {
       restrict: 'A',
       replace: true,
@@ -12,8 +12,9 @@
         username: '=',
         password: '=',
         authenticated: '=',
-        login: '&login',
-        logout: '&logout'
+        login: '&',
+        logout: '&',
+        loginError: '='
       },
       templateUrl: '/scripts/directives/user.html',
       link: function($scope) {

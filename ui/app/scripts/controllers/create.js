@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', 'MLRest', 'Features', '$window', function ($scope, mlRest, features, win) {
+    .controller('CreateCtrl', ['$scope', 'MLRest', 'Features', 'User', '$window', function ($scope, mlRest, features, user, win) {
       var model = {
         demo: {
           name: '',
@@ -14,9 +14,10 @@
           languages: []
         },
         featureChoices: features.list(),
-        browserChoices: ['Firefox', 'Chrome', 'IE']
+        browserChoices: ['Firefox', 'Chrome', 'IE'],
+        user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
-
+      
       angular.extend($scope, {
         model: model,
         editorOptions: {
