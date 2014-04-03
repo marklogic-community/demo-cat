@@ -1,6 +1,6 @@
 <div class="row detail">
   <h2 class="col-md-12">{{model.demo.name}}</h2>
-  <editable class="desc col-md-12" edit-model="model.demo.description" edit-type="textarea" save="saveField('description', model.demo.description)"/>
+  <editable class="desc col-md-12" enabled="model.user.authenticated" edit-model="model.demo.description" edit-type="textarea" save="saveField('description', model.demo.description)"/>
   <div class="col-md-12">
     <label>Hosted at</label>
     <a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
@@ -8,9 +8,9 @@
   </div>
   <div class="credentials col-md-12">
     <label>Credentials</label>
-    <editable edit-model="model.demo.username" edit-type="text" save="saveField('username', model.demo.username)"/>
+    <editable enabled="model.user.authenticated" edit-model="model.demo.username" edit-type="text" save="saveField('username', model.demo.username)"/>
     /
-    <editable edit-model="model.demo.password" edit-type="text" save="saveField('password', model.demo.password)"/>
+    <editable enabled="model.user.authenticated" edit-model="model.demo.password" edit-type="text" save="saveField('password', model.demo.password)"/>
   </div>
   <div class="browsers col-md-12">
     <label>Browsers</label>
@@ -18,11 +18,11 @@
       <li ng-repeat="browser in model.demo.browsers">{{browser}}</li>
     </ul>
   </div>
-  <features edit-features="model.demo.features" feature-choices="model.featureChoices"
+  <features enabled="model.user.authenticated" edit-features="model.demo.features" feature-choices="model.featureChoices"
             edit-type="inline" mode="view" save="saveField('features', model.demo.features)"/>
   <div class="repo col-md-12">
     <label>Code repo</label>
-    <editable edit-model="model.demo.repo" edit-type="text" save="saveField('repo', model.demo.repo)"/>
+    <editable enabled="model.user.authenticated" edit-model="model.demo.repo" edit-type="text" save="saveField('repo', model.demo.repo)"/>
   </div>
   <div class="maintainer col-md-12">
     <label>Maintainer</label>
@@ -31,6 +31,6 @@
   </div>
   <div class="version col-md-12">
     <label>MarkLogic version</label>
-    <editable edit-model="model.demo.version" edit-type="text" save="saveField('version', model.demo.version)"/>
+    <editable enabled="model.user.authenticated" edit-model="model.demo.version" edit-type="text" save="saveField('version', model.demo.version)"/>
   </div>
 </div>

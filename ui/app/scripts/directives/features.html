@@ -1,4 +1,4 @@
-<ul class="features-view col-md-12" ng-show="mode == 'view'" ng-click="mode = 'edit'">
+<ul class="features-view col-md-12" ng-show="mode == 'view'" ng-click="enabled && (mode = 'edit')">
   <label>Features</label>
   <li ng-repeat="feature in editFeatures">{{feature}}</li>
 </ul>

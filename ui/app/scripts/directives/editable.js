@@ -8,6 +8,7 @@
     return {
       restrict: 'AE',
       scope: {
+        enabled: "=enabled",
         editType: '@editType',
         editModel: '=editModel',
         save: '&save'
