@@ -91,7 +91,7 @@
         },
 				
 				resetCommentForm: function() {
-					angular.copy(commentModel,$scope.model.additionalComment)
+					angular.copy(commentModel,$scope.model.additionalComment);
 				}
       });
     }]);
