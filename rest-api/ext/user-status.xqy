@@ -44,6 +44,10 @@ declare function user:get(
         xdmp:server()
       )
     )
+  let $profile :=
+    fn:doc(
+      fn:concat("/users/", $current, ".json")
+    )
   return
     document {
       if ($current = $default) then
@@ -56,7 +60,8 @@ declare function user:get(
         xdmp:to-json(
           map:new((
             map:entry("authenticated", fn:true()),
-            map:entry("username", $current)
+            map:entry("username", $current),
+            map:entry("profile", $profile)
           ))
         )
     }

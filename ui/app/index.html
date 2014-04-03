@@ -33,7 +33,7 @@
           </div>
           <button type="submit" class="btn btn-default" ng-click="textSearch()">Submit</button>
         </form>
-        <div ml-user username="model.user.name" password="model.user.password" authenticated="model.user.authenticated" login="login(username, password)" logout="logout()"/>
+        <div ml-user username="model.user.name" password="model.user.password" authenticated="model.user.authenticated" login="login(username, password)" logout="logout()" loginError="model.user.loginError"/>
       </div><!-- /.navbar-collapse -->
     </nav>
     <!-- Add your site or application content here -->
