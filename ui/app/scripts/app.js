@@ -1,14 +1,5 @@
 
 angular.module('demoCat', ['ngRoute', 'ngCkeditor'])
-  .factory('User', function() {
-    return {
-      name: "",
-      password: "",
-      loginError: false,
-      authenticated: false,
-      email: ""
-    }
-  })
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
     'use strict';
