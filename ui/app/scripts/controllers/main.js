@@ -2,15 +2,11 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('MainCtrl', ['$scope', 'MLRest', '$location', function ($scope, mlRest, $location) {
+    .controller('MainCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
       var model = {
         selected: [],
         text: '',
-        user: {
-          name: '',
-          password: '',
-          authenticated: false
-        }
+        user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
 
       var searchContext = mlRest.createSearchContext();
@@ -23,6 +19,7 @@
         if (data.authenticated === true) {
           model.user.name = data.username;
           model.user.authenticated = true;
+          model.user.email = data.email;
         }
       }
 
@@ -30,7 +27,7 @@
         mlRest.checkLoginStatus().then(updateUser);
         searchContext.search().then(updateSearchResults);
       })();
-
+      
       angular.extend($scope, {
         model: model,
         selectFacet: function(facet, value) {
@@ -61,6 +58,7 @@
             if (result === 'success') {
               model.user.authenticated = true;
             } else {
+              model.loginError = true;
               alert('authentication failed');
             }
           });

@@ -2,15 +2,11 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('ProfileCtrl', ['$scope', 'MLRest', '$window', function ($scope, mlRest, win) {
+    .controller('ProfileCtrl', ['$scope', 'MLRest', 'User', '$window', function ($scope, mlRest, user, win) {
       var model = {
-        user: {
-          name: '',
-          authenticated: false,
-          email: ''
-        }
+        user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
-
+      
       angular.extend($scope, {
         model: model,
         submit: function() {
