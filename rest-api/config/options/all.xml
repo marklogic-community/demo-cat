@@ -73,4 +73,9 @@
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="name"/>
   </search:extract-metadata>
   <annotation xmlns="http://marklogic.com/appservices/search">Delta options here</annotation>
+  <search:additional-query>
+    <cts:directory-query xmlns:cts="http://marklogic.com/cts">
+      <cts:uri>/demos/</cts:uri>
+    </cts:directory-query>
+  </search:additional-query>
 </search:options>
