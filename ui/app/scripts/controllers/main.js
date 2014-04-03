@@ -53,7 +53,7 @@
           searchContext.clearFacet(facet, value).then(updateSearchResults);
         },
         textSearch: function() {
-          searchContext.textSearch(model.text).then(updateSearchResults);
+          searchContext.setText(model.text).then(updateSearchResults);
         },
         login: function(username, password) {
           mlRest.login(username, password).then(function (result) {
