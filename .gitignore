@@ -7,3 +7,5 @@ deploy/dev.properties
 src/public
 deploy/local.properties
 mlcp.conf
+deploy/local-deploy.properties
+.DS_Store

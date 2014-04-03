@@ -60,6 +60,8 @@
           mlRest.login(username, password).then(function (result) {
             if (result === 'success') {
               model.user.authenticated = true;
+            } else {
+              alert('authentication failed');
             }
           });
         },
