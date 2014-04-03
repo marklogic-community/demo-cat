@@ -83,11 +83,11 @@
 					// set the username and dateTime
 					comment.username = $scope.model.user.name;
 					comment.dateTime = new Date();
+					// add the comment to the demo model to update UI
+					$scope.model.demo.comments.push(angular.copy(comment));
 					// send comment to server
 					// reset the comment form after the comment is sent
-					$scope.addToField('comments',comment);
-					// add the comment to the demo model to update UI
-					$scope.model.demo.comments.unshift(comment);
+					$scope.addToField('comments',comment, $scope.resetCommentForm);
         },
 				
 				resetCommentForm: function() {
