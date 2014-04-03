@@ -8,6 +8,7 @@
     return {
       restrict: 'E',
       scope: {
+        enabled: '=enabled',
         editFeatures: '=editFeatures',
         featureChoices: '=featureChoices',
         editType: '@editType',

@@ -9,12 +9,12 @@
       restrict: 'A',
       replace: true,
       scope: {
-        username: '=',
-        password: '=',
-        authenticated: '=',
-        login: '&',
-        logout: '&',
-        loginError: '='
+        username: '=username',
+        password: '=password',
+        authenticated: '=authenticated',
+        login: '&login',
+        logout: '&logout',
+        loginError: '=loginError'
       },
       templateUrl: '/scripts/directives/user.html',
       link: function($scope) {
