@@ -268,6 +268,27 @@
               d.reject(reason);
             });
             return d.promise;
+          },
+          addComment: function(uri, comment) {
+            var d = $q.defer();
+            $http.put(
+              '/v1/resources/comment',
+              comment,
+              {
+                params: {
+                  'rs:uri': uri
+                },
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              }
+            )
+            .success(function(data, status, headers, config) {
+              d.resolve(data);
+            }).error(function(reason) {
+              d.reject(reason);
+            });
+            return d.promise;
           }
         };
 
