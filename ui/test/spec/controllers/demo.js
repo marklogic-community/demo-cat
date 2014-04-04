@@ -35,9 +35,9 @@ describe('Controller: DemoCtrl', function () {
     scope.addComment({'msg':'This was a great demo'});
     expect(scope.model.demo.comments.length).toBe(1);
     expect(scope.model.demo.comments[0].msg).toBe('This was a great demo');
-	//testing adding a second comment
+  //testing adding a second comment
     scope.addComment({'msg':'This demo was even better than the first time'});
     expect(scope.model.demo.comments.length).toBe(2);
-    expect(scope.model.demo.comments[0].msg).toBe('This demo was even better than the first time');
+    expect(scope.model.demo.comments[1].msg).toBe('This demo was even better than the first time');
   });
 });
