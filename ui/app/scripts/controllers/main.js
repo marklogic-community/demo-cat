@@ -60,6 +60,7 @@
           mlRest.login(username, password).then(function (result) {
             if (result === 'success') {
               model.user.authenticated = true;
+              model.user.loginError = false;
               if (model.user.hasProfile === false) {
                 $location.path('/profile');
               }
@@ -71,9 +72,7 @@
         },
         logout: function() {
           mlRest.logout().then(function() {
-            model.user.name = '';
-            model.user.password = '';
-            model.user.authenticated = false;
+            model.user.init();
           });
         }
       });
