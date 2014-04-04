@@ -14,7 +14,7 @@
         authenticated: '=authenticated',
         login: '&login',
         logout: '&logout',
-        loginError: '=loginError'
+        loginerror: '=loginerror'
       },
       templateUrl: '/scripts/directives/user.html',
       link: function($scope) {

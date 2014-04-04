@@ -96,6 +96,18 @@
       <error-handler>@ml.error-handler</error-handler>
       <rewrite-resolves-globally>@ml.rewrite-resolves-globally</rewrite-resolves-globally>
       <!-- <ssl-certificate-template>@ml.ssl-certificate-template</ssl-certificate-template> -->
+      <namespaces>
+<!--
+        <namespace>
+          <prefix>sample</prefix>
+          <namespace-uri>http://marklogic.com/ns/sample</namespace-uri>
+        </namespace>
+-->
+        <namespace>
+          <prefix>jbasic</prefix>
+          <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
+        </namespace>
+      </namespaces>
     </http-server>
     @ml.test-appserver
     @ml.rest-appserver
