@@ -2,7 +2,7 @@
   <!-- form to log in -->
   <form class="navbar-form navbar-right" ng-hide="authenticated"
     ng-submit="login({'username': username, 'password': password})">
-    <div class="alert alert-danger" ng-show="loginError" ng-cloak>Username and/or Password Incorrect</div>
+    <div class="alert alert-danger" ng-show="loginerror" ng-cloak>Username and/or Password Incorrect</div>
     <div class="form-group">
       <input type="text" placeholder="Username" class="form-control" ng-model="username">
     </div>
