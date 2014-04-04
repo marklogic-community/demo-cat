@@ -13,10 +13,6 @@
           $scope.model.user.emails.push('');
         },
         removeEmail: function(index) {
-          // var i = $.inArray(email, $scope.model.user.emails);
-          // if (~i) {
-          //   $scope.model.user.emails.splice(i, 1);
-          // }
           $scope.model.user.emails.splice(index, 1);
         },
         submit: function() {
