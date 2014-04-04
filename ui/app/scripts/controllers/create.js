@@ -11,7 +11,8 @@
           hostType: 'internal',
           browsers: [],
           features: [],
-          languages: []
+          languages: [],
+          comments: []
         },
         featureChoices: features.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
