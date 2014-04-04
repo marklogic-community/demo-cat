@@ -8,8 +8,7 @@
         {
           // set by model binding
           msg:'',
-          // the values below are set on submiting a comment
-          // see addComment function below
+          // the values below are set server-side
           username: null,
           dateTime: null
         };
@@ -19,7 +18,7 @@
           comments:[]
         },
         // additional comment model used for new 
-        additionalComment: angular.copy(commentModel),
+        additionalComment: commentModel,
         edit: '',
         featureChoices: features.list(),
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
@@ -80,18 +79,16 @@
             $scope.insertField('', {'comments':[]},'last-child');
             $scope.model.demo.comments = [];
           }
-          // set the username and dateTime
-          comment.username = $scope.model.user.name;
-          comment.dateTime = (new Date()).toISOString();
-          // add the comment to the demo model to update UI
-          $scope.model.demo.comments.push(angular.copy(comment));
           // send comment to server
           // reset the comment form after the comment is sent
-          $scope.addToField('comments',comment, $scope.resetCommentForm);
+          mlRest.addComment(uri, comment)
+            .then($scope.resetCommentForm);
         },
         
-        resetCommentForm: function() {
-          angular.copy(commentModel,$scope.model.additionalComment);
+        resetCommentForm: function(result) {
+          // add the comment to the demo model to update UI
+          $scope.model.demo.comments.push(result);
+          $scope.model.additionalComment.msg = '';
         }
       });
     }]);
