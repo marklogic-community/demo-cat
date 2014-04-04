@@ -248,7 +248,7 @@
             return d.promise;
           },
           patch: function(uri, patch) {
-            // var d = $q.defer();
+            var d = $q.defer();
             $http.post(
               '/v1/documents',
               patch,
@@ -261,7 +261,13 @@
                   'Content-Type': 'application/json'
                 }
               }
-            );
+            )
+            .success(function(data, status, headers, config) {
+              d.resolve(headers('location'));
+            }).error(function(reason) {
+              d.reject(reason);
+            });
+            return d.promise;
           }
         };
 
