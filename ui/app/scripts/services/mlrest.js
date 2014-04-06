@@ -269,18 +269,22 @@
             });
             return d.promise;
           },
-          addComment: function(uri, comment) {
+          advancedCall: function(url, settings) {
             var d = $q.defer();
-            $http.put(
-              '/v1/resources/comment',
-              comment,
+            var method = settings.method;
+            var isSupportedMethod = (method === 'GET' || method === 'PUT' || method === 'POST' || method === 'DELETE');
+            method = isSupportedMethod ? method : 'POST';
+            if (!isSupportedMethod) {
+              settings.headers['X-HTTP-Method-Override'] = settings.method;
+            }
+            
+            $http(
               {
-                params: {
-                  'rs:uri': uri
-                },
-                headers: {
-                  'Content-Type': 'application/json'
-                }
+                url: url,
+                data: settings.data,
+                method: method,
+                params: settings.params,
+                headers: settings.headers
               }
             )
             .success(function(data, status, headers, config) {
@@ -289,9 +293,12 @@
               d.reject(reason);
             });
             return d.promise;
+          },
+          callExtension: function(extensionName, settings) {
+            return this.advancedCall('/v1/resources/'+extensionName, settings);
           }
         };
-
+        
         return service;
       };
     });
