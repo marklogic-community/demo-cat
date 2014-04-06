@@ -9,11 +9,17 @@
       
       angular.extend($scope, {
         model: model,
+        addEmail: function() {
+          $scope.model.user.emails.push('');
+        },
+        removeEmail: function(index) {
+          $scope.model.user.emails.splice(index, 1);
+        },
         submit: function() {
           mlRest.updateDocument({
             user: {
-              "name": $scope.model.user.name,
-              "email": $scope.model.user.email
+              "fullname": $scope.model.user.fullname,
+              "emails": $scope.model.user.emails
             }
           }, {
             format: 'json',
