@@ -62,7 +62,8 @@ declare function user:get(
             map:entry("authenticated", fn:true()),
             map:entry("username", $current),
             map:entry("profile", map:new((
-              map:entry("email", $profile//*:email/data(.))
+              map:entry("fullname", $profile//*:fullname/data(.)),
+              map:entry("emails", $profile//*:emails/*:item/data(.))
             )))
           ))
         )
