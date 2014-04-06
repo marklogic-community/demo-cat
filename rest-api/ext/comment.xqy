@@ -43,7 +43,7 @@ function comment:put(
   let $insert-noop := xdmp:node-insert-child($comments-section,$populated-xml)
   return (
     xdmp:set-response-code(200, "OK"),
-    document { json:transform-to-json($populated-xml) }
+    document { json:transform-to-json($populated-xml[xdmp:log(.),fn:true()]) }
   )
 };
 
@@ -96,7 +96,25 @@ function comment:set-element-value(
   $value as xs:anyAtomicType
 ) as element() {
   element {fn:node-name($element)} {
-    $element/@*,
+    $element/@* except $element/@type,
+    attribute type {
+      comment:get-type-name($value)
+    },
     $value
   }
+};
+
+declare  
+%private 
+function comment:get-type-name( 
+  $value as item()
+) as xs:string {
+    typeswitch($value)
+    case  xs:decimal  return "number" 
+    case  xs:float  return "number" 
+    case  xs:double  return "number" 
+    case  xs:boolean return "boolean"
+    case  map:map return "object" 
+    case  json:array return "array"
+    default return "string"    
 };
