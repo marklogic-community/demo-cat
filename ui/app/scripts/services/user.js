@@ -11,7 +11,8 @@
       user.loginError = false;
       user.authenticated = false;
       user.hasProfile = false;
-      user.email = "";
+      user.fullname = "";
+      user.emails = [];
       return user;
     }
     
