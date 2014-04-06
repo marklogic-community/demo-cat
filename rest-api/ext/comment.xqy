@@ -43,7 +43,7 @@ function comment:put(
   let $insert-noop := xdmp:node-insert-child($comments-section,$populated-xml)
   return (
     xdmp:set-response-code(200, "OK"),
-    document { json:transform-to-json($populated-xml[xdmp:log(.),fn:true()]) }
+    document { json:transform-to-json($populated-xml) }
   )
 };
 
