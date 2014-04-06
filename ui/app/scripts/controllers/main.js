@@ -21,7 +21,15 @@
           model.user.authenticated = true;
           if (data.profile !== undefined) {
             model.user.hasProfile = true;
-            model.user.email = data.profile.email;
+            
+            model.user.fullname = data.profile.fullname;
+
+            if ($.isArray(data.profile.emails)) {
+              model.user.emails = data.profile.emails;
+            } else {
+              // wrap single value in array, needed for repeater
+              model.user.emails = [data.profile.emails];
+            }
           }
         }
       }
