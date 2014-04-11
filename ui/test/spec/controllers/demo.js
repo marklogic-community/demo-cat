@@ -48,13 +48,13 @@ describe('Controller: DemoCtrl', function () {
     $scope.addBug({'msg':'Status won\'t update', 'browser':'IE','status':'open'});
     $httpBackend.flush();
     expect($scope.model.demo.bugs.length).toBe(1);
-    expect($scope.model.demo.bugs[0].msg).toBe('This was a great demo');
+    expect($scope.model.demo.bugs[0].msg).toBe('Status won\'t update');
     expect($scope.model.demo.bugs[0].status).toBe('open');
     //testing adding a second comment
     $scope.addBug({'msg':'Page won\'t load', 'browser':'Chrome', 'status':'closed'});
     $httpBackend.flush();
     expect($scope.model.demo.bugs.length).toBe(2);
-    expect($scope.model.demo.bugs[1].msg).toBe('This demo was even better than the first time');
+    expect($scope.model.demo.bugs[1].msg).toBe('Page won\'t load');
     expect($scope.model.demo.bugs[1].status).toBe('closed');
   });
 
