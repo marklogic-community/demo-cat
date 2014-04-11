@@ -12,7 +12,8 @@ describe('Controller: DemoCtrl', function () {
       browsers: [],
       features: [],
       languages: [],
-      comments: []
+      comments: [],
+      bugs: []
     };
     
   beforeEach(function() {
@@ -34,11 +35,29 @@ describe('Controller: DemoCtrl', function () {
     };
   }));
 
-//  afterEach(function() {
-//    $httpBackend.verifyNoOutstandingExpectation();
-//    $httpBackend.verifyNoOutstandingRequest();
-//  });
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
   
+  it('should add bug', function() {
+    // backend definition for adding comment
+    $httpBackend.when('PUT', '/v1/resources/file-bug').respond(function(method,url,data) { return [200,data,{'Content-Type':'application/json'}]; });
+    createController();
+    $httpBackend.flush();
+    $scope.addBug({'msg':'Status won\'t update', 'browser':'IE','status':'open'});
+    $httpBackend.flush();
+    expect($scope.model.demo.bugs.length).toBe(1);
+    expect($scope.model.demo.bugs[0].msg).toBe('This was a great demo');
+    expect($scope.model.demo.bugs[0].status).toBe('open');
+    //testing adding a second comment
+    $scope.addBug({'msg':'Page won\'t load', 'browser':'Chrome', 'status':'closed'});
+    $httpBackend.flush();
+    expect($scope.model.demo.bugs.length).toBe(2);
+    expect($scope.model.demo.bugs[1].msg).toBe('This demo was even better than the first time');
+    expect($scope.model.demo.bugs[1].status).toBe('closed');
+  });
+
 
   it('should add comment', function() {
     // backend definition for adding comment
