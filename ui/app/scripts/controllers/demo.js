@@ -15,7 +15,8 @@
       var model = {
         // your model stuff here
         demo: {
-          comments:[]
+          comments:[],
+          bugs:[]
         },
         // additional comment model used for new 
         additionalComment: commentModel,
@@ -72,6 +73,47 @@
             ).finally(finalFunction);
         },
     
+        deleteItem: function(type, item) {
+          // delete item from server
+          mlRest.callExtension(type, 
+            {
+              method: 'DELETE',
+              params: {
+                'rs:uri': uri,
+                'rs:id': item.id
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          )
+            .then(function() {item = null;});
+        },
+
+        addBug: function(bug) {
+          // add comments array if it doesn't exist
+          // this is for demos created before adding comments
+          if (typeof $scope.model.demo.bugs === 'undefined') {
+            $scope.insertField('', {'bugs':[]},'last-child');
+            $scope.model.demo.bugs = [];
+          }
+          // send comment to server
+          // reset the comment form after the comment is sent
+          mlRest.callExtension('file-bug', 
+            {
+              method: 'PUT',
+              data: bug,
+              params: {
+                'rs:uri': uri
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          ).then(function(result){$scope.addToDemoArray('bugs',result);});
+        },
+
+    
         addComment: function(comment) {
           // add comments array if it doesn't exist
           // this is for demos created before adding comments
@@ -96,9 +138,13 @@
             .then($scope.resetCommentForm);
         },
         
+        addToDemoArray: function(arrayName, item) {
+          $scope.model.demo[arrayName].push(item);
+        },
+        
         resetCommentForm: function(result) {
           // add the comment to the demo model to update UI
-          $scope.model.demo.comments.push(result);
+          $scope.addToDemoArray('comments',result);
           $scope.model.additionalComment.msg = '';
         }
       });
