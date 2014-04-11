@@ -81,7 +81,18 @@
           }
           // send comment to server
           // reset the comment form after the comment is sent
-          mlRest.addComment(uri, comment)
+          mlRest.callExtension('comment', 
+            {
+              method: 'PUT',
+              data: comment,
+              params: {
+                'rs:uri': uri
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          )
             .then($scope.resetCommentForm);
         },
         
