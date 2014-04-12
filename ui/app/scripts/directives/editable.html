@@ -1,4 +1,6 @@
-<span ng-show="mode == 'view'" ng-click="enabled && (mode = 'edit')">{{editModel}}</span>
+<div ng-show="mode == 'view'" class="editable" ng-mouseover="hover=true" ng-mouseleave="hover=false">{{editModel}}
+  <span ng-show="enabled && mode == 'view' && hover" ng-click="enabled && (mode = 'edit')" class="glyphicon glyphicon-edit"></span>
+</div>
 <div ng-show="mode == 'edit' &amp;&amp; editType === 'textarea'">
   <textarea ng-model="editModel" rows="10"></textarea>
   <a href="#" ng-click="mode = 'view'">Cancel</a>
