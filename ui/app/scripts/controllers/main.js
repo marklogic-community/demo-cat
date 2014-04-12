@@ -21,7 +21,7 @@
           model.user.authenticated = true;
           if (data.profile !== undefined) {
             model.user.hasProfile = true;
-            
+
             model.user.fullname = data.profile.fullname;
 
             if ($.isArray(data.profile.emails)) {
@@ -38,7 +38,7 @@
         mlRest.checkLoginStatus().then(updateUser);
         searchContext.search().then(updateSearchResults);
       })();
-      
+
       angular.extend($scope, {
         model: model,
         selectFacet: function(facet, value) {
@@ -66,15 +66,17 @@
         },
         login: function(username, password) {
           mlRest.login(username, password).then(function (result) {
-            if (result === 'success') {
-              model.user.authenticated = true;
+            model.user.authenticated = result.authenticated;
+            if (model.user.authenticated === true) {
               model.user.loginError = false;
-              if (model.user.hasProfile === false) {
+              if (result.profile !== undefined) {
+                model.user.fullname = result.profile.fullname;
+                model.user.emails = result.profile.emails;
+              } else {
                 $location.path('/profile');
               }
             } else {
               model.user.loginError = true;
-              //alert('authentication failed');
             }
           });
         },
