@@ -6,6 +6,8 @@ import module namespace json="http://marklogic.com/xdmp/json" at "/MarkLogic/jso
 
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
+declare variable $JSON_NS as xs:string := "http://marklogic.com/xdmp/json/basic";
+
 declare 
 function json-helper:remove-from-array(
   $doc-uri as xs:string,
@@ -14,10 +16,8 @@ function json-helper:remove-from-array(
 ) as empty-sequence() {
   (: get current username :)
   let $username as xs:string := xdmp:get-request-username()
-  (: build the xs:QName for the array :)
-  let $array-qn as xs:QName := fn:QName("http://marklogic.com/xdmp/json/basic",$json-array-name)
   (: find the array section in the database :)
-  let $array-item as element()? := fn:doc($doc-uri)/jbasic:json/*[fn:node-name(.) eq $array-qn][@type eq "array"]/jbasic:json[jbasic:id eq $json-id]
+  let $array-item as element()? := json-helper:find-in-array($doc-uri,$json-array-name,$json-id)
   return 
     if ($array-item/jbasic:username ne $username)
     then
@@ -37,13 +37,25 @@ function json-helper:remove-from-array(
 };
 
 declare 
+function json-helper:find-in-array(
+  $doc-uri as xs:string,
+  $json-array-name as xs:string,
+  $json-id as xs:string
+) as empty-sequence() {
+  (: build the xs:QName for the array :)
+  let $array-qn as xs:QName := fn:QName($JSON_NS,$json-array-name)
+  (: find the array section in the database :)
+  return fn:doc($doc-uri)/jbasic:json/*[fn:node-name(.) eq $array-qn][@type eq "array"]/jbasic:json[jbasic:id eq $json-id]
+};
+
+declare 
 function json-helper:add-to-array(
   $doc-uri as xs:string,
   $json-array-name as xs:string,
   $json-xml as element()
 ) as empty-sequence() {
   (: build the xs:QName for the array :)
-  let $array-qn as xs:QName := fn:QName("http://marklogic.com/xdmp/json/basic",$json-array-name)
+  let $array-qn as xs:QName := fn:QName($JSON_NS,$json-array-name)
   (: find the array section in the database :)
   let $array-section as element()? := fn:doc($doc-uri)/jbasic:json/*[fn:node-name(.) eq $array-qn][@type eq "array"]
   (: insert the json xml that has added the meta info to the array section :)
@@ -106,7 +118,6 @@ function json-helper:populate-proper-fields(
 };
 
 declare 
-%private 
 function json-helper:set-element-value(
   $element as element(),
   $value as xs:anyAtomicType
