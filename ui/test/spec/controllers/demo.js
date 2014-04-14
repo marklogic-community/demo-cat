@@ -42,7 +42,7 @@ describe('Controller: DemoCtrl', function () {
   
   it('should add bug', function() {
     // backend definition for adding comment
-    $httpBackend.when('PUT', '/v1/resources/file-bug').respond(function(method,url,data) { return [200,data,{'Content-Type':'application/json'}]; });
+    $httpBackend.when('POST', '/v1/resources/file-bug').respond(function(method,url,data) { return [200,data,{'Content-Type':'application/json'}]; });
     createController();
     $httpBackend.flush();
     $scope.addBug({'msg':'Status won\'t update', 'browser':'IE','status':'open'});
@@ -61,7 +61,7 @@ describe('Controller: DemoCtrl', function () {
 
   it('should add comment', function() {
     // backend definition for adding comment
-    $httpBackend.when('PUT', '/v1/resources/comment').respond(function(method,url,data) { return [200,data,{'Content-Type':'application/json'}]; });
+    $httpBackend.when('POST', '/v1/resources/comment').respond(function(method,url,data) { return [200,data,{'Content-Type':'application/json'}]; });
     createController();
     $httpBackend.flush();
     $scope.addComment({'msg':'This was a great demo'});

@@ -9,3 +9,6 @@
   <a href="#" ng-click="mode = 'view'">Cancel</a>
   <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
 </div>
+<div ng-show="mode == 'edit' &amp;&amp; editType === 'select'">
+  <select ng-model="editModel" ng-options="option for option in editOptions" ng-change="mode='view'; save()"></select>
+</div>
