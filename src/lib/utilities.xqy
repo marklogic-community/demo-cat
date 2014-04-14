@@ -35,6 +35,6 @@ function utilities:send-notification(
       <body>{$message}</body>
     </html>
   </em:content>
-</em:Message>[xdmp:log(.),fn:true()])
+</em:Message>)
   
 };
