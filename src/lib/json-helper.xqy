@@ -41,7 +41,7 @@ function json-helper:find-in-array(
   $doc-uri as xs:string,
   $json-array-name as xs:string,
   $json-id as xs:string
-) as empty-sequence() {
+) as element()? {
   (: build the xs:QName for the array :)
   let $array-qn as xs:QName := fn:QName($JSON_NS,$json-array-name)
   (: find the array section in the database :)

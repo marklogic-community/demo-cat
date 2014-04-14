@@ -20,7 +20,7 @@ Receive the comment and adjust it with proper values.
  :)
 declare 
 %roxy:params("uri=xs:string")
-function comment:put(
+function comment:post(
     $context as map:map,
     $params  as map:map,
     $input   as document-node()*
@@ -47,6 +47,35 @@ function comment:put(
 };
 
 (:
+Change a comment property value.
+ :)
+declare 
+%roxy:params("uri=xs:string","id=xs:string", "property=xs:string")
+function comment:put(
+    $context as map:map,
+    $params  as map:map,
+    $input   as document-node()*
+) as document-node()?
+{
+  map:put($context, "output-types", "application/json"),
+  let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
+  let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
+  let $property as xs:string := xdmp:url-decode(map:get($params,"property"))
+  let $value as xs:string := fn:string($input)
+  (: build property qn :)
+  let $property-qn := fn:QName($json-helper:JSON_NS,$property)
+  (: find bug property :)
+  let $property-to-be-updated := json-helper:find-in-array($uri,'comments',$id)/*[fn:node-name(.) eq $property-qn]
+  (: create property with new value :)
+  let $new-property := json-helper:set-element-value($property-to-be-updated,$value)
+  return (
+    xdmp:node-replace($property-to-be-updated,$new-property),
+    xdmp:set-response-code(200, "OK"),
+    document {'{"status":"success"}'}
+  )
+};
+
+(:
 deletes a comment when requested by someone who is the creator
  :)
 declare 
@@ -63,6 +92,7 @@ function comment:delete(
   let $delete-noop := json-helper:remove-from-array($uri,'comments',$id)
   return (
     xdmp:set-response-code(200, "OK"),
-    document {"{'status':'success'}"}
+    document {'{"status":"success"}'}
+
   )
 };
