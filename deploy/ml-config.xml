@@ -433,6 +433,7 @@
       <role-names>
         <role-name>rest-reader</role-name>
         <role-name>security</role-name>
+        <role-name>admin</role-name>
       </role-names>
       <permissions>
         <permission>

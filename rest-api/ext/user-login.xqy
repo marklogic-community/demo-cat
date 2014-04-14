@@ -22,10 +22,31 @@ function user:get(
 {
   map:put($context, "output-types", "application/json"),
   if (xdmp:login(map:get($params, 'username'), map:get($params, 'password'))) then (
+    xdmp:log("current user: " || xdmp:get-current-user()),
     xdmp:set-response-code(200, "OK"),
-    document { "success" }
+    document {
+      xdmp:to-json(
+        map:new((
+          map:entry("authenticated", fn:true()),
+          map:entry("username", map:get($params, 'username')),
+          let $profile := fn:doc("/users/" || map:get($params, 'username') || ".json")
+          where $profile
+          return
+            map:entry("profile", map:new((
+              map:entry("fullname", $profile//*:fullname/data(.)),
+              map:entry("emails", json:to-array($profile//*:emails/*:item/data(.)))
+            )))
+        ))
+      )
+    }
   ) else (
     xdmp:set-response-code(401, "Not Authorized"),
-    document { "incorrect" }
+    document {
+      xdmp:to-json(
+        map:new((
+          map:entry("authenticated", fn:false())
+        ))
+      )
+    }
   )
 };
