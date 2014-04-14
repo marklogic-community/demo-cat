@@ -35,28 +35,31 @@
   </div>
   <div class="open-bugs col-md-12">
     <label>Open Bugs</label>
+    <button class="btn btn-primary" ng-show="model.user.authenticated && !showBugForm" ng-click="showBugForm = true">Add</button>
+    <form ng-show="model.user.authenticated && showBugForm">
+      <fieldset class="col-md-12">
+        <label class="col-md-2">Bug description</label>
+        <textarea ng-model="model.additionalBug.msg" name="bugDescription" required></textarea>
+      </fieldset>
+      <fieldset class="col-md-12">
+        <label class="col-md-2">Browser</label>
+        <select ng-model="model.additionalBug.browser" name="bugBrowser" required>
+          <option ng-repeat="browser in model.browserChoices" value="{{browser}}">{{browser}}</option>
+        </select>
+      </fieldset>
+      <div class="col-md-12">
+        <a class="col-md-3" href="#" ng-click="showBugForm = false">Cancel</a>
+        <button class="btn btn-primary" ng-click="addBug(model.additionalBug)">Add</button>
+      </div>
+    </form>
     <div class="bug col-md-12" ng-repeat="bug in model.demo.bugs | filter: { status: 'open' }: true | orderBy:'-dateTime'" ng-controller="BugCtrl" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
         <li class="bug-status">Status: <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" /></li>
         <li class="bug-dateTime">Created by {{bug.username}} on {{bug.dateTime}}</li>
+        <li class="bug-browser">Browser: {{bug.browser}}</li>
       </ul>
     </div>
-    <button class="btn btn-primary" ng-show="model.user.authenticated && !showBugForm" ng-click="showBugForm = true">Add</button>
-    <form ng-show="model.user.authenticated && showBugForm">
-      <fieldset class="col-md-12">
-        <label>Bug description</label>
-        <textarea ng-model="model.additionalBug.msg" name="bugDescription" required></textarea>
-      </fieldset>
-      <fieldset class="col-md-12">
-        <label>Browser</label>
-        <select ng-model="model.additionalBug.browser" name="bugBrowser" required>
-          <option ng-repeat="browser in model.browserChoices" value="{{browser}}">{{browser}}</option>
-        </select>
-      </fieldset>
-      <a href="#" ng-click="showBugForm = false">Cancel</a>
-      <button class="btn btn-primary" ng-click="addBug(model.additionalBug)">Add</button>
-    </form>
   </div>
   <div class="closed-bugs col-md-12">
     <label>Closed Bugs</label>
@@ -67,6 +70,7 @@
       <ul class="bug-meta">
         <li class="bug-status">Status: <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" /></li>
         <li class="bug-dateTime">Created by {{bug.username}} on {{bug.dateTime}}</li>
+        <li class="bug-browser">Browser: {{bug.browser}}</li>
       </ul>
     </div>
   </div>
