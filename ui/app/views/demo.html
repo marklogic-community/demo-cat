@@ -26,7 +26,7 @@
   </div>
   <div class="maintainer col-md-12">
     <label>Maintainer</label>
-    <span>{{model.demo.maintainer}}</span>
+    <editable enabled="model.user.authenticated" edit-model="model.demo.maintainer" edit-type="text" save="saveField('maintainer', model.demo.maintainer)"/>
     (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
   </div>
   <div class="version col-md-12">
