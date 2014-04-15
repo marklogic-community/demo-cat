@@ -11,7 +11,8 @@
         enabled: "=enabled",
         editType: '@editType',
         editModel: '=editModel',
-        save: '&save'
+        save: '&save',
+        editOptions: '=editOptions'
       },
       templateUrl: '/scripts/directives/editable.html',
       link: function($scope) {
