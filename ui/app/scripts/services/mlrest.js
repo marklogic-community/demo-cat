@@ -275,6 +275,7 @@
             var isSupportedMethod = (method === 'GET' || method === 'PUT' || method === 'POST' || method === 'DELETE');
             method = isSupportedMethod ? method : 'POST';
             if (!isSupportedMethod) {
+              settings.headers = settings.headers || {};
               settings.headers['X-HTTP-Method-Override'] = settings.method;
             }
             

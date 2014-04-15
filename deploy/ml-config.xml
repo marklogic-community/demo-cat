@@ -497,7 +497,23 @@
           <privilege-name>rest-writer</privilege-name>
         </privilege>
       </privileges>
-    </role>  </roles>
+    </role>
+    <role>
+      <role-name>send-email</role-name>
+      <description>A role for amping a function to send email</description>
+      <role-names>
+      </role-names>
+      <permissions>
+      </permissions>
+      <collections>
+      </collections>
+      <privileges>
+        <privilege>
+          <privilege-name>xdmp:email</privilege-name>
+        </privilege>
+      </privileges>
+    </role>
+  </roles>
   <users xmlns="http://marklogic.com/xdmp/security">
     <user>
       <user-name>@ml.app-name-user</user-name>
@@ -533,6 +549,13 @@
       <role-name>a-privileged-role</role-name>
     </amp>
 -->
+    <amp>
+      <namespace>http://marklogic.com/demo-cat/utilities</namespace>
+      <local-name>send-notification</local-name>
+      <doc-uri>/lib/utilities.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>send-email</role-name>
+    </amp>
   </amps>
   <privileges xmlns="http://marklogic.com/xdmp/security">
 <!--

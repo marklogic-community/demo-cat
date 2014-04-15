@@ -12,6 +12,7 @@
           browsers: [],
           features: [],
           languages: [],
+          bugs: [],
           comments: []
         },
         featureChoices: features.list(),

@@ -1,26 +1,27 @@
 xquery version "1.0-ml";
 
-module namespace comment = "http://marklogic.com/rest-api/resource/comment";
+module namespace file-bug = "http://marklogic.com/rest-api/resource/file-bug";
 
 import module namespace json="http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 import module namespace json-helper="http://marklogic.com/demo-cat/json-helper" at "/lib/json-helper.xqy";
+import module namespace utilities="http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
 
 declare namespace roxy = "http://marklogic.com/roxy";
+declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
 (: 
  : To add parameters to the functions, specify them in the params annotations. 
  : Example
- :   declare %roxy:params("uri=xs:string", "priority=xs:int") comment:get(...)
+ :   declare %roxy:params("uri=xs:string", "priority=xs:int") file-bug:get(...)
  : This means that the get function will take two parameters, a string and an int.
  :)
 
-
 (:
-Receive the comment and adjust it with proper values.
+Receive the bug and adjust it with proper values.
  :)
 declare 
 %roxy:params("uri=xs:string")
-function comment:post(
+function file-bug:post(
     $context as map:map,
     $params  as map:map,
     $input   as document-node()*
@@ -38,20 +39,37 @@ function comment:post(
   let $json-xml := json:transform-from-json(fn:string($input))
   (: populate default meta information :)
   let $populated-xml as element() := json-helper:populate-meta-fields($json-xml)
-  (: insert comment :)
-  let $insert-noop := json-helper:add-to-array($uri,'comments',$populated-xml)
+  (: insert bug :)
+  let $insert-noop := json-helper:add-to-array($uri,'bugs',$populated-xml)
+  (: BEGIN send notification :)
+  (: get demo info :)
+  let $demo := fn:doc($uri)/jbasic:json
+  (: get maintainer name :)
+  let $demo-name as xs:string? := $demo/jbasic:name
+  (: get maintainer name :)
+  let $maintainer-name as xs:string? := $demo/jbasic:maintainer
+  (: get maintainer email :)
+  let $maintainer-email as xs:string? := $demo/jbasic:email
+  (: build message :)
+  let $message :=
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <h2>New Bug for "<a href="http://{xdmp:get-request-header('Host')}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
+      <p>Opened by {$populated-xml/jbasic:username/node()}</p>
+      <div>{$populated-xml/jbasic:msg/node()}</div>
+    </div>
   return (
+    utilities:send-notification($maintainer-name, $maintainer-email, '[DemoCat] New Bug for "'||$demo-name||'"', $message),
     xdmp:set-response-code(200, "OK"),
     document { json:transform-to-json($populated-xml) }
   )
 };
 
 (:
-Change a comment property value.
+Change a bug property value.
  :)
 declare 
-%roxy:params("uri=xs:string","id=xs:string", "property=xs:string")
-function comment:put(
+%roxy:params("uri=xs:string","id=xs:string", "property=xs:string","value=xs:anyAtomicType")
+function file-bug:put(
     $context as map:map,
     $params  as map:map,
     $input   as document-node()*
@@ -65,7 +83,7 @@ function comment:put(
   (: build property qn :)
   let $property-qn := fn:QName($json-helper:JSON_NS,$property)
   (: find bug property :)
-  let $property-to-be-updated := json-helper:find-in-array($uri,'comments',$id)/*[fn:node-name(.) eq $property-qn]
+  let $property-to-be-updated := json-helper:find-in-array($uri,'bugs',$id)/*[fn:node-name(.) eq $property-qn]
   (: create property with new value :)
   let $new-property := json-helper:set-element-value($property-to-be-updated,$value)
   return (
@@ -76,11 +94,11 @@ function comment:put(
 };
 
 (:
-deletes a comment when requested by someone who is the creator
+deletes a bug when requested by someone who is the creator
  :)
 declare 
 %roxy:params("uri=xs:string","id=xs:string")
-function comment:delete(
+function file-bug:delete(
     $context as map:map,
     $params  as map:map
 ) as document-node()?
@@ -89,10 +107,9 @@ function comment:delete(
   let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
   let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
   (: remove bug :)
-  let $delete-noop := json-helper:remove-from-array($uri,'comments',$id)
+  let $delete-noop := json-helper:remove-from-array($uri,'bugs',$id)
   return (
     xdmp:set-response-code(200, "OK"),
     document {'{"status":"success"}'}
-
   )
 };
