@@ -4,7 +4,7 @@
   <div class="col-md-12">
     <label>Hosted at</label>
     <a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
-    (<span>{{model.demo.hostType}}</span>)
+    (<editable class="host-type" enabled="model.user.authenticated" edit-model="model.demo.hostType" edit-type="text" save="saveField('hostType', model.demo.hostType)"/>)
   </div>
   <div class="credentials col-md-12">
     <label>Credentials</label>
