@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: editable', function () {
+describe('editable directive', function () {
   var scope, element;
 
   beforeEach(module('demoCat', 'app-templates'));
@@ -8,15 +8,21 @@ describe('Directive: editable', function () {
   beforeEach(inject( function($compile, $rootScope) {
     element = '<editable edit-model="model.demo.username" edit-type="text"/>';
     scope = $rootScope.$new();
+    scope.model = {
+      demo: {
+        username: 'test1'
+      }
+    };
     element = $compile(element)(scope);
   }));
 
-  it('should show span when mode="view"', function () {
+  it('should display original value when mode="view"', function () {
     scope.mode = 'view';
     scope.$digest();
 
-    expect( $( element ).find('span') ).not.toHaveClass('ng-hide');
-    expect( $( element ).find('div') ).toHaveClass('ng-hide');
+    expect( $( element ).find('.editable') ).not.toHaveClass('ng-hide');
+    expect( $( element ).find('.editable .value').text() ).toEqual('test1');
+    expect( $( element ).find('.editor')).toHaveClass('ng-hide');
   });
 
   it('should show input when mode="edit" and editType="text"', function () {
