@@ -1,7 +1,10 @@
+/*global module*/
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
 
 module.exports = function(config) {
+  'use strict';
+
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
@@ -19,6 +22,7 @@ module.exports = function(config) {
       'ui/app/bower_components/jquery/jquery.js',
       'ui/app/bower_components/ckeditor/ckeditor.js',
       'ui/app/bower_components/ng-ckeditor/ng-ckeditor.js',
+      'ui/app/bower_components/mlFacets/dist/ml-facets.js',
       'ui/app/scripts/**/*.html',
       'ui/app/scripts/**/*.js',
       'ui/test/**/*.js'
@@ -31,7 +35,7 @@ module.exports = function(config) {
 
     ngHtml2JsPreprocessor: {
       stripPrefix: 'ui/app',
-      moduleName: "app-templates"
+      moduleName: 'app-templates'
     },
 
     // list of files / patterns to exclude
@@ -57,7 +61,7 @@ module.exports = function(config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // Continuous Integration mode
