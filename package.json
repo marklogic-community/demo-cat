@@ -18,7 +18,8 @@
     "gulp-less": "^1.2.3",
     "gulp-rename": "^1.2.0",
     "gulp-concat": "^2.2.0",
-    "gulp-uglify": "^0.2.1"
+    "gulp-uglify": "^0.2.1",
+    "gulp-karma": "0.0.4"
   },
   "engines": {
     "node": ">=0.8.0"

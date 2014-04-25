@@ -7,8 +7,10 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
+var karma = require('karma').server;
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var path = require('path');
 
 gulp.task('jshint', function() {
   gulp.src('ui/app/scripts/**/*.js')
@@ -38,6 +40,28 @@ gulp.task('watch', function() {
   gulp.watch('./ui/app/scripts/**/*.js', ['jshint', 'scripts']);
   gulp.watch('./ui/app/styles/*.less', ['less']);
 });
+
+gulp.task('test', function() {
+  karma.start({
+    configFile: path.join(__dirname, './karma.conf.js'),
+    singleRun: true,
+    autoWatch: false
+  }, function (exitCode) {
+    console.log('Karma has exited with ' + exitCode);
+    process.exit(exitCode);
+  });
+});
+
+gulp.task('autotest', function() {
+  karma.start({
+    configFile: path.join(__dirname, './karma.conf.js'),
+    autoWatch: true
+  }, function (exitCode) {
+    console.log('Karma has exited with ' + exitCode);
+    process.exit(exitCode);
+  });
+});
+
 
 // Default Task
 gulp.task('default', ['jshint', 'less', 'scripts', 'watch']);
