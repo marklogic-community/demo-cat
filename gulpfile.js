@@ -4,13 +4,17 @@
 
 var gulp = require('gulp');
 
+var concat = require('gulp-concat');
+var connect = require('connect');
+var http = require('http');
 var jshint = require('gulp-jshint');
 var less = require('gulp-less');
-var concat = require('gulp-concat');
 var karma = require('karma').server;
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
 var path = require('path');
+var proxy = require('proxy-middleware');
+var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
+var url = require('url');
 
 gulp.task('jshint', function() {
   gulp.src('ui/app/scripts/**/*.js')
@@ -62,6 +66,12 @@ gulp.task('autotest', function() {
   });
 });
 
+gulp.task('server', function() {
+  var app = connect()
+    .use(connect.static('ui/app'))
+    .use('/v1', proxy(url.parse('http://localhost:8070/v1')));
+  http.createServer(app).listen(9070, 'localhost');
+});
 
 // Default Task
 gulp.task('default', ['jshint', 'less', 'scripts', 'watch']);
