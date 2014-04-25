@@ -4,6 +4,7 @@
 
 var gulp = require('gulp');
 
+var argv = require('yargs').argv;
 var concat = require('gulp-concat');
 var connect = require('connect');
 var http = require('http');
@@ -15,6 +16,12 @@ var proxy = require('proxy-middleware');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var url = require('url');
+
+var options = {
+  appPort: argv['app-port'] || 9070,
+  mlHost: argv['ml-host'] || 'localhost',
+  mlPort: argv['ml-port'] || '8070'
+};
 
 gulp.task('jshint', function() {
   gulp.src('ui/app/scripts/**/*.js')
@@ -69,8 +76,8 @@ gulp.task('autotest', function() {
 gulp.task('server', function() {
   var app = connect()
     .use(connect.static('ui/app'))
-    .use('/v1', proxy(url.parse('http://localhost:8070/v1')));
-  http.createServer(app).listen(9070, 'localhost');
+    .use('/v1', proxy(url.parse('http://' + options.mlHost + ':' + options.mlPort + '/v1')));
+  http.createServer(app).listen(options.appPort, 'localhost');
 });
 
 // Default Task
