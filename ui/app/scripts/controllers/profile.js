@@ -6,7 +6,7 @@
       var model = {
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
-      
+
       angular.extend($scope, {
         model: model,
         addEmail: function() {
@@ -18,8 +18,8 @@
         submit: function() {
           mlRest.updateDocument({
             user: {
-              "fullname": $scope.model.user.fullname,
-              "emails": $scope.model.user.emails
+              'fullname': $scope.model.user.fullname,
+              'emails': $scope.model.user.emails
             }
           }, {
             format: 'json',
