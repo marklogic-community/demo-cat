@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var module = angular.module('demoCat');
+  var module = angular.module('demoCat.user');
 
   module.directive('mlUser', ['User', function (user) {
     return {

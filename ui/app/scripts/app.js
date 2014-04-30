@@ -1,5 +1,5 @@
 
-angular.module('demoCat', ['ngRoute', 'ngCkeditor', 'mlFacets', 'ui.bootstrap'])
+angular.module('demoCat', ['ngRoute', 'ngCkeditor', 'demoCat.user', 'mlFacets', 'ui.bootstrap'])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
     'use strict';
