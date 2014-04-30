@@ -16,7 +16,7 @@
         logout: '&logout',
         loginerror: '=loginerror'
       },
-      templateUrl: '/scripts/directives/user.html',
+      templateUrl: '/user/user-dir.html',
       link: function($scope) {
 
       }
