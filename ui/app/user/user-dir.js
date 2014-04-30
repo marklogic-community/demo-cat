@@ -4,9 +4,10 @@
 
   var module = angular.module('demoCat.user');
 
-  module.directive('mlUser', ['User', function (user) {
+  module.directive('mlUser', [function () {
     return {
       restrict: 'A',
+      controller: 'UserController',
       replace: true,
       scope: {
         username: '=username',
@@ -21,5 +22,31 @@
 
       }
     };
+  }])
+  .controller('UserController', ['$scope', 'User', 'MLRest', '$location', function ($scope, user, mlRest, $location) {
+    angular.extend($scope, {
+      login: function(username, password) {
+        mlRest.login(username, password).then(function (result) {
+          user.authenticated = result.authenticated;
+          if (user.authenticated === true) {
+            user.loginError = false;
+            if (result.profile !== undefined) {
+              user.fullname = result.profile.fullname;
+              user.emails = result.profile.emails;
+            } else {
+              $location.path('/profile');
+            }
+          } else {
+            user.loginError = true;
+          }
+        });
+      },
+      logout: function() {
+        mlRest.logout().then(function() {
+          user.init();
+        });
+      }
+
+    });
   }]);
 }());

@@ -2,8 +2,29 @@
   'use strict';
 
   angular.module('demoCat.user')
-  .factory('User', function() {
+  .factory('User', ['MLRest', function(mlRest) {
     var user = {};
+
+    function updateUser(data) {
+      if (data.authenticated === true) {
+        user.name = data.username;
+        user.authenticated = true;
+        if (data.profile !== undefined) {
+          user.hasProfile = true;
+
+          user.fullname = data.profile.fullname;
+
+          if ($.isArray(data.profile.emails)) {
+            user.emails = data.profile.emails;
+          } else {
+            // wrap single value in array, needed for repeater
+            user.emails = [data.profile.emails];
+          }
+        }
+      }
+    }
+
+    mlRest.checkLoginStatus().then(updateUser);
 
     user.init = function init() {
       user.name = '';
@@ -16,6 +37,6 @@
       return user;
     };
 
-    return user.init();
-  });
+    return user;
+  }]);
 }());

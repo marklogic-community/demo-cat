@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('demoCat')
+  angular.module('demoCat.common')
     .provider('MLRest', function() {
 
       // Rewrite the data.results part of the response from /v1/search so that the metadata section in each is easier
@@ -278,7 +278,7 @@
               settings.headers = settings.headers || {};
               settings.headers['X-HTTP-Method-Override'] = settings.method;
             }
-            
+
             $http(
               {
                 url: url,
@@ -299,7 +299,7 @@
             return this.advancedCall('/v1/resources/'+extensionName, settings);
           }
         };
-        
+
         return service;
       };
     });

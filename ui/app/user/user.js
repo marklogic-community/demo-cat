@@ -1,2 +1,2 @@
 
-angular.module('demoCat.user', []);
+angular.module('demoCat.user', ['demoCat.common']);
