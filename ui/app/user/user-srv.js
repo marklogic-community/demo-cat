@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('demoCat')
+  angular.module('demoCat.user')
   .factory('User', function() {
     var user = {};
 
