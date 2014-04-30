@@ -8,7 +8,7 @@ angular.module('demoCat', ['ngRoute', 'ngCkeditor', 'demoCat.user', 'demoCat.sea
 
     $routeProvider
       .when('/', {
-        templateUrl: '/views/main.html'
+        templateUrl: '/search/search.html'
       })
       .when('/create', {
         templateUrl: '/views/create.html',
