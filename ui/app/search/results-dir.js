@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var module = angular.module('demoCat');
+  var module = angular.module('demoCat.search');
 
   module.directive('results', [function () {
     return {
@@ -11,7 +11,7 @@
         results: '=resultList',
         updateQuery: '&updateQuery'
       },
-      templateUrl: '/scripts/directives/results.html',
+      templateUrl: '/search/results-dir.html',
       link: function() {
       }
     };
