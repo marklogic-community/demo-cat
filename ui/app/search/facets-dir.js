@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var module = angular.module('demoCat');
+  var module = angular.module('demoCat.search');
 
   module.directive('facets', [function () {
     return {
@@ -13,7 +13,7 @@
         select: '&select',
         clear: '&clear'
       },
-      templateUrl: '/scripts/directives/facets.html',
+      templateUrl: '/search/facets-dir.html',
       link: function() {
       }
     };

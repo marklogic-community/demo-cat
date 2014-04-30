@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('demoCat')
-    .controller('MainCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
+  angular.module('demoCat.search')
+    .controller('SearchCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
       var model = {
         selected: [],
         text: '',
