@@ -15,27 +15,7 @@
         model.search = data;
       }
 
-      function updateUser(data) {
-        if (data.authenticated === true) {
-          model.user.name = data.username;
-          model.user.authenticated = true;
-          if (data.profile !== undefined) {
-            model.user.hasProfile = true;
-
-            model.user.fullname = data.profile.fullname;
-
-            if ($.isArray(data.profile.emails)) {
-              model.user.emails = data.profile.emails;
-            } else {
-              // wrap single value in array, needed for repeater
-              model.user.emails = [data.profile.emails];
-            }
-          }
-        }
-      }
-
       (function init() {
-        mlRest.checkLoginStatus().then(updateUser);
         searchContext.search().then(updateSearchResults);
       })();
 
@@ -63,27 +43,6 @@
         textSearch: function() {
           searchContext.setText(model.text).then(updateSearchResults);
           $location.path('/');
-        },
-        login: function(username, password) {
-          mlRest.login(username, password).then(function (result) {
-            model.user.authenticated = result.authenticated;
-            if (model.user.authenticated === true) {
-              model.user.loginError = false;
-              if (result.profile !== undefined) {
-                model.user.fullname = result.profile.fullname;
-                model.user.emails = result.profile.emails;
-              } else {
-                $location.path('/profile');
-              }
-            } else {
-              model.user.loginError = true;
-            }
-          });
-        },
-        logout: function() {
-          mlRest.logout().then(function() {
-            model.user.init();
-          });
         }
       });
     }]);
