@@ -28,17 +28,23 @@
   <search:constraint name="version">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
+      <search:facet-option>limit=10</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
   <search:constraint name="maintainer">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:element ns="http://marklogic.com/xdmp/json/basic" name="maintainer"/>
+      <search:facet-option>limit=10</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
   <search:constraint name="feature">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:path-index
         xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:features/jbasic:item</search:path-index>
+      <search:facet-option>limit=15</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
   <search:sort-order direction="descending">
