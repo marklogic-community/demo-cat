@@ -160,11 +160,11 @@
           login: function(username, password) {
             var d = $q.defer();
             $http.get(
-              '/v1/resources/user-login',
+              '/user/login',
               {
                 params: {
-                  'rs:username': username,
-                  'rs:password': password
+                  'username': username,
+                  'password': password
                 }
               })
             .success(

@@ -52,12 +52,57 @@ gulp.task('start', function () {
     if (req.session.user === undefined) {
       res.send('{"authenticated": false}');
     } else {
-      res.send(req.session);
+      res.send(req.session.user);
     }
   });
 
-  app.get('/user/login', function(req, res){
+  app.get('/user/login', function(req, res) {
+    // need to attempt to read a document that we know exists
+    // or maybe we can try to read the profile and distinguish between 401 and 404
+    // 404 - valid credentials, but no profile yet
+    // 401 - bad credentials
+    console.log('auth is ' + req.query.username + ':' + req.query.password);
+    var login = http.get({
+      hostname: options.mlHost,
+      port: options.mlPort,
+      path: '/v1/documents?uri=/users/' + req.query.username + '.json',
+      headers: req.headers,
+      auth: req.query.username + ':' + req.query.password
+    }, function(response) {
+      console.log('response is ' + response.statusCode);
+      if (response.statusCode === 401) {
+        res.statusCode = 401;
+        res.send('Unauthenticated');
+      } else {
+        if (response.statusCode === 200) {
+          req.session.username = req.query.username;
+          req.session.password = req.query.password;
+          response.on('data', function(chunk) {
+            var json = JSON.parse(chunk);
+            console.log('chunk: ' + json);
+            if (json.user !== undefined) {
+              req.session.emails = json.user.emails;
+              var sendBack = {
+                authenticated: true,
+                username: req.query.username,
+                profile: {
+                  fullname: json.user.fullname,
+                  emails: json.user.emails
+                }
+              };
+              console.log('sending response: ' + JSON.stringify(sendBack));
+              res.send(200, sendBack);
+            } else {
+              console.log('did not find chunk.user');
+            }
+          });
+        }
+      }
+    });
 
+    login.on('error', function(e) {
+      console.log('login failed: ' + e.statusCode);
+    });
   });
 
   app.use(express.static('ui/app'));
