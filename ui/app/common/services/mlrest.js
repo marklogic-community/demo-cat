@@ -146,7 +146,7 @@
         var service = {
           checkLoginStatus: function() {
             var d = $q.defer();
-            $http.get('/v1/resources/user-status', {})
+            $http.get('/user/status', {})
             .success(
               function(data) {
                 d.resolve(data);
@@ -263,10 +263,11 @@
               }
             )
             .success(function(data, status, headers, config) {
-              d.resolve(headers('location'));
-            }).error(function(reason) {
-              d.reject(reason);
-            });
+                d.resolve(headers('location'));
+              })
+            .error(function(reason) {
+                d.reject(reason);
+              });
             return d.promise;
           },
           advancedCall: function(url, settings) {
@@ -289,10 +290,11 @@
               }
             )
             .success(function(data, status, headers, config) {
-              d.resolve(data);
-            }).error(function(reason) {
-              d.reject(reason);
-            });
+                d.resolve(data);
+              })
+            .error(function(reason) {
+                d.reject(reason);
+              });
             return d.promise;
           },
           callExtension: function(extensionName, settings) {
