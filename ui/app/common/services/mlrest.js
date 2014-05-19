@@ -180,7 +180,7 @@
           logout: function() {
             var d = $q.defer();
             $http.get(
-              '/v1/resources/user-logout',
+              '/user/logout',
               {})
             .success(
               function(data) {

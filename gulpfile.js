@@ -5,6 +5,7 @@
 var gulp = require('gulp');
 
 var argv = require('yargs').argv;
+var bodyParser = require('body-parser');
 var concat = require('gulp-concat');
 var connect = require('connect');
 var cookieParser = require('cookie-parser');
@@ -22,8 +23,18 @@ var url = require('url');
 var options = {
   appPort: argv['app-port'] || 9070,
   mlHost: argv['ml-host'] || 'localhost',
-  mlPort: argv['ml-port'] || '8070'
+  mlPort: argv['ml-port'] || '8070',
+  defaultUser: 'demo-cat-user',
+  defaultPass: 'c2t2l0g'
 };
+
+function getAuth(session) {
+  if (session.user !== undefined && session.user.name !== undefined) {
+    return session.user.name + ':' + session.user.password;
+  } else {
+    return options.defaultUser + ':' + options.defaultPass;
+  }
+}
 
 // start express
 gulp.task('start', function () {
@@ -32,6 +43,7 @@ gulp.task('start', function () {
 
   app.use(cookieParser());
   app.use(expressSession({secret: '1234567890QWERTY'}));
+  app.use(bodyParser());
 
   app.get('/v1*', function(req, res){
     var queryString = req.originalUrl.split('?')[1];
@@ -40,7 +52,7 @@ gulp.task('start', function () {
       port: options.mlPort,
       path: req.path + (queryString ? '?' + queryString : ''),
       headers: req.headers,
-      auth: (req.session.username || 'demo-cat-user') + ':' + (req.session.password || 'c2t2l0g')
+      auth: getAuth(req.session)
     }, function(response) {
       response.on('data', function(chunk) {
         res.send(chunk);
@@ -48,20 +60,57 @@ gulp.task('start', function () {
     });
   });
 
+  app.put('/v1*', function(req, res){
+    var queryString = req.originalUrl.split('?')[1];
+
+    if (req.session.user === undefined) {
+      res.send(401, 'Unauthorized');
+    } else if (req.path === '/v1/documents' &&
+      req.query.uri.match('/users/') &&
+      req.query.uri.match(new RegExp('/users/[^(' + req.session.user.name + ')]+.json'))) {
+      // The user is try to PUT to a profile document other than his/her own. Not allowed.
+      res.send(403, 'Forbidden');
+    } else {
+      console.log('PUT to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
+      var mlReq = http.request({
+        hostname: options.mlHost,
+        port: options.mlPort,
+        method: 'PUT',
+        path: req.path + (queryString ? '?' + queryString : ''),
+        headers: req.headers,
+        auth: getAuth(req.session)
+      }, function(response) {
+        console.log('got response');
+        response.on('data', function(chunk) {
+          res.send(chunk);
+        });
+      });
+
+      mlReq.write(JSON.stringify(req.body));
+      mlReq.end();
+
+      mlReq.on('error', function(e) {
+        console.log('Problem with request: ' + e.message);
+      });
+    }
+  });
+
   app.get('/user/status', function(req, res) {
     if (req.session.user === undefined) {
       res.send('{"authenticated": false}');
     } else {
-      res.send(req.session.user);
+      res.send({
+        authenticated: true,
+        username: req.session.user.name,
+        profile: req.session.user.profile
+      });
     }
   });
 
   app.get('/user/login', function(req, res) {
-    // need to attempt to read a document that we know exists
     // or maybe we can try to read the profile and distinguish between 401 and 404
     // 404 - valid credentials, but no profile yet
     // 401 - bad credentials
-    console.log('auth is ' + req.query.username + ':' + req.query.password);
     var login = http.get({
       hostname: options.mlHost,
       port: options.mlPort,
@@ -69,29 +118,38 @@ gulp.task('start', function () {
       headers: req.headers,
       auth: req.query.username + ':' + req.query.password
     }, function(response) {
-      console.log('response is ' + response.statusCode);
       if (response.statusCode === 401) {
         res.statusCode = 401;
         res.send('Unauthenticated');
+      } else if (response.statusCode === 404) {
+        // authentication successful, but no profile defined
+        req.session.user = {
+          name: req.query.username,
+          password: req.query.password
+        };
+        res.send(200, {
+          authenticated: true,
+          username: req.query.username
+        });
       } else {
         if (response.statusCode === 200) {
-          req.session.username = req.query.username;
-          req.session.password = req.query.password;
+          // authentication successful, remember the username
+          req.session.user = {
+            name: req.query.username,
+            password: req.query.password
+          };
           response.on('data', function(chunk) {
             var json = JSON.parse(chunk);
-            console.log('chunk: ' + json);
             if (json.user !== undefined) {
-              req.session.emails = json.user.emails;
-              var sendBack = {
+              req.session.user.profile = {
+                fullname: json.user.fullname,
+                emails: json.user.emails
+              };
+              res.send(200, {
                 authenticated: true,
                 username: req.query.username,
-                profile: {
-                  fullname: json.user.fullname,
-                  emails: json.user.emails
-                }
-              };
-              console.log('sending response: ' + JSON.stringify(sendBack));
-              res.send(200, sendBack);
+                profile: req.session.user.profile
+              });
             } else {
               console.log('did not find chunk.user');
             }
@@ -105,9 +163,16 @@ gulp.task('start', function () {
     });
   });
 
+  app.get('/user/logout', function(req, res) {
+    delete req.session.user;
+    res.send();
+  });
+
   app.use(express.static('ui/app'));
+  app.use('/profile', express.static('ui/app'));
   app.listen(4000);
 });
+
 
 gulp.task('jshint', function() {
   gulp.src('ui/app/scripts/**/*.js')
