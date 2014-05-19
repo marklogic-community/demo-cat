@@ -71,7 +71,7 @@ gulp.task('start', function () {
       // The user is try to PUT to a profile document other than his/her own. Not allowed.
       res.send(403, 'Forbidden');
     } else {
-      console.log('PUT to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
+      console.log('PUT ' + req.path + ' proxied to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
       var mlReq = http.request({
         hostname: options.mlHost,
         port: options.mlPort,
@@ -80,9 +80,11 @@ gulp.task('start', function () {
         headers: req.headers,
         auth: getAuth(req.session)
       }, function(response) {
-        console.log('got response');
         response.on('data', function(chunk) {
           res.send(chunk);
+        });
+        response.on('end', function() {
+          res.end();
         });
       });
 
