@@ -172,6 +172,8 @@ gulp.task('start', function () {
 
   app.use(express.static('ui/app'));
   app.use('/profile', express.static('ui/app'));
+  app.use('/create', express.static('ui/app'));
+  app.use('/detail', express.static('ui/app'));
   app.listen(4000);
 });
 
