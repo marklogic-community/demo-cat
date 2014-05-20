@@ -45,21 +45,6 @@ gulp.task('start', function () {
   app.use(expressSession({secret: '1234567890QWERTY'}));
   app.use(bodyParser());
 
-  app.get('/v1*', function(req, res){
-    var queryString = req.originalUrl.split('?')[1];
-    http.get({
-      hostname: options.mlHost,
-      port: options.mlPort,
-      path: req.path + (queryString ? '?' + queryString : ''),
-      headers: req.headers,
-      auth: getAuth(req.session)
-    }, function(response) {
-      response.on('data', function(chunk) {
-        res.send(chunk);
-      });
-    });
-  });
-
   function proxy(req, res) {
     var queryString = req.originalUrl.split('?')[1];
     console.log(req.method + ' ' + req.path + ' proxied to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
@@ -74,18 +59,27 @@ gulp.task('start', function () {
       response.on('data', function(chunk) {
         res.send(chunk);
       });
-      response.on('end', function() {
-        res.end();
-      });
+      // GET responses don't complete with this block; POST/PUT don't complete without it.
+      if (req.method !== 'GET') {
+        response.on('end', function() {
+          res.end();
+        });
+      }
     });
 
-    mlReq.write(JSON.stringify(req.body));
-    mlReq.end();
+    if (req.body !== undefined) {
+      mlReq.write(JSON.stringify(req.body));
+      mlReq.end();
+    }
 
     mlReq.on('error', function(e) {
       console.log('Problem with request: ' + e.message);
     });
   }
+
+  app.get('/v1*', function(req, res){
+    proxy(req, res);
+  });
 
   app.put('/v1*', function(req, res){
     if (req.session.user === undefined) {
@@ -96,6 +90,9 @@ gulp.task('start', function () {
       // The user is try to PUT to a profile document other than his/her own. Not allowed.
       res.send(403, 'Forbidden');
     } else {
+      if (req.path === '/v1/documents' && req.query.uri.match('/users/')) {
+        // TODO: The user is updating the profile. Update the session info.
+      }
       proxy(req, res);
     }
   });
