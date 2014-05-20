@@ -60,9 +60,34 @@ gulp.task('start', function () {
     });
   });
 
-  app.put('/v1*', function(req, res){
+  function proxy(req, res) {
     var queryString = req.originalUrl.split('?')[1];
+    console.log(req.method + ' ' + req.path + ' proxied to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
+    var mlReq = http.request({
+      hostname: options.mlHost,
+      port: options.mlPort,
+      method: req.method,
+      path: req.path + (queryString ? '?' + queryString : ''),
+      headers: req.headers,
+      auth: getAuth(req.session)
+    }, function(response) {
+      response.on('data', function(chunk) {
+        res.send(chunk);
+      });
+      response.on('end', function() {
+        res.end();
+      });
+    });
 
+    mlReq.write(JSON.stringify(req.body));
+    mlReq.end();
+
+    mlReq.on('error', function(e) {
+      console.log('Problem with request: ' + e.message);
+    });
+  }
+
+  app.put('/v1*', function(req, res){
     if (req.session.user === undefined) {
       res.send(401, 'Unauthorized');
     } else if (req.path === '/v1/documents' &&
@@ -71,29 +96,15 @@ gulp.task('start', function () {
       // The user is try to PUT to a profile document other than his/her own. Not allowed.
       res.send(403, 'Forbidden');
     } else {
-      console.log('PUT ' + req.path + ' proxied to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
-      var mlReq = http.request({
-        hostname: options.mlHost,
-        port: options.mlPort,
-        method: 'PUT',
-        path: req.path + (queryString ? '?' + queryString : ''),
-        headers: req.headers,
-        auth: getAuth(req.session)
-      }, function(response) {
-        response.on('data', function(chunk) {
-          res.send(chunk);
-        });
-        response.on('end', function() {
-          res.end();
-        });
-      });
+      proxy(req, res);
+    }
+  });
 
-      mlReq.write(JSON.stringify(req.body));
-      mlReq.end();
-
-      mlReq.on('error', function(e) {
-        console.log('Problem with request: ' + e.message);
-      });
+  app.post('/v1*', function(req, res){
+    if (req.session.user === undefined) {
+      res.send(401, 'Unauthorized');
+    } else {
+      proxy(req, res);
     }
   });
 
