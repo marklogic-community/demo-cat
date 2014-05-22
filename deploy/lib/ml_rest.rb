@@ -7,6 +7,7 @@ module Roxy
       if !@port or @port == ""
         @port = options[:app_port]
       end
+      @auth_method = options[:auth_method]
       @http = Roxy::Http.new({
         :logger => @logger
       })
@@ -31,6 +32,38 @@ module Roxy
       data
     end
 
+    def install_properties(path)
+      if (File.exists?(path))
+        headers = {
+          'Content-Type' => 'application/xml'
+        }
+
+        data = [path]
+
+        data.each_with_index do |d, i|
+          file = open(d, "rb")
+          contents = file.read
+
+          if contents.match('<properties')
+            # Properties is in the correct format
+            # @logger.debug "methods: #{methods}"
+            url = "http://#{@hostname}:#{@port}/v1/config/properties"
+
+            @logger.debug "url: #{url}"
+            r = go url, "put", headers, nil, contents, @auth_method
+            if (r.code.to_i < 200 && r.code.to_i > 206)
+              @logger.error("code: #{r.code.to_i} body:#{r.body}")
+            end
+          else
+            # Properties file needs to be updated
+            raise ExitException.new "#{d} is in an old format; changes to this file won't take effect. See https://github.com/marklogic/roxy/wiki/REST-properties-format-change"
+          end
+        end
+      else
+        @logger.error "#{path} does not exist"
+      end
+    end
+
     def install_extensions(path)
       if (File.exists?(path))
         headers = {
@@ -43,7 +76,7 @@ module Roxy
         data.each_with_index do |d, i|
           file = open(d, "rb")
           contents = file.read
-          extensionName = $1 if contents =~ /"http:\/\/marklogic.com\/rest-api\/resource\/([^"]+)"/
+          extensionName = $1 if contents =~ /module\s*namespace\s*[\w\-]+\s*=\s*"http:\/\/marklogic.com\/rest-api\/resource\/([^"]+)"/
           params = []
           contents.scan(/function\s+[^:]+:(get|put|post|delete)/).each do |m|
             params << "method=#{m[0]}"
@@ -79,7 +112,7 @@ module Roxy
           @logger.debug "loading: #{d}"
 
           @logger.debug "url: #{url}"
-          r = go url, "put", headers, nil, contents
+          r = go url, "put", headers, nil, contents, @auth_method
           if (r.code.to_i < 200 && r.code.to_i > 206)
             @logger.error("code: #{r.code.to_i} body:#{r.body}")
           end
@@ -169,7 +202,7 @@ module Roxy
           @logger.debug "loading: #{d}"
 
           @logger.debug "url: #{url}"
-          r = go url, "put", headers, nil, contents
+          r = go url, "put", headers, nil, contents, @auth_method
           if (r.code.to_i < 200 && r.code.to_i > 206)
             @logger.error("code: #{r.code.to_i} body:#{r.body}")
           end
