@@ -13,6 +13,15 @@ If the app-port specified in build.properties is already occupied and you want t
 
 Likewise, if you are running MarkLogic on a different host than where you are running the user interface, pass --ml-host to the grunt server command.
 
+## Data
+You can find the sample data set at ssh.marklogic.com:/home/dcassel/projects/demo-cat/demo-cat.zip. Load it with:
+
+    $ ./ml local mlcp import -input_file_path <path to dir with zips or zip itself> -input_compressed –document_type xml
+
+You will need to set the mlcp-home property in your local.properties file for this to work. For instance:
+
+    mlcp-home=/Users/dcassel/software/mlcp-Hadoop2-1.2-1
+
 # Roxy
 Roxy (RObust XQuerY Framework) is a lightweight framework for quickly developing well-structured, easily maintained XQuery applications. Roxy was heavily inspired by Ruby On Rails and CakePHP.
 
