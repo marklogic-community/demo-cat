@@ -37,14 +37,11 @@ exports.buildExpress = function(options) {
       auth: getAuth(options, req.session)
     }, function(response) {
       response.on('data', function(chunk) {
-        res.send(chunk);
+        res.write(chunk);
       });
-      // GET responses don't complete with this block; POST/PUT don't complete without it.
-      if (req.method !== 'GET') {
-        response.on('end', function() {
-          res.end();
-        });
-      }
+      response.on('end', function() {
+        res.end();
+      });
     });
 
     if (req.body !== undefined) {
