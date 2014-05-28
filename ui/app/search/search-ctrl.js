@@ -6,6 +6,7 @@
       var model = {
         selected: [],
         text: '',
+        currentPage: 1,
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
 
@@ -43,6 +44,10 @@
         textSearch: function() {
           searchContext.setText(model.text).then(updateSearchResults);
           $location.path('/');
+        },
+        pageChanged: function() {
+          console.log(model.currentPage);
+          //searchContext.setStart(model.currentPage * model.pageLength - model.pageLength + 1).then(updateSearchResults);
         }
       });
     }]);
