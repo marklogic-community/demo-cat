@@ -45,9 +45,8 @@
           searchContext.setText(model.text).then(updateSearchResults);
           $location.path('/');
         },
-        pageChanged: function() {
-          console.log(model.currentPage);
-          //searchContext.setStart(model.currentPage * model.pageLength - model.pageLength + 1).then(updateSearchResults);
+        pageChanged: function(page) {
+          searchContext.setPage(page, model.pageLength).then(updateSearchResults);
         }
       });
     }]);
