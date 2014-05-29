@@ -50,6 +50,7 @@
 
         var facetSelections = {};
         var textQuery = null;
+        var start = 1;
 
         (function init(){
           options.queryOptions = options.queryOptions ? options.queryOptions : 'all';
@@ -63,7 +64,8 @@
               params: {
                 format: 'json',
                 options: options.queryOptions,
-                structuredQuery: getStructuredQuery()
+                structuredQuery: getStructuredQuery(),
+                start: start
               }
             })
           .success(
@@ -137,6 +139,11 @@
             } else {
               textQuery = null;
             }
+            return runSearch();
+          },
+          setPage: function(page, size) {
+            var pageSize = size > 0 ? size : 10;
+            start = 1 + (page - 1) * pageSize;
             return runSearch();
           }
         };

@@ -1,4 +1,4 @@
-<pagination boundary-links="true" total-items="total" ng-model="currentPage" items-per-page="pageLength" ng-change="paginate()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+<pagination boundary-links="true" total-items="total" ng-model="currentPage" items-per-page="pageLength" ng-change="paginate({page: currentPage})" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
 <div ng-repeat="result in results">
   <h4><a ng-href="/detail?uri={{result.uri}}">{{result.metadata.name[0]}}</a></h4>
   <div class="matches">
