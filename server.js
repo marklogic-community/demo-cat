@@ -55,7 +55,11 @@ exports.buildExpress = function(options) {
   }
 
   app.get('/v1*', function(req, res){
-    proxy(req, res);
+    if (req.session.user === undefined) {
+      res.send(401, 'Unauthorized');
+    } else {
+      proxy(req, res);
+    }
   });
 
   app.put('/v1*', function(req, res){
