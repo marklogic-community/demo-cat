@@ -49,5 +49,13 @@
           searchContext.setPage(page, model.pageLength).then(updateSearchResults);
         }
       });
+
+      $scope.$watch('model.user.authenticated', function(newValue, oldValue) {
+        // authentication status has changed; rerun search
+        searchContext.search().then(updateSearchResults, function(error) {
+          model.search = {};
+        });
+      });
+
     }]);
 }());
