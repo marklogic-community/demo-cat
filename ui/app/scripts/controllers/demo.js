@@ -2,9 +2,11 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('DemoCtrl', ['$scope', 'MLRest', 'Features', 'User', '$routeParams', function ($scope, mlRest, features, user, $routeParams) {
+    .controller('DemoCtrl',
+      ['$scope', 'MLRest', 'Features', 'User', '$routeParams',
+      function ($scope, mlRest, features, user, $routeParams) {
       var uri = $routeParams.uri;
-      var commentModel = 
+      var commentModel =
         {
           // set by model binding
           msg:'',
@@ -13,24 +15,24 @@
           username: null,
           dateTime: null
         };
-      var bugModel = 
-          {
-            // set by model binding
-            msg:'',
-            browser: '',
-            status: 'open',
-            // the values below are set server-side
-            id: null,
-            username: null,
-            dateTime: null
-          };
+      var bugModel =
+        {
+          // set by model binding
+          msg:'',
+          browser: '',
+          status: 'open',
+          // the values below are set server-side
+          id: null,
+          username: null,
+          dateTime: null
+        };
       var model = {
         // your model stuff here
         demo: {
           comments:[],
           bugs:[]
         },
-        // additional comment model used for new 
+        // additional comment model used for new
         additionalComment: commentModel,
         additionalBug: bugModel,
         edit: '',
@@ -38,13 +40,24 @@
         // TODO We probably want only one place to edit browser choices
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         bugStatuses: ['open', 'closed'],
+        editorOptions: {
+          height: '100px',
+          toolbarGroups: [
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] }
+          ],
+          //override default options
+          toolbar: '',
+          /* jshint camelcase: false */
+          toolbar_full: ''
+        },
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
 
       mlRest.getDocument(uri, { format: 'json' }).then(function(data) {
         model.demo = data;
       });
-      
+
       angular.extend($scope, {
         model: model,
 
@@ -70,11 +83,11 @@
         },
 
         // call to add to an array field
-        // 
+        //
         addToField: function(field, value, finalFunction) {
           $scope.insertField('.' + field,value,'last-child',finalFunction);
         },
-        
+
         // this adds a field to a doc
         insertField: function(pathFromDoc, value, position, finalFunction) {
             mlRest.patch(
@@ -91,11 +104,11 @@
                 ]
               }
             ).finally(finalFunction);
-        },
-    
+          },
+
         deleteItem: function(type, item) {
           // delete item from server
-          mlRest.callExtension(type, 
+          mlRest.callExtension(type,
             {
               method: 'DELETE',
               params: {
@@ -119,7 +132,7 @@
           }
           // send comment to server
           // reset the comment form after the comment is sent
-          mlRest.callExtension('file-bug', 
+          mlRest.callExtension('file-bug',
             {
               method: 'POST',
               data: bug,
@@ -148,7 +161,7 @@
           }
           // send comment to server
           // reset the comment form after the comment is sent
-          mlRest.callExtension('comment', 
+          mlRest.callExtension('comment',
             {
               method: 'POST',
               data: comment,
@@ -162,11 +175,11 @@
           )
             .then($scope.resetCommentForm);
         },
-    
+
         updateItemInArray: function(extensionName, itemId, propertyName, propertyValue) {
           // send comment to server
           // reset the comment form after the comment is sent
-          mlRest.callExtension(extensionName, 
+          mlRest.callExtension(extensionName,
             {
               method: 'PUT',
               data: propertyValue,
@@ -181,11 +194,11 @@
             }
           );
         },
-        
+
         addToDemoArray: function(arrayName, item) {
           $scope.model.demo[arrayName].push(item);
         },
-        
+
         resetCommentForm: function(result) {
           // add the comment to the demo model to update UI
           $scope.addToDemoArray('comments',result);
@@ -193,10 +206,10 @@
         }
       });
     }]);
-    angular.module('demoCat')
-      .controller('BugCtrl', ['$scope', function ($scope) {
-        $scope.$watch('bug.status', function (status) {
-          $scope.updateItemInArray('file-bug',$scope.bug.id,'status',status);
-        });        
-      }]);
+  angular.module('demoCat')
+    .controller('BugCtrl', ['$scope', function ($scope) {
+      $scope.$watch('bug.status', function (status) {
+        $scope.updateItemInArray('file-bug',$scope.bug.id,'status',status);
+      });
+    }]);
 }());

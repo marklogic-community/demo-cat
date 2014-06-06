@@ -12,7 +12,8 @@
         editType: '@editType',
         editModel: '=editModel',
         save: '&save',
-        editOptions: '=editOptions'
+        editOptions: '=editOptions',
+        richTextOptions: '='
       },
       templateUrl: '/scripts/directives/editable.html',
       link: function($scope) {
