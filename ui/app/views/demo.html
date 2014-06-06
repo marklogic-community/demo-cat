@@ -1,6 +1,6 @@
 <div class="row detail">
   <h2 class="col-md-12">{{model.demo.name}}</h2>
-  <editable class="desc col-md-12" enabled="model.user.authenticated" edit-model="model.demo.description" edit-type="textarea" save="saveField('description', model.demo.description)"/>
+  <editable class="desc col-md-12" enabled="model.user.authenticated" edit-model="model.demo.description" edit-type="richtext" save="saveField('description', model.demo.description)" rich-text-options="model.editorOptions"/>
   <div class="col-md-12">
     <label>Hosted at</label>
     <a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
