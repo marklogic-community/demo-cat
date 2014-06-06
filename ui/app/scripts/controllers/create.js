@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', 'MLRest', 'Features', 'User', '$window', '$http', function ($scope, mlRest, features, user, win, $http) {
+    .controller('CreateCtrl', ['$scope', 'Features', 'User', '$window', '$http', function ($scope, features, user, win, $http) {
       var model = {
         demo: {
           name: '',
