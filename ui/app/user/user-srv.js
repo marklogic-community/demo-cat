@@ -2,10 +2,11 @@
   'use strict';
 
   angular.module('demoCat.user')
-  .factory('User', ['MLRest', function(mlRest) {
+  .factory('User', ['$http', function($http) {
     var user = {};
 
-    function updateUser(data) {
+    function updateUser(response) {
+      var data = response.data;
       if (data.authenticated === true) {
         user.name = data.username;
         user.authenticated = true;
@@ -24,7 +25,7 @@
       }
     }
 
-    mlRest.checkLoginStatus().then(updateUser);
+    $http.get('/user/status', {}).then(updateUser);
 
     user.init = function init() {
       user.name = '';

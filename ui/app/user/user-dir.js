@@ -23,28 +23,37 @@
       }
     };
   }])
-  .controller('UserController', ['$scope', 'User', 'MLRest', '$location', function ($scope, user, mlRest, $location) {
+  .controller('UserController', ['$scope', 'User', '$http', '$location', function ($scope, user, $http, $location) {
     angular.extend($scope, {
       login: function(username, password) {
-        mlRest.login(username, password).then(function (result) {
-          user.authenticated = result.authenticated;
-          if (user.authenticated === true) {
-            user.loginError = false;
-            if (result.profile !== undefined) {
-              user.fullname = result.profile.fullname;
-              user.emails = result.profile.emails;
-            } else {
-              $location.path('/profile');
+        $http.get(
+          '/user/login',
+          {
+            params: {
+              'username': username,
+              'password': password
             }
-          } else {
-            user.loginError = true;
-          }
-        });
+          }).then(function (result) {
+            user.authenticated = result.data.authenticated;
+            if (user.authenticated === true) {
+              user.loginError = false;
+              if (result.data.profile !== undefined) {
+                user.fullname = result.data.profile.fullname;
+                user.emails = result.data.profile.emails;
+              } else {
+                $location.path('/profile');
+              }
+            } else {
+              user.loginError = true;
+            }
+          });
       },
       logout: function() {
-        mlRest.logout().then(function() {
-          user.init();
-        });
+        $http.get(
+          '/user/logout',
+          {}).then(function() {
+            user.init();
+          });
       }
 
     });
