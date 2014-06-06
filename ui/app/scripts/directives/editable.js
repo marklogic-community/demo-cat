@@ -15,7 +15,15 @@
         editOptions: '=editOptions',
         richTextOptions: '='
       },
-      templateUrl: '/scripts/directives/editable.html',
+      // Rich text uses its own template. If done together, the ckEditor for rich text adds a <p> wrapper to
+      // non-rich-text content. That can be prevented with ng-if, but that triggers a new scope, meaning you
+      // can't actually change the content.
+      templateUrl: function(tElement, tAttrs) {
+        if (tAttrs.editType === 'richtext') {
+          return '/scripts/directives/editable-richtext.html';
+        }
+        return '/scripts/directives/editable.html';
+      },
       link: function($scope) {
         $scope.mode = 'view';
       }
