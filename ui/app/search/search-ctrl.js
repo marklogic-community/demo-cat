@@ -28,7 +28,10 @@
           });
           if ( existing.length === 0 ) {
             model.selected.push({facet: facet, value: value});
-            searchContext.selectFacet(facet, value).then(updateSearchResults);
+            searchContext
+              .selectFacet(facet, value)
+              .search()
+              .then(updateSearchResults);
           }
         },
         clearFacet: function(facet, value) {
@@ -39,14 +42,23 @@
               break;
             }
           }
-          searchContext.clearFacet(facet, value).then(updateSearchResults);
+          searchContext
+            .clearFacet(facet, value)
+            .search()
+            .then(updateSearchResults);
         },
         textSearch: function() {
-          searchContext.setText(model.text).then(updateSearchResults);
+          searchContext
+            .setText(model.text)
+            .search()
+            .then(updateSearchResults);
           $location.path('/');
         },
         pageChanged: function(page) {
-          searchContext.setPage(page, model.pageLength).then(updateSearchResults);
+          searchContext
+            .setPage(page, model.pageLength)
+            .search()
+            .then(updateSearchResults);
         }
       });
 
