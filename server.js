@@ -54,38 +54,6 @@ exports.buildExpress = function(options) {
     });
   }
 
-  app.get('/v1*', function(req, res){
-    if (req.session.user === undefined) {
-      res.send(401, 'Unauthorized');
-    } else {
-      proxy(req, res);
-    }
-  });
-
-  app.put('/v1*', function(req, res){
-    if (req.session.user === undefined) {
-      res.send(401, 'Unauthorized');
-    } else if (req.path === '/v1/documents' &&
-      req.query.uri.match('/users/') &&
-      req.query.uri.match(new RegExp('/users/[^(' + req.session.user.name + ')]+.json'))) {
-      // The user is try to PUT to a profile document other than his/her own. Not allowed.
-      res.send(403, 'Forbidden');
-    } else {
-      if (req.path === '/v1/documents' && req.query.uri.match('/users/')) {
-        // TODO: The user is updating the profile. Update the session info.
-      }
-      proxy(req, res);
-    }
-  });
-
-  app.post('/v1*', function(req, res){
-    if (req.session.user === undefined) {
-      res.send(401, 'Unauthorized');
-    } else {
-      proxy(req, res);
-    }
-  });
-
   app.get('/user/status', function(req, res) {
     if (req.session.user === undefined) {
       res.send('{"authenticated": false}');
@@ -157,6 +125,69 @@ exports.buildExpress = function(options) {
   app.get('/user/logout', function(req, res) {
     delete req.session.user;
     res.send();
+  });
+
+  app.post('/demo/create', function(req, res) {
+    var queryString = req.originalUrl.split('?')[1];
+    var mlReq = http.request({
+      hostname: options.mlHost,
+      port: options.mlPort,
+      method: 'POST',
+      path: '/v1/documents?' + queryString,
+      headers: req.headers,
+      auth: getAuth(options, req.session)
+    }, function(response) {
+      console.log('created demo at: ' + response.headers.location);
+      res.write(JSON.stringify({href: response.headers.location}));
+      response.on('data', function(chunk) {
+        res.write(chunk);
+      });
+      response.on('end', function() {
+        res.end();
+      });
+    });
+
+    if (req.body !== undefined) {
+      mlReq.write(JSON.stringify(req.body));
+      mlReq.end();
+    }
+
+    mlReq.on('error', function(e) {
+      console.log('Problem with request: ' + e.message);
+    });
+
+  });
+
+  app.get('/v1*', function(req, res){
+    if (req.session.user === undefined) {
+      res.send(401, 'Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
+  app.put('/v1*', function(req, res){
+    if (req.session.user === undefined) {
+      res.send(401, 'Unauthorized');
+    } else if (req.path === '/v1/documents' &&
+      req.query.uri.match('/users/') &&
+      req.query.uri.match(new RegExp('/users/[^(' + req.session.user.name + ')]+.json'))) {
+      // The user is try to PUT to a profile document other than his/her own. Not allowed.
+      res.send(403, 'Forbidden');
+    } else {
+      if (req.path === '/v1/documents' && req.query.uri.match('/users/')) {
+        // TODO: The user is updating the profile. Update the session info.
+      }
+      proxy(req, res);
+    }
+  });
+
+  app.post('/v1*', function(req, res){
+    if (req.session.user === undefined) {
+      res.send(401, 'Unauthorized');
+    } else {
+      proxy(req, res);
+    }
   });
 
   app.use(express.static('ui/app'));
