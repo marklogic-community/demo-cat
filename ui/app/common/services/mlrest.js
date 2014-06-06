@@ -118,13 +118,13 @@
             } else {
               facetSelections[facet].push(value);
             }
-            return runSearch();
+            return this;
           },
           clearFacet: function(facet, value) {
             facetSelections[facet] = facetSelections[facet].filter( function( facetValue ) {
               return facetValue !== value;
             });
-            return runSearch();
+            return this;
           },
           getQueryOptions: function() {
             return options.queryOptions;
@@ -139,12 +139,12 @@
             } else {
               textQuery = null;
             }
-            return runSearch();
+            return this;
           },
           setPage: function(page, size) {
             var pageSize = size > 0 ? size : 10;
             start = 1 + (page - 1) * pageSize;
-            return runSearch();
+            return this;
           }
         };
       }
