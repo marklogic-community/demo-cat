@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', 'MLRest', 'Features', 'User', '$window', function ($scope, mlRest, features, user, win) {
+    .controller('CreateCtrl', ['$scope', 'MLRest', 'Features', 'User', '$window', '$http', function ($scope, mlRest, features, user, win, $http) {
       var model = {
         demo: {
           name: '',
@@ -19,7 +19,7 @@
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
-      
+
       angular.extend($scope, {
         model: model,
         editorOptions: {
@@ -42,14 +42,16 @@
           }
         },
         submit: function() {
-          mlRest.createDocument($scope.model.demo, {
-            format: 'json',
-            directory: '/demos/',
-            extension: '.json',
-            'perm:demo-cat-role': 'read',
-            'perm:demo-cat-registered-role': 'update'
-          }).then(function(data) {
-            win.location.href = '/detail?uri=' + data.replace(/(.*\?uri=)/, '');
+          $http.post('/demo/create', $scope.model.demo, {
+            params: {
+              format: 'json',
+              directory: '/demos/',
+              extension: '.json',
+              'perm:demo-cat-role': 'read',
+              'perm:demo-cat-registered-role': 'update'
+            }
+          }).then(function(response) {
+            win.location.href = '/detail?uri=' + response.data.href.replace(/(.*\?uri=)/, '');
           });
         }
       });
