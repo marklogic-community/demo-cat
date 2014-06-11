@@ -66,14 +66,18 @@
         showClosedBugs: false,
 
         saveField: function(field, value) {
+          var content = {};
+          content[field] = value;
           mlRest.patch(
             uri,
             {
               'patch': [
                 {
-                  'replace': {
+                  'replace-insert': {
                     'select': '$.' + field,
-                    'content': value
+                    'content': content,
+                    'context': '$',
+                    'position': 'last-child'
                   }
                 }
               ]
