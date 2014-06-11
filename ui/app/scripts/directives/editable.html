@@ -1,5 +1,6 @@
 <div ng-show="mode == 'view'" class="editable" ng-mouseover="hover=true" ng-mouseleave="hover=false">
-  <span class="value" ng-show="editType !== 'richtext'">{{editModel}}</span>
+  <span class="value" ng-if="editType !== 'link'">{{editModel}}</span>
+  <a ng-href="{{prefix}}{{editModel}}" ng-if="editType === 'link'">{{editModel}}</a>
   <span ng-show="enabled && mode == 'view' && hover" ng-click="enabled && (mode = 'edit')" class="glyphicon glyphicon-edit"></span>
 </div>
 <div ng-show="mode === 'edit' &amp;&amp; editType === 'textarea'" class="editor">
@@ -7,7 +8,7 @@
   <a href="#" ng-click="mode = 'view'">Cancel</a>
   <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
 </div>
-<div ng-show="mode == 'edit' &amp;&amp; editType === 'text'" class="editor">
+<div ng-show="mode == 'edit' &amp;&amp; (editType === 'text' || editType === 'link') " class="editor">
   <input type="text" ng-model="editModel"/>
   <a href="#" ng-click="mode = 'view'">Cancel</a>
   <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
