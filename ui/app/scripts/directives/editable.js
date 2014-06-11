@@ -13,7 +13,8 @@
         editModel: '=editModel',
         save: '&save',
         editOptions: '=editOptions',
-        richTextOptions: '='
+        richTextOptions: '=',
+        prefix: '@prefix'
       },
       // Rich text uses its own template. If done together, the ckEditor for rich text adds a <p> wrapper to
       // non-rich-text content. That can be prevented with ng-if, but that triggers a new scope, meaning you
