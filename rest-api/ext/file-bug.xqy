@@ -9,8 +9,8 @@ import module namespace utilities="http://marklogic.com/demo-cat/utilities" at "
 declare namespace roxy = "http://marklogic.com/roxy";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
-(: 
- : To add parameters to the functions, specify them in the params annotations. 
+(:
+ : To add parameters to the functions, specify them in the params annotations.
  : Example
  :   declare %roxy:params("uri=xs:string", "priority=xs:int") file-bug:get(...)
  : This means that the get function will take two parameters, a string and an int.
@@ -19,7 +19,7 @@ declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 (:
 Receive the bug and adjust it with proper values.
  :)
-declare 
+declare
 %roxy:params("uri=xs:string")
 function file-bug:post(
     $context as map:map,
@@ -31,9 +31,9 @@ function file-bug:post(
   (: get 'input-types' to use in content negotiation :)
   let $input-types := map:get($context,"input-types")
   let $uri := xdmp:url-decode(map:get($params,"uri"))
-  let $negotiate := 
+  let $negotiate :=
       if ($input-types = ("application/json"))
-      then () (: process, insert/update :) 
+      then () (: process, insert/update :)
       else error((),"ACK",
         "Invalid type, accepts application/json only")
   let $json-xml := json:transform-from-json(fn:string($input))
@@ -67,8 +67,8 @@ function file-bug:post(
 (:
 Change a bug property value.
  :)
-declare 
-%roxy:params("uri=xs:string","id=xs:string", "property=xs:string","value=xs:anyAtomicType")
+declare
+%roxy:params("uri=xs:string","id=xs:string", "property=xs:string")
 function file-bug:put(
     $context as map:map,
     $params  as map:map,
@@ -79,7 +79,7 @@ function file-bug:put(
   let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
   let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
   let $property as xs:string := xdmp:url-decode(map:get($params,"property"))
-  let $value as xs:string := fn:string($input)
+  let $value as xs:string := map:get(xdmp:from-json(fn:string($input)),"value")
   (: build property qn :)
   let $property-qn := fn:QName($json-helper:JSON_NS,$property)
   (: find bug property :)
@@ -96,7 +96,7 @@ function file-bug:put(
 (:
 deletes a bug when requested by someone who is the creator
  :)
-declare 
+declare
 %roxy:params("uri=xs:string","id=xs:string")
 function file-bug:delete(
     $context as map:map,

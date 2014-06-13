@@ -181,12 +181,11 @@
         },
 
         updateItemInArray: function(extensionName, itemId, propertyName, propertyValue) {
-          // send comment to server
-          // reset the comment form after the comment is sent
+          // make call to extension with item id
           mlRest.callExtension(extensionName,
             {
               method: 'PUT',
-              data: propertyValue,
+              data: { 'value':propertyValue },
               params: {
                 'rs:uri': uri,
                 'rs:id': itemId,
@@ -208,12 +207,6 @@
           $scope.addToDemoArray('comments',result);
           $scope.model.additionalComment.msg = '';
         }
-      });
-    }]);
-  angular.module('demoCat')
-    .controller('BugCtrl', ['$scope', function ($scope) {
-      $scope.$watch('bug.status', function (status) {
-        $scope.updateItemInArray('file-bug',$scope.bug.id,'status',status);
       });
     }]);
 }());

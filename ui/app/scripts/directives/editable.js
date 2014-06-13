@@ -4,7 +4,7 @@
 
   var module = angular.module('demoCat');
 
-  module.directive('editable', [function () {
+  module.directive('editable', ['$timeout',function ($timeout) {
     return {
       restrict: 'AE',
       scope: {
@@ -27,6 +27,14 @@
       },
       link: function($scope) {
         $scope.mode = 'view';
+        $scope.delayedSave = function() {
+          $timeout(
+            function () {
+              $scope.save();
+            },
+            0
+          );
+        };
       }
     };
   }]);
