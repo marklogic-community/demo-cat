@@ -7,8 +7,8 @@ import module namespace json-helper="http://marklogic.com/demo-cat/json-helper" 
 
 declare namespace roxy = "http://marklogic.com/roxy";
 
-(: 
- : To add parameters to the functions, specify them in the params annotations. 
+(:
+ : To add parameters to the functions, specify them in the params annotations.
  : Example
  :   declare %roxy:params("uri=xs:string", "priority=xs:int") comment:get(...)
  : This means that the get function will take two parameters, a string and an int.
@@ -18,7 +18,7 @@ declare namespace roxy = "http://marklogic.com/roxy";
 (:
 Receive the comment and adjust it with proper values.
  :)
-declare 
+declare
 %roxy:params("uri=xs:string")
 function comment:post(
     $context as map:map,
@@ -30,9 +30,9 @@ function comment:post(
   (: get 'input-types' to use in content negotiation :)
   let $input-types := map:get($context,"input-types")
   let $uri := xdmp:url-decode(map:get($params,"uri"))
-  let $negotiate := 
+  let $negotiate :=
       if ($input-types = ("application/json"))
-      then () (: process, insert/update :) 
+      then () (: process, insert/update :)
       else error((),"ACK",
         "Invalid type, accepts application/json only")
   let $json-xml := json:transform-from-json(fn:string($input))
@@ -49,7 +49,7 @@ function comment:post(
 (:
 Change a comment property value.
  :)
-declare 
+declare
 %roxy:params("uri=xs:string","id=xs:string", "property=xs:string")
 function comment:put(
     $context as map:map,
@@ -61,7 +61,7 @@ function comment:put(
   let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
   let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
   let $property as xs:string := xdmp:url-decode(map:get($params,"property"))
-  let $value as xs:string := fn:string($input)
+  let $value as xs:string := map:get(xdmp:from-json(fn:string($input)),"value")
   (: build property qn :)
   let $property-qn := fn:QName($json-helper:JSON_NS,$property)
   (: find bug property :)
@@ -78,7 +78,7 @@ function comment:put(
 (:
 deletes a comment when requested by someone who is the creator
  :)
-declare 
+declare
 %roxy:params("uri=xs:string","id=xs:string")
 function comment:delete(
     $context as map:map,

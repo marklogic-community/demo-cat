@@ -14,5 +14,5 @@
   <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
 </div>
 <div ng-show="mode == 'edit' &amp;&amp; editType === 'select'" class="editor">
-  <select ng-model="editModel" ng-options="option for option in editOptions" ng-change="mode='view'; save()"></select>
+  <select ng-model="editModel" ng-change="delayedSave()" ng-options="option for option in editOptions"></select>
 </div>
