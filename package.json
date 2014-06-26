@@ -17,7 +17,7 @@
     "karma-jasmine": "^0.1.5",
     "phantomjs": "^1.9.7-4",
     "karma-phantomjs-launcher": "^0.1.4",
-    "gulp": "^3.6.2",
+    "gulp": "3.8.x",
     "gulp-jshint": "^1.5.5",
     "gulp-less": "^1.2.3",
     "gulp-rename": "^1.2.0",

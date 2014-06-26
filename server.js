@@ -23,7 +23,10 @@ exports.buildExpress = function(options) {
 
   app.use(cookieParser());
   app.use(expressSession({secret: '1234567890QWERTY'}));
-  app.use(bodyParser());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
 
   function proxy(req, res) {
     var queryString = req.originalUrl.split('?')[1];
