@@ -1,5 +1,4 @@
-<h1>Demo Cat</h1>
-<div class="row">
+<div class="row" ng-show="model.user.authenticated">
   <facets facet-list="model.search.facets" selected="model.selected" class="col-md-3"
           select="selectFacet(facet, value)" clear="clearFacet(facet, value)"></facets>
   <results result-list="model.search.results" total="model.search.total" current-page="model.currentPage"
