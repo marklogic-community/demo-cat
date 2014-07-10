@@ -23,7 +23,7 @@
       }
     };
   }])
-  .controller('UserController', ['$scope', 'User', '$http', '$location', function ($scope, user, $http, $location) {
+  .controller('UserController', ['$scope', 'User', '$http', '$location', '$route', function ($scope, user, $http, $location, $route) {
     angular.extend($scope, {
       login: function(username, password) {
         $http.get(
@@ -40,6 +40,7 @@
               if (result.data.profile !== undefined) {
                 user.fullname = result.data.profile.fullname;
                 user.emails = result.data.profile.emails;
+                $route.reload();
               } else {
                 $location.path('/profile');
               }
@@ -53,6 +54,7 @@
           '/user/logout',
           {}).then(function() {
             user.init();
+            $route.reload();
           });
       }
 
