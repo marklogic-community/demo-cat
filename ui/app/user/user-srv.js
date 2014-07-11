@@ -25,8 +25,6 @@
       }
     }
 
-    $http.get('/user/status', {}).then(updateUser);
-
     user.init = function init() {
       user.name = '';
       user.password = '';
@@ -37,6 +35,11 @@
       user.emails = [];
       return user;
     };
+
+    (function(){
+      user.init();
+      $http.get('/user/status', {}).then(updateUser);
+    })();
 
     return user;
   }]);

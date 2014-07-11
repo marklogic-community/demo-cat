@@ -3,7 +3,7 @@
 describe('Directive: facets', function () {
   var scope, element;
 
-  beforeEach(module('demoCat', 'app-templates'));
+  beforeEach(module('demoCat.search', 'app-templates'));
 
   beforeEach(inject( function($compile, $rootScope) {
     element = '<facets facet-list="model.search.facets" selected="model.selected"/>';
