@@ -23,14 +23,23 @@ module.exports = function(config) {
       'ui/app/bower_components/ckeditor/ckeditor.js',
       'ui/app/bower_components/ng-ckeditor/ng-ckeditor.js',
       'ui/app/bower_components/mlFacets/dist/ml-facets.js',
-      'ui/app/scripts/**/*.html',
+      'ui/app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'ui/app/bower_components/angular-sanitize/angular-sanitize.min.js',
       'ui/app/scripts/**/*.js',
-      'ui/test/**/*.js'
+      'ui/app/common/**/*.js',
+      'ui/app/search/search.js',
+      'ui/app/search/*.js',
+      'ui/app/user/user.js',
+      'ui/app/user/*.js',
+      'ui/test/**/*.js',
+      'ui/app/scripts/directives/*.html',
+      'ui/app/search/*.html'
     ],
 
     // generate js files from html templates
     preprocessors: {
-      'ui/app/scripts/**/*.html': 'ng-html2js'
+      'ui/app/scripts/directives/*.html': ['ng-html2js'],
+      'ui/app/search/*.html': ['ng-html2js']
     },
 
     ngHtml2JsPreprocessor: {

@@ -6,6 +6,7 @@ describe('editable directive', function () {
   beforeEach(module('demoCat', 'app-templates'));
 
   beforeEach(inject( function($compile, $rootScope) {
+
     element = '<editable edit-model="model.demo.username" edit-type="text"/>';
     scope = $rootScope.$new();
     scope.model = {
