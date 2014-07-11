@@ -1,5 +1,0 @@
-#!/bin/bash
-
-./ml local-deploy bootstrap
-./ml local-deploy deploy modules
-./ml local bootstrap
