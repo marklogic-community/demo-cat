@@ -4,7 +4,10 @@
   <h4><a ng-href="/detail?uri={{result.uri}}">{{result.metadata.name[0]}}</a></h4>
   <div class="matches">
     <div ng-repeat="match in result.matches">
-      <div ng-repeat="text in match['match-text']">{{text}}</div>
+      <span ng-repeat="text in match['match-text'] track by $index">
+        <span ng-if="text.highlight === undefined">{{text}}</span>
+        <span class="highlight" ng-if="text.highlight !== undefined">{{text.highlight}}</span>
+      </span>
     </div>
   </div>
 </div>
