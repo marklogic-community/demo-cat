@@ -56,8 +56,8 @@
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
 
-      mlRest.getDocument(uri, { format: 'json' }).then(function(data) {
-        model.demo = data;
+      mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
+        model.demo = response.data;
       });
 
       angular.extend($scope, {

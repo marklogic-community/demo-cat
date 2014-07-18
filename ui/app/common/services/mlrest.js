@@ -48,12 +48,16 @@
       function SearchContext(options, $q, $http) {
         options = options || {};
 
+        var boostQueries = [];
         var facetSelections = {};
         var textQuery = null;
+        var snippet = 'compact';
+        var sort = null;
         var start = 1;
 
         (function init(){
           options.queryOptions = options.queryOptions ? options.queryOptions : 'all';
+          options.pageLength = options.pageLength ? options.pageLength : 10;
         })();
 
         function runSearch() {
@@ -65,7 +69,8 @@
                 format: 'json',
                 options: options.queryOptions,
                 structuredQuery: getStructuredQuery(),
-                start: start
+                start: start,
+                pageLength: options.pageLength
               }
             })
           .success(
@@ -80,34 +85,123 @@
           return d.promise;
         }
 
-        function getStructuredQuery() {
-          var structured = {
-            query: {
-              'and-query': {
-                'queries': []
-              }
-            }
-          };
+        function buildFacetQuery(queries) {
           var facet;
           for (facet in facetSelections) {
-            if (facetSelections.hasOwnProperty(facet)) {
-              structured.query['and-query'].queries.push(
-                {
-                  'range-constraint-query': {
-                    'constraint-name': facet,
-                    'value': facetSelections[facet]
+            if (facetSelections.hasOwnProperty(facet) && facetSelections[facet].length > 0) {
+              // TODO: derive constraint type from search options!
+              if (facet === 'Dataset') {
+                queries.push(
+                  {
+                    'collection-constraint-query': {
+                      'constraint-name': 'Dataset',
+                      'uri': [facetSelections[facet]]
+                    }
                   }
-                }
-              );
+                );
+              } else if (options.customConstraintNames !== undefined && options.customConstraintNames.indexOf(facet) > -1) {
+                queries.push(
+                  {
+                    'custom-constraint-query' : {
+                      'constraint-name': facet,
+                      'value': facetSelections[facet]
+                    }
+                  }
+                );
+              } else  {
+                queries.push(
+                  {
+                    'range-constraint-query' : {
+                      'constraint-name': facet,
+                      'value': facetSelections[facet]
+                    }
+                  }
+                );
+              }
             }
           }
+        }
+
+        function getStructuredQuery() {
+          var queries = [];
+          var structured;
+
+          buildFacetQuery(queries);
+
           if (textQuery !== null) {
-            structured.query['and-query'].queries.push({
-              'term-query': {
-                text: textQuery
+            queries.push({
+              'qtext': textQuery
+            });
+          }
+
+          if (boostQueries.length > 0) {
+            structured = {
+              query: {
+                'queries': [{
+                  'boost-query': {
+                    'matching-query': {
+                      'and-query': {
+                        'queries': queries
+                      }
+                    },
+                    'boosting-query': {
+                      'and-query': {
+                        'queries': boostQueries
+                      }
+                    }
+                  }
+                }]
+              }
+            };
+          } else {
+            structured = {
+              query: {
+                'queries': [{
+                  'and-query': {
+                    'queries': queries
+                  }
+                }]
+              }
+            };
+          }
+
+          if (options.includeProperties) {
+            structured = {
+              query: {
+                'queries': [{
+                  'or-query': {
+                    'queries': [
+                      structured,
+                      { 'properties-query': structured }
+                    ]
+                  }
+                }]
+              }
+            };
+          }
+
+          if (sort) {
+            // TODO: this assumes that the sort operator is called "sort", but
+            // that isn't necessarily true. Properly done, we'd get the options
+            // from the server and find the operator that contains sort-order
+            // elements
+            structured.query.queries.push({
+              'operator-state': {
+                'operator-name': 'sort',
+                'state-name': sort
               }
             });
           }
+
+          if (snippet) {
+            structured.query.queries.push({
+              'operator-state': {
+                'operator-name': 'results',
+                'state-name': snippet
+              }
+            });
+          }
+
           return structured;
         }
 
@@ -126,6 +220,10 @@
             });
             return this;
           },
+          clearAllFacets: function() {
+            facetSelections = {};
+            return this;
+          },
           getQueryOptions: function() {
             return options.queryOptions;
           },
@@ -141,9 +239,12 @@
             }
             return this;
           },
-          setPage: function(page, size) {
-            var pageSize = size > 0 ? size : 10;
-            start = 1 + (page - 1) * pageSize;
+          setPage: function(page) {
+            start = 1 + (page - 1) * options.pageLength;
+            return this;
+          },
+          sortBy: function(sortField) {
+            sort = sortField;
             return this;
           }
         };
@@ -154,41 +255,28 @@
           createSearchContext: function(options) {
             return new SearchContext(options, $q, $http);
           },
-          getDocument: function(uri) {
-            var d = $q.defer();
-            $http.get(
+          getDocument: function(uri, options) {
+            if (options === undefined || options === null) {
+              options = {};
+            }
+            angular.extend(options, {
+              format: 'json',
+              uri: uri
+            });
+            return $http.get(
               '/v1/documents',
               {
-                params: {
-                  format: 'json',
-                  uri: uri
-                }
-              })
-            .success(
-              function(data) {
-                d.resolve(data);
-              })
-            .error(
-              function(reason) {
-                d.reject(reason);
+                params: options
               });
-            return d.promise;
           },
           createDocument: function(doc, options) {
             // send a POST request to /v1/documents
-            var d = $q.defer();
-            $http.post(
+            return $http.post(
               '/v1/documents',
               doc,
               {
                 params: options
-              })
-              .success(function(data, status, headers, config) {
-                d.resolve(headers('location'));
-              }).error(function(reason) {
-                d.reject(reason);
               });
-            return d.promise;
           },
           updateDocument: function(doc, options) {
             // send a PUT request to /v1/documents
