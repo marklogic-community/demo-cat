@@ -530,7 +530,9 @@
       <description>A user for the @ml.app-name application</description>
       <password>bobspassword</password>
       <role-names>
-        <role-names>@ml.app-name-registered-role</role-names>
+        <role-name>@ml.app-name-registered-role</role-name>
+        <role-name>rest-reader</role-name>
+        <role-name>rest-writer</role-name>
       </role-names>
       <permissions/>
       <collections/>
