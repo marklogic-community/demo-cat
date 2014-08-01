@@ -10,3 +10,4 @@ mlcp.conf
 deploy/local-deploy.properties
 .DS_Store
 dist
+*.pid
