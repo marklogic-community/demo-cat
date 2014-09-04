@@ -47,6 +47,14 @@
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
+  <search:constraint name="domain">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:path-index
+        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:domains/jbasic:item</search:path-index>
+      <search:facet-option>limit=15</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:constraint>
   <search:sort-order direction="descending">
     <search:score/>
   </search:sort-order>

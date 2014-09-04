@@ -18,8 +18,15 @@
       <li ng-repeat="browser in model.demo.browsers">{{browser}}</li>
     </ul>
   </div>
-  <features enabled="model.user.authenticated" edit-features="model.demo.features" feature-choices="model.featureChoices"
+  <items enabled="model.user.authenticated" edit-items="model.demo.features" item-choices="model.featureChoices" label="Features"
             edit-type="inline" mode="view" save="saveField('features', model.demo.features)"/>
+  <items enabled="model.user.authenticated" edit-items="model.demo.domains" item-choices="model.domainChoices" label="Domains"
+            edit-type="inline" mode="view" save="saveField('domains', model.demo.domains)"/>
+
+  <!--
+  <domains enabled="model.user.authenticated" edit-domains="model.demo.domains" domain-choices="model.domainChoices"
+            edit-type="inline" mode="view" save="saveField('domains', model.demo.domains)"/>
+  -->
   <div class="repo col-md-12">
     <label>Code repo</label>
     <editable enabled="model.user.authenticated" edit-model="model.demo.repo" edit-type="text" save="saveField('repo', model.demo.repo)"/>

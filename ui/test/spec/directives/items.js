@@ -1,23 +1,23 @@
 'use strict';
 
-describe('Directive: features', function () {
+describe('Directive: items', function () {
   var scope, element;
 
   beforeEach(module('demoCat', 'app-templates'));
 
   beforeEach(inject( function($compile, $rootScope) {
-    element = '<features edit-features="model.demo.features" feature-choices="model.featureChoices" edit-type="inline" mode="view"/>';
+    element = '<items edit-items="model.demo.features" item-choices="model.featureChoices" edit-type="inline" mode="view"/>';
     element = $compile(element)($rootScope);
     $rootScope.$digest();
     scope = element.isolateScope();
 
     angular.extend(scope, {
-      featureChoices: {
+      itemChoices: {
         list: ['blue', 'green'],
-        optFeature: '',
-        selFeature: ''
+        optItem: '',
+        selItem: ''
       },
-      editFeatures: ['black']
+      editItems: ['black']
     });
 
   }));
@@ -27,7 +27,7 @@ describe('Directive: features', function () {
     scope.$digest();
 
     expect( $( element ).find('ul') ).not.toHaveClass('ng-hide');
-    expect( $( element ).find('div.features-edit') ).toHaveClass('ng-hide');
+    expect( $( element ).find('div.items-edit') ).toHaveClass('ng-hide');
   });
 
   it('should show edit-form when mode="edit"', function () {
@@ -35,7 +35,7 @@ describe('Directive: features', function () {
     scope.$digest();
 
     expect( $( element ).find('ul') ).toHaveClass('ng-hide');
-    expect( $( element ).find('.features-edit') ).not.toHaveClass('ng-hide');
+    expect( $( element ).find('.items-edit') ).not.toHaveClass('ng-hide');
   });
 
   it('should show cancel/save when mode="edit" and editType="inline"', function () {
@@ -46,22 +46,22 @@ describe('Directive: features', function () {
     expect( $( element ).find('.inline-controls') ).not.toHaveClass('ng-hide');
   });
 
-  it('should add selected feature', function () {
+  it('should add selected item', function () {
     scope.mode = 'edit';
-    scope.featureChoices.optFeature = 'blue';
-    $( element ).find('.add-feature').trigger('click');
+    scope.itemChoices.optItem = 'blue';
+    $( element ).find('.add-item').trigger('click');
     scope.$digest();
 
-    expect( scope.editFeatures.indexOf('blue') > -1 ).toBe(true);
+    expect( scope.editItems.indexOf('blue') > -1 ).toBe(true);
   });
 
-  it('should add new feature', function () {
+  it('should add new item', function () {
     scope.mode = 'edit';
-    scope.featureChoices.selFeature = 'pink';
-    $( element ).find('.add-feature').trigger('click');
+    scope.itemChoices.selItem = 'pink';
+    $( element ).find('.add-item').trigger('click');
     scope.$digest();
 
-    expect( scope.editFeatures.indexOf('pink') > -1 ).toBe(true);
+    expect( scope.editItems.indexOf('pink') > -1 ).toBe(true);
   });
 
 });

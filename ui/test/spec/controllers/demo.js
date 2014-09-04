@@ -11,6 +11,7 @@ describe('Controller: DemoCtrl', function () {
       hostType: 'internal',
       browsers: [],
       features: [],
+      domains: [],
       languages: [],
       comments: [],
       bugs: []
@@ -49,6 +50,7 @@ describe('Controller: DemoCtrl', function () {
         '$scope': $scope,
         'MLRest': mlRest,
         'features': {},
+        'domains': {},
         'User': user,
         '$routeParams': routeParams
       });
