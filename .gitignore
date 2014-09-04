@@ -11,3 +11,7 @@ deploy/local-deploy.properties
 .DS_Store
 dist
 *.pid
+
+*.sublime-project
+
+*.sublime-workspace

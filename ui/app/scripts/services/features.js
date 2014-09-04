@@ -46,8 +46,8 @@
           'Visualization widgets',
           'Workflow queue'
         ],
-        selFeature: '',
-        optFeature: 'Select...'
+        selItem: '',
+        optItem: 'Select...'
       };
 
       this.$get = function() {

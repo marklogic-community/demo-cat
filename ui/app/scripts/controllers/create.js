@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', 'Features', 'User', '$window', '$http', function ($scope, features, user, win, $http) {
+    .controller('CreateCtrl', ['$scope', 'Features', 'Domains', 'User', '$window', '$http', function ($scope, features, domains, user, win, $http) {
       var model = {
         demo: {
           name: '',
@@ -11,11 +11,13 @@
           hostType: 'internal',
           browsers: [],
           features: [],
+          domains: [],
           languages: [],
           bugs: [],
           comments: []
         },
         featureChoices: features.list(),
+        domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };

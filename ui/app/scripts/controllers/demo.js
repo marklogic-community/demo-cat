@@ -3,8 +3,8 @@
 
   angular.module('demoCat')
     .controller('DemoCtrl',
-      ['$scope', 'MLRest', 'Features', 'User', '$routeParams',
-      function ($scope, mlRest, features, user, $routeParams) {
+      ['$scope', 'MLRest', 'Features', 'Domains', 'User', '$routeParams',
+      function ($scope, mlRest, features, domains, user, $routeParams) {
       var uri = $routeParams.uri;
       var commentModel =
         {
@@ -37,6 +37,7 @@
         additionalBug: bugModel,
         edit: '',
         featureChoices: features.list(),
+        domainChoices: domains.list(),
         // TODO We probably want only one place to edit browser choices
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         bugStatuses: ['open', 'closed'],
