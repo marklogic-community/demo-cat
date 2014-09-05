@@ -282,19 +282,19 @@
         </range-path-index>
 -->
         <range-path-index>
-            <scalar-type>string</scalar-type>
-            <collation>http://marklogic.com/collation/codepoint</collation>
-            <path-expression>jbasic:features/jbasic:item</path-expression>
-            <range-value-positions>false</range-value-positions>
-            <invalid-values>reject</invalid-values>
+          <scalar-type>string</scalar-type>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <path-expression>jbasic:features/jbasic:item</path-expression>
+          <range-value-positions>false</range-value-positions>
+          <invalid-values>reject</invalid-values>
         </range-path-index>
 
         <range-path-index>
-            <scalar-type>string</scalar-type>
-            <collation>http://marklogic.com/collation/codepoint</collation>
-            <path-expression>jbasic:domains/jbasic:item</path-expression>
-            <range-value-positions>false</range-value-positions>
-            <invalid-values>ignore</invalid-values>
+          <scalar-type>string</scalar-type>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <path-expression>jbasic:domains/jbasic:item</path-expression>
+          <range-value-positions>false</range-value-positions>
+          <invalid-values>ignore</invalid-values>
         </range-path-index>
 
       </range-path-indexes>
