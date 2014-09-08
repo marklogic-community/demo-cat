@@ -77,7 +77,8 @@ function file-bug:put(
 {
   map:put($context, "output-types", "application/json"),
   let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
-  let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
+  (: Don't urldecode the bug's ID.  The ID can have a + in it, which turns into a space. :)
+  let $id as xs:string := map:get($params,"id")
   let $property as xs:string := xdmp:url-decode(map:get($params,"property"))
   let $value as xs:string := map:get(xdmp:from-json(fn:string($input)),"value")
   (: build property qn :)
@@ -111,5 +112,6 @@ function file-bug:delete(
   return (
     xdmp:set-response-code(200, "OK"),
     document {'{"status":"success"}'}
+
   )
 };
