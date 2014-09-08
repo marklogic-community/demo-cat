@@ -68,17 +68,19 @@ describe('Controller: DemoCtrl', function () {
       .respond(function(method, url, data) { return [200, data, {'Content-Type':'application/json'}]; });
     createController();
     $httpBackend.flush();
-    $scope.addBug({'msg': 'Status won\'t update', 'browser':'IE', 'status':'open'});
+    $scope.addBug({'msg': 'Status won\'t update', 'browser':'IE', 'status':'open', 'type':'defect'});
     $httpBackend.flush();
     expect($scope.model.demo.bugs.length).toBe(1);
     expect($scope.model.demo.bugs[0].msg).toBe('Status won\'t update');
     expect($scope.model.demo.bugs[0].status).toBe('open');
+    expect($scope.model.demo.bugs[0].type).toBe('defect');
     //testing adding a second bug
-    $scope.addBug({'msg': 'Page won\'t load', 'browser':'Chrome', 'status':'closed'});
+    $scope.addBug({'msg': 'Page won\'t load', 'browser':'Chrome', 'status':'closed', 'type':'enhancement'});
     $httpBackend.flush();
     expect($scope.model.demo.bugs.length).toBe(2);
     expect($scope.model.demo.bugs[1].msg).toBe('Page won\'t load');
     expect($scope.model.demo.bugs[1].status).toBe('closed');
+    expect($scope.model.demo.bugs[1].type).toBe('enhancement');
   });
 
 
