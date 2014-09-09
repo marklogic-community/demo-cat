@@ -40,7 +40,7 @@
     <button class="btn btn-primary" ng-show="model.user.authenticated && !showBugForm" ng-click="showBugForm = true">Add</button>
     <form ng-show="model.user.authenticated && showBugForm">
       <fieldset class="col-md-12">
-        <label class="col-md-2">Bug description</label>
+        <label class="col-md-2">Description</label>
         <textarea ng-model="model.additionalBug.msg" name="bugDescription" required></textarea>
       </fieldset>
       <fieldset class="col-md-12">
