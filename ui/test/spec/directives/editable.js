@@ -42,4 +42,13 @@ describe('editable directive', function () {
     expect( $( element ).find('textarea') ).not.toHaveClass('ng-hide');
   });
 
+  it('should show select when mode="edit" and editType="select"', function () {
+    scope.mode = 'edit';
+    scope.editType = 'select';
+    scope.$digest();
+
+    expect( $( element ).find('select') ).not.toHaveClass('ng-hide');
+  });
+
+
 });

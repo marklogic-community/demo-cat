@@ -50,10 +50,12 @@ function file-bug:post(
   let $maintainer-name as xs:string? := $demo/jbasic:maintainer
   (: get maintainer email :)
   let $maintainer-email as xs:string? := $demo/jbasic:email
+  (: get bug type - defect or enhancement :)
+  let $bug-type as xs:string? := $json-xml/jbasic:type
   (: build message :)
   let $message :=
     <div xmlns="http://www.w3.org/1999/xhtml">
-      <h2>New Bug for "<a href="http://{xdmp:get-request-header('Host')}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
+      <h2>New {$bug-type} bug for "<a href="http://{xdmp:get-request-header('Host')}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
       <p>Opened by {$populated-xml/jbasic:username/node()}</p>
       <div>{$populated-xml/jbasic:msg/node()}</div>
     </div>
@@ -77,17 +79,27 @@ function file-bug:put(
 {
   map:put($context, "output-types", "application/json"),
   let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
-  let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
+  (: Don't urldecode the bug's ID.  The ID can have a + in it, which turns into a space. :)
+  let $id as xs:string := map:get($params,"id")
   let $property as xs:string := xdmp:url-decode(map:get($params,"property"))
   let $value as xs:string := map:get(xdmp:from-json(fn:string($input)),"value")
   (: build property qn :)
   let $property-qn := fn:QName($json-helper:JSON_NS,$property)
-  (: find bug property :)
-  let $property-to-be-updated := json-helper:find-in-array($uri,'bugs',$id)/*[fn:node-name(.) eq $property-qn]
-  (: create property with new value :)
-  let $new-property := json-helper:set-element-value($property-to-be-updated,$value)
+  (: find bug and property :)
+  let $bug-to-be-updated := json-helper:find-in-array($uri,'bugs',$id)
+  let $property-to-be-updated := $bug-to-be-updated/*[fn:node-name(.) eq $property-qn]
+  let $update-noop :=
+    if (fn:exists($property-to-be-updated))
+    then
+      (: create property with new value and node-replace it :)
+      let $new-property := json-helper:set-element-value($property-to-be-updated,$value)
+      return xdmp:node-replace($property-to-be-updated,$new-property)
+    else
+      (: We're adding a new field that the bug doesn't have yet.  :)
+      let $add-property :=
+        element {$property-qn} { attribute type {"string"}, $value }
+      return xdmp:node-insert-child($bug-to-be-updated,$add-property)
   return (
-    xdmp:node-replace($property-to-be-updated,$new-property),
     xdmp:set-response-code(200, "OK"),
     document {'{"status":"success"}'}
   )
@@ -111,5 +123,6 @@ function file-bug:delete(
   return (
     xdmp:set-response-code(200, "OK"),
     document {'{"status":"success"}'}
+
   )
 };
