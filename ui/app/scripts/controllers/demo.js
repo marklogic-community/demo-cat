@@ -21,6 +21,7 @@
           msg:'',
           browser: '',
           status: 'open',
+          type: '',
           // the values below are set server-side
           id: null,
           username: null,
@@ -40,6 +41,7 @@
         domainChoices: domains.list(),
         // TODO We probably want only one place to edit browser choices
         browserChoices: ['Firefox', 'Chrome', 'IE'],
+        bugChoices: ['defect', 'enhancement'],
         bugStatuses: ['open', 'closed'],
         editorOptions: {
           height: '100px',
@@ -131,14 +133,14 @@
         },
 
         addBug: function(bug) {
-          // add comments array if it doesn't exist
-          // this is for demos created before adding comments
+          // add bugs array if it doesn't exist
+          // this is for demos created before adding bugs
           if (typeof $scope.model.demo.bugs === 'undefined') {
             $scope.insertField('', {'bugs':[]},'last-child');
             $scope.model.demo.bugs = [];
           }
-          // send comment to server
-          // reset the comment form after the comment is sent
+          // send bug to server
+          // reset the bug form after the bug is sent
           mlRest.callExtension('file-bug',
             {
               method: 'POST',
@@ -155,6 +157,7 @@
               $scope.addToDemoArray('bugs',result);
               $scope.model.additionalBug.msg = '';
               $scope.model.additionalBug.browser = '';
+              $scope.model.additionalBug.type = '';
             }
           );
         },

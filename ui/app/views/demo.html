@@ -22,11 +22,6 @@
             edit-type="inline" mode="view" save="saveField('features', model.demo.features)"/>
   <items enabled="model.user.authenticated" edit-items="model.demo.domains" item-choices="model.domainChoices" label="Domains"
             edit-type="inline" mode="view" save="saveField('domains', model.demo.domains)"/>
-
-  <!--
-  <domains enabled="model.user.authenticated" edit-domains="model.demo.domains" domain-choices="model.domainChoices"
-            edit-type="inline" mode="view" save="saveField('domains', model.demo.domains)"/>
-  -->
   <div class="repo col-md-12">
     <label>Code repo</label>
     <editable enabled="model.user.authenticated" edit-model="model.demo.repo" edit-type="text" save="saveField('repo', model.demo.repo)"/>
@@ -41,12 +36,18 @@
     <editable enabled="model.user.authenticated" edit-model="model.demo.version" edit-type="text" save="saveField('version', model.demo.version)"/>
   </div>
   <div class="open-bugs col-md-12">
-    <label>Open Bugs</label>
+    <label>Open Bugs & RFEs</label>
     <button class="btn btn-primary" ng-show="model.user.authenticated && !showBugForm" ng-click="showBugForm = true">Add</button>
     <form ng-show="model.user.authenticated && showBugForm">
       <fieldset class="col-md-12">
         <label class="col-md-2">Bug description</label>
         <textarea ng-model="model.additionalBug.msg" name="bugDescription" required></textarea>
+      </fieldset>
+      <fieldset class="col-md-12">
+        <label class="col-md-2">Type</label>
+        <select ng-model="model.additionalBug.type" name="bugType" required>
+          <option ng-repeat="type in model.bugChoices" value="{{type}}">{{type}}</option>
+        </select>
       </fieldset>
       <fieldset class="col-md-12">
         <label class="col-md-2">Browser</label>
@@ -63,19 +64,21 @@
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
         <li class="bug-status">Status: <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
+        <li class="bug-status">Type: <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
         <li class="bug-dateTime">Created by {{bug.username}} on {{bug.dateTime}}</li>
         <li class="bug-browser">Browser: {{bug.browser}}</li>
       </ul>
     </div>
   </div>
   <div class="closed-bugs col-md-12">
-    <label>Closed Bugs</label>
+    <label>Closed Bugs & RFEs</label>
     <a href="#" ng-show="!showClosedBugs" ng-click="showClosedBugs = true">Expand</a>
     <a href="#" ng-show="showClosedBugs" ng-click="showClosedBugs = false">Collapse</a>
     <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo.bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
         <li class="bug-status">Status: <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
+        <li class="bug-status">Type: <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
         <li class="bug-dateTime">Created by {{bug.username}} on {{bug.dateTime}}</li>
         <li class="bug-browser">Browser: {{bug.browser}}</li>
       </ul>
