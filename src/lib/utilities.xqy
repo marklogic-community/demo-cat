@@ -37,3 +37,35 @@ declare function utilities:send-notification(
     </em:Message>)
 
 };
+
+(:
+Parses the url to get the host information.
+:)
+declare function utilities:get-url-host(
+  $url as xs:string
+) as xs:string?
+{
+  let $tokens := 
+    if ($url ne '')
+    then
+      fn:tokenize($url, '/')
+    else
+      ''
+
+  return(
+    (: 
+       Host is after second '/'.  Example:
+         http://myhost/path
+
+       token[1] = http:
+       token[2] = 
+       token[3] = myhost
+       token[4] = path
+    :)
+    if (fn:count($tokens) gt 2)
+    then
+      $tokens[3]
+    else
+      ''
+  )
+};
