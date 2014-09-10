@@ -52,10 +52,23 @@ function file-bug:post(
   let $maintainer-email as xs:string? := $demo/jbasic:email
   (: get bug type - defect or enhancement :)
   let $bug-type as xs:string? := $json-xml/jbasic:type
+  (: get host from request header <referer> :)
+  let $tmp-host := utilities:get-url-host(xdmp:get-request-header('referer', ''))
+  (: 
+     Set host to <host> from <referer> request header when possible,
+      otherwise, use the <host> request header.
+  :)
+  let $host := 
+    if ($tmp-host ne '')
+    then
+      $tmp-host
+    else
+      xdmp:get-request-header('host')
+      
   (: build message :)
   let $message :=
     <div xmlns="http://www.w3.org/1999/xhtml">
-      <h2>New {$bug-type} bug for "<a href="http://{xdmp:get-request-header('Host')}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
+      <h2>New {$bug-type} bug for "<a href="http://{$host}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
       <p>Opened by {$populated-xml/jbasic:username/node()}</p>
       <div>{$populated-xml/jbasic:msg/node()}</div>
     </div>
