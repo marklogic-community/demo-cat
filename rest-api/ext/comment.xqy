@@ -4,8 +4,10 @@ module namespace comment = "http://marklogic.com/rest-api/resource/comment";
 
 import module namespace json="http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 import module namespace json-helper="http://marklogic.com/demo-cat/json-helper" at "/lib/json-helper.xqy";
+import module namespace utilities="http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
 
 declare namespace roxy = "http://marklogic.com/roxy";
+declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
 (:
  : To add parameters to the functions, specify them in the params annotations.
@@ -40,7 +42,35 @@ function comment:post(
   let $populated-xml as element() := json-helper:populate-meta-fields($json-xml)
   (: insert comment :)
   let $insert-noop := json-helper:add-to-array($uri,'comments',$populated-xml)
+  (: BEGIN send notification :)
+  (: get demo info :)
+  let $demo := fn:doc($uri)/jbasic:json
+  (: get maintainer name :)
+  let $demo-name as xs:string? := $demo/jbasic:name
+  (: get maintainer name :)
+  let $maintainer-name as xs:string? := $demo/jbasic:maintainer
+  (: get maintainer email :)
+  let $maintainer-email as xs:string? := $demo/jbasic:email
+  (: get host from request header <referer> (when available) :)
+  let $host := 
+    let $ref-host := utilities:get-url-host(xdmp:get-request-header('referer', ''))
+    return
+      if ($ref-host ne '')
+      then
+        $ref-host
+      else
+        xdmp:get-request-header('host')      
+  
+  (: build message :)
+  let $message :=
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <h2>New Comment for "<a href="http://{$host}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
+      <p>Created by {$populated-xml/jbasic:username/node()}</p>
+      <div>{$populated-xml/jbasic:msg/node()}</div>
+    </div>
+
   return (
+    utilities:send-notification($maintainer-name, $maintainer-email, '[DemoCat] New Comment for "'||$demo-name||'"', $message),
     xdmp:set-response-code(200, "OK"),
     document { json:transform-to-json($populated-xml) }
   )
