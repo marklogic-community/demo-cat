@@ -1,5 +1,5 @@
 
-angular.module('demoCat', ['ngRoute', 'ngCkeditor', 'demoCat.user', 'demoCat.search', 'demoCat.common', 'ui.bootstrap', 'ngSanitize'])
+angular.module('demoCat', ['ngRoute', 'ngCkeditor', 'demoCat.user', 'demoCat.search', 'demoCat.common', 'ui.bootstrap', 'ngSanitize', 'autocomplete'])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
     'use strict';
