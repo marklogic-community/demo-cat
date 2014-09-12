@@ -51,16 +51,8 @@ function comment:post(
   let $maintainer-name as xs:string? := $demo/jbasic:maintainer
   (: get maintainer email :)
   let $maintainer-email as xs:string? := $demo/jbasic:email
-  (: get host from request header <referer> (when available) :)
-  let $host := 
-    let $ref-host := utilities:get-url-host(xdmp:get-request-header('referer', ''))
-    return
-      if ($ref-host ne '')
-      then
-        $ref-host
-      else
-        xdmp:get-request-header('host')      
-  
+  (: get referring host :)
+  let $host := utilities:get-referring-host()
   (: build message :)
   let $message :=
     <div xmlns="http://www.w3.org/1999/xhtml">
