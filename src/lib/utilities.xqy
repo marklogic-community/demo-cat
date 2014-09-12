@@ -69,3 +69,25 @@ declare function utilities:get-url-host(
       ''
   )
 };
+
+(:
+Returns the hostname from the URL used by the referring client for a
+REST service request.
+
+Depends upon the xdmp App Server methods to get data from REST request.
+:)
+declare function utilities:get-referring-host(
+) as xs:string?
+{
+  (: Get host from request header <referer> (when available) :)
+  let $host := 
+    let $ref-host := utilities:get-url-host(xdmp:get-request-header('referer', ''))
+    return
+      if ($ref-host ne '')
+      then
+        $ref-host
+      else
+        xdmp:get-request-header('host')
+  
+  return($host)
+};

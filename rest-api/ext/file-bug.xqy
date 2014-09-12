@@ -52,19 +52,8 @@ function file-bug:post(
   let $maintainer-email as xs:string? := $demo/jbasic:email
   (: get bug type - defect or enhancement :)
   let $bug-type as xs:string? := $json-xml/jbasic:type
-  (: get host from request header <referer> :)
-  let $tmp-host := utilities:get-url-host(xdmp:get-request-header('referer', ''))
-  (: 
-     Set host to <host> from <referer> request header when possible,
-      otherwise, use the <host> request header.
-  :)
-  let $host := 
-    if ($tmp-host ne '')
-    then
-      $tmp-host
-    else
-      xdmp:get-request-header('host')
-      
+  (: get referring host :)
+  let $host := utilities:get-referring-host()
   (: build message :)
   let $message :=
     <div xmlns="http://www.w3.org/1999/xhtml">
