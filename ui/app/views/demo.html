@@ -60,7 +60,7 @@
         <autocomplete ng-model="model.additionalBug.assignee" data="model.users" click-activation="true" ></autocomplete>
       </fieldset>
       <div class="col-md-12">
-        <a class="col-md-1" href="#" ng-click="showBugForm = false">Cancel</a>
+        <a class="col-md-1" href="#" ng-click="resetBugForm(); showBugForm = false">Cancel</a>
         <button class="btn btn-primary" ng-click="addBug(model.additionalBug)">Add</button>
       </div>
     </form>

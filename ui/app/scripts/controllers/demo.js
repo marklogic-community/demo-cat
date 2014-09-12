@@ -157,10 +157,7 @@
           ).then(
             function(result){
               $scope.addToDemoArray('bugs',result);
-              $scope.model.additionalBug.msg = '';
-              $scope.model.additionalBug.browser = '';
-              $scope.model.additionalBug.type = '';
-              $scope.model.additionalBug.assignee = '';
+              $scope.resetBugForm();
             }
           );
         },
@@ -215,6 +212,13 @@
           // add the comment to the demo model to update UI
           $scope.addToDemoArray('comments',result);
           $scope.model.additionalComment.msg = '';
+        },
+
+        resetBugForm: function() {
+          $scope.model.additionalBug.msg = '';
+          $scope.model.additionalBug.browser = '';
+          $scope.model.additionalBug.type = '';
+          $scope.model.additionalBug.assignee = '';
         },
 
         // Get a list of the users in the system
