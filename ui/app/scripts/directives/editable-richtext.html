@@ -1,9 +1,9 @@
 <div ng-show="mode == 'view'" class="editable" ng-mouseover="hover=true" ng-mouseleave="hover=false">
   <div class="" ng-bind-html="editModel"></div>
-  <span ng-show="enabled && mode == 'view' && hover" ng-click="enabled && (mode = 'edit')" class="glyphicon glyphicon-edit"></span>
+  <span ng-show="enabled && mode == 'view' && hover" ng-click="enabled && (mode = 'edit') && (getOriginal())" class="glyphicon glyphicon-edit"></span>
 </div>
 <div ng-show="mode === 'edit'" class="editor">
   <textarea class="form-control" ckeditor="richTextOptions" ng-model="editModel"></textarea>
-  <a href="#" ng-click="mode = 'view'">Cancel</a>
+  <a href="#" ng-click="cancel(); mode = 'view'">Cancel</a>
   <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
 </div>
