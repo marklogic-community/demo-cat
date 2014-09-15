@@ -23,15 +23,17 @@ function user:get(
   $params  as map:map
 ) as document-node()*
 {
-  let $names :=
-    for $doc in xdmp:directory("/users/")
-    let $name := $doc//jbasic:fullname/data(.)
-    order by $name
-    return $name
+  let $user-list :=
+   for $doc in xdmp:directory("/users/")
+    let $uri := fn:document-uri($doc)
+    let $after-slash := fn:substring-after($uri, "/users/")
+    let $username := fn:substring-before($after-slash, ".json")
+    order by $username
+    return $username
 
   return (
     map:put($context, "output-types", "application/json"),
     xdmp:set-response-code(200, "OK"),
-    document { xdmp:to-json(json:to-array($names)) }
+    document { xdmp:to-json(json:to-array($user-list)) }
   )
 };
