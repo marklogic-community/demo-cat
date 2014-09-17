@@ -5,5 +5,5 @@
 <div ng-show="mode === 'edit'" class="editor">
   <textarea class="form-control" ckeditor="richTextOptions" ng-model="editModel"></textarea>
   <a href="#" ng-click="cancel(); mode = 'view'">Cancel</a>
-  <button class="btn btn-primary" ng-click="mode='view'; save()">Save</button>
+  <button class="btn btn-primary btn-xs" ng-click="mode='view'; save()">Save</button>
 </div>
