@@ -50,5 +50,13 @@ describe('editable directive', function () {
     expect( $( element ).find('select') ).not.toHaveClass('ng-hide');
   });
 
+  it('should show autocomplete when mode="edit" and editType="autocomplete"', function () {
+    scope.mode = 'edit';
+    scope.editType = 'autocomplete';
+    scope.$digest();
+
+    expect( $( element ).find('autocomplete') ).not.toHaveClass('ng-hide');
+  });
+
 
 });

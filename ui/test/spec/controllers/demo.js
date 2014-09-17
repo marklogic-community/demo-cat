@@ -14,7 +14,8 @@ describe('Controller: DemoCtrl', function () {
       domains: [],
       languages: [],
       comments: [],
-      bugs: []
+      bugs: [],
+      users: []
     };
 
   beforeEach(function() {
@@ -68,19 +69,21 @@ describe('Controller: DemoCtrl', function () {
       .respond(function(method, url, data) { return [200, data, {'Content-Type':'application/json'}]; });
     createController();
     $httpBackend.flush();
-    $scope.addBug({'msg': 'Status won\'t update', 'browser':'IE', 'status':'open', 'type':'defect'});
+    $scope.addBug({'msg': 'Status won\'t update', 'browser':'IE', 'status':'open', 'type':'defect', 'assignee':'bobby joe'});
     $httpBackend.flush();
     expect($scope.model.demo.bugs.length).toBe(1);
     expect($scope.model.demo.bugs[0].msg).toBe('Status won\'t update');
     expect($scope.model.demo.bugs[0].status).toBe('open');
     expect($scope.model.demo.bugs[0].type).toBe('defect');
+    expect($scope.model.demo.bugs[0].assignee).toBe('bobby joe');
     //testing adding a second bug
-    $scope.addBug({'msg': 'Page won\'t load', 'browser':'Chrome', 'status':'closed', 'type':'enhancement'});
+    $scope.addBug({'msg': 'Page won\'t load', 'browser':'Chrome', 'status':'closed', 'type':'enhancement', 'assignee':'joe bobby'});
     $httpBackend.flush();
     expect($scope.model.demo.bugs.length).toBe(2);
     expect($scope.model.demo.bugs[1].msg).toBe('Page won\'t load');
     expect($scope.model.demo.bugs[1].status).toBe('closed');
     expect($scope.model.demo.bugs[1].type).toBe('enhancement');
+    expect($scope.model.demo.bugs[1].assignee).toBe('joe bobby');
   });
 
 
@@ -100,4 +103,5 @@ describe('Controller: DemoCtrl', function () {
     expect($scope.model.demo.comments.length).toBe(2);
     expect($scope.model.demo.comments[1].msg).toBe('This demo was even better than the first time');
   });
+
 });
