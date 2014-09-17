@@ -22,6 +22,7 @@
           browser: '',
           status: 'open',
           type: '',
+          assignee: '',
           // the values below are set server-side
           id: null,
           username: null,
@@ -43,6 +44,7 @@
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         bugChoices: ['defect', 'enhancement'],
         bugStatuses: ['open', 'closed'],
+        users: [],
         editorOptions: {
           height: '100px',
           toolbarGroups: [
@@ -155,9 +157,7 @@
           ).then(
             function(result){
               $scope.addToDemoArray('bugs',result);
-              $scope.model.additionalBug.msg = '';
-              $scope.model.additionalBug.browser = '';
-              $scope.model.additionalBug.type = '';
+              $scope.resetBugForm();
             }
           );
         },
@@ -212,7 +212,45 @@
           // add the comment to the demo model to update UI
           $scope.addToDemoArray('comments',result);
           $scope.model.additionalComment.msg = '';
+        },
+
+        resetBugForm: function() {
+          $scope.model.additionalBug.msg = '';
+          $scope.model.additionalBug.browser = '';
+          $scope.model.additionalBug.type = '';
+          $scope.model.additionalBug.assignee = '';
+        },
+
+        // Get a list of the users in the system
+        populateUsers: function() {
+          // Only attempt to get the list once.
+          if ($scope.model.users.length <= 0) {
+            mlRest.callExtension('user-list',
+                  {
+                    method: 'GET',
+                    data: '',
+                    params: {
+                    },
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  }
+                ).then(
+                  function(result){
+                    // Modify the list and put the currentUser in the first position, as requested in #51
+                    var currentUser = $scope.model.user.name;
+                    result = $.grep(result, function(value) {
+                      return value !== currentUser;
+                    });
+                    result.unshift(currentUser);
+
+                    $scope.model.users = result;
+                  }
+                );
+          }
         }
+
+
       });
     }]);
 }());

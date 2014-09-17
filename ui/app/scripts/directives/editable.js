@@ -35,6 +35,14 @@
             0
           );
         };
+        $scope.getOriginal = function() {
+          // Keep track of the original value of the model
+          $scope.originalValue = angular.copy($scope.editModel);
+        };
+        $scope.cancel = function() {
+          // Revert the editModel back to its original value
+          $scope.editModel = $scope.originalValue;
+        };
       }
     };
   }]);
