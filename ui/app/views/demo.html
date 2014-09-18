@@ -82,11 +82,11 @@
     <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo.bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
-        <li class="bug-status">Status: <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
-        <li class="bug-status">Type: <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
-        <li class="bug-status">Assigned to: {{bug.assignee}}</li>
-        <li class="bug-dateTime">Created by {{bug.username}} on {{bug.dateTime}}</li>
-        <li class="bug-browser">Browser: {{bug.browser}}</li>
+        <li class="bug-status"><label>Status:</label> <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
+        <li class="bug-status"><label>Type:</label> <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
+        <li class="bug-status"><label>Assigned to:</label> {{bug.assignee}}</li>
+        <li class="bug-dateTime"><label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
+        <li class="bug-browser"><label>Browser:</label> {{bug.browser}}</li>
       </ul>
     </div>
   </div>
