@@ -37,7 +37,7 @@
   </div>
   <div class="open-bugs col-md-12">
     <label>Open Bugs & RFEs</label>
-    <button class="btn btn-primary" ng-show="model.user.authenticated && !showBugForm" ng-click="populateUsers(); showBugForm = true;">Add</button>
+    <button class="btn btn-primary btn-xs" ng-show="model.user.authenticated && !showBugForm" ng-click="populateUsers(); showBugForm = true;">Add</button>
     <form ng-show="model.user.authenticated && showBugForm">
       <fieldset class="col-md-12">
         <label class="col-md-2">Description</label>
@@ -61,17 +61,17 @@
       </fieldset>
       <div class="col-md-12">
         <a class="col-md-1" href="#" ng-click="resetBugForm(); showBugForm = false">Cancel</a>
-        <button class="btn btn-primary" ng-click="addBug(model.additionalBug)">Add</button>
+        <button class="btn btn-primary btn-xs" ng-click="addBug(model.additionalBug)">Add</button>
       </div>
     </form>
     <div class="bug col-md-12" ng-repeat="bug in model.demo.bugs | filter: { status: 'open' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
-        <li class="bug-status">Status: <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
-        <li class="bug-status">Type: <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
-        <li class="bug-status">Assigned to: <editable ng-click="populateUsers()" enabled="model.user.authenticated" edit-model="bug.assignee" edit-type="autocomplete" edit-options="model.users" save="updateItemInArray('file-bug',bug.id,'assignee',bug.assignee)"></editable></li>
-        <li class="bug-dateTime">Created by {{bug.username}} on {{bug.dateTime}}</li>
-        <li class="bug-browser">Browser: {{bug.browser}}</li>
+        <li class="bug-status"><label>Status:</label> <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
+        <li class="bug-type"><label>Type:</label> <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
+        <li class="bug-status"><label>Assigned to:</label> <editable ng-click="populateUsers()" enabled="model.user.authenticated" edit-model="bug.assignee" edit-type="autocomplete" edit-options="model.users" save="updateItemInArray('file-bug',bug.id,'assignee',bug.assignee)"></editable></li>
+        <li class="bug-dateTime"><label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
+        <li class="bug-browser"><label>Browser:</label> {{bug.browser}}</li>
       </ul>
     </div>
   </div>
@@ -82,11 +82,11 @@
     <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo.bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
-        <li class="bug-status">Status: <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
-        <li class="bug-status">Type: <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
-        <li class="bug-status">Assigned to: {{bug.assignee}}</li>
-        <li class="bug-dateTime">Created by {{bug.username}} on {{bug.dateTime}}</li>
-        <li class="bug-browser">Browser: {{bug.browser}}</li>
+        <li class="bug-status"><label>Status:</label> <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
+        <li class="bug-status"><label>Type:</label> <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
+        <li class="bug-status"><label>Assigned to:</label> {{bug.assignee}}</li>
+        <li class="bug-dateTime"><label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
+        <li class="bug-browser"><label>Browser:</label> {{bug.browser}}</li>
       </ul>
     </div>
   </div>
