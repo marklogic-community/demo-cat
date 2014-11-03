@@ -22,6 +22,53 @@ You will need to set the mlcp-home property in your local.properties file for th
 
     mlcp-home=/Users/dcassel/software/mlcp-Hadoop2-1.2-1
 
+# Deployment on server
+
+A local git repo has been setup on the server, add it as a remote to your local git:
+
+* git remote add prod USERNAME@van-prod3.demo.marklogic.com:/space/projects/demo-cat.git
+
+Then run the following each time you want to update code on the demo server:
+
+* git push prod
+
+Ask IT for sudo rights, you might need to chown files to a shared group to have write access.
+
+Once done that, you can run all above deployment steps on the server, just go to /space/projects/demo-cat.live/. A few ml commands might return an error, but only after having done what needed to be done.
+
+# Installing as service
+
+The code includes service scripts, and service configs to make installing express server service and gulp watch service as easy as possible. The following files are involved:
+
+- etc/init.d/node-express-service (generic express server service script)
+- etc/init.d/node-gulp-service (generic gulp watch service script)
+- etc/{env}/conf.sh (env specific service configuration, any env name allowed)
+- startup.js (entry point for express service, calls out to server.js)
+- server.js (called by both gulp server and startup.js)
+- gulpfile.js (entry point for gulp service, which executes default task)
+
+The conf.sh is 'sourced' by the service scripts, and allows overriding the built-in defaults. Usually you only need to override SOURCE\_DIR, APP\_PORT, and ML\_PORT. Make sure they match the appropriate environment.
+
+Next step is to push all source files to the appropriate server. The following assumes it was dropped under /space/projects/ in a folder called demo-cat.live. Take these steps to install the services:
+
+- cd /etc
+- sudo ln -s /space/projects/demo-cat.live/etc/{env} demo-cat
+- sudo ln -s demo-cat demo-cat-watch
+- cd /etc/init.d
+- sudo ln -s /space/projects/demo-cat.live/etc/init.d/node-express-service demo-cat
+- sudo ln -s /space/projects/demo-cat.live/etc/init.d/node-gulp-service demo-cat-watch
+- sudo chkconfig --add demo-cat
+- sudo chkconfig --add demo-cat-watch
+- sudo chkconfig --levels 2345 demo-cat on
+- sudo chkconfig --levels 2345 demo-cat-watch on
+
+Next to start them, use the following commands (from any directory):
+
+- sudo service demo-cat start
+- sudo service demo-cat-watch start
+
+These services will also print usage without param, but they support info, restart, start, status, and stop. The info param is very useful to check the settings.
+
 # Roxy
 Roxy (RObust XQuerY Framework) is a lightweight framework for quickly developing well-structured, easily maintained XQuery applications. Roxy was heavily inspired by Ruby On Rails and CakePHP.
 
