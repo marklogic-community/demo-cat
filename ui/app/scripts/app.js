@@ -1,5 +1,15 @@
 
-angular.module('demoCat', ['ngRoute', 'ngCkeditor', 'demoCat.user', 'demoCat.search', 'demoCat.common', 'ui.bootstrap', 'ngSanitize', 'autocomplete'])
+angular.module('demoCat', [
+  'ngRoute',
+  'ngCkeditor',
+  'demoCat.user', 'demoCat.search', 'demoCat.common',
+  'ui.bootstrap',
+  'ngSanitize',
+  'autocomplete',
+  'ml.common',
+  'ml.search',
+  'ml.search.tpls',
+  'ml.utils'])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
     'use strict';
@@ -8,7 +18,9 @@ angular.module('demoCat', ['ngRoute', 'ngCkeditor', 'demoCat.user', 'demoCat.sea
 
     $routeProvider
       .when('/', {
-        templateUrl: '/search/search.html'
+        templateUrl: '/search/search.html',
+        controller:'SearchCtrl',
+        reloadOnSearch: false
       })
       .when('/create', {
         templateUrl: '/views/create.html',
