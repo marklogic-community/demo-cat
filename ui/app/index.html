@@ -14,7 +14,7 @@
   <body ng-app="demoCat" ng-controller="SearchCtrl">
     <nav class="navbar navbar-default" role="navigation">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#demo-cat-navbar-collapse-1">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -22,7 +22,7 @@
         </button>
         <a class="navbar-brand" href="/">Demo Cat</a>
       </div>
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div class="collapse navbar-collapse" id="demo-cat-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="/">Search</a></li>
           <li ng-show="model.user.authenticated"><a href="/create">Create</a></li>
@@ -53,6 +53,7 @@
     <script src="/bower_components/ml-common-ng/dist/ml-common-ng.min.js"></script>
     <script src="/bower_components/ml-search-ng/dist/ml-search-ng.js"></script>
     <script src="/bower_components/ml-search-ng/dist/ml-search-ng-tpls.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- endbuild -->
 
     <!-- build:js scripts/scripts.js -->
@@ -66,7 +67,6 @@
     <script src="search/search-ctrl.js"></script>
     <script src="search/facets-dir.js"></script>
     <script src="common/common.js"></script>
-    <script src="common/services/mlrest.js"></script>
     <script src="scripts/directives/add-comment.js"></script>
     <script src="scripts/directives/autocomplete.js"></script>
     <script src="scripts/services/features.js"></script>
