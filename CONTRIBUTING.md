@@ -118,14 +118,6 @@ $ git rebase upstream/develop
 
 #### Test your code
 
-We are working hard to improve Demo Cat's testing. If you add new functions
-in ruby code then please write unit tests in the deploy/test directory.
-When finished, verify that the self-test works.
-
-```sh
-$ ./ml self-test
-```
-
 For front-end javascript add tests in the ui/test/spec folder. Test your
 javascript changes with gulp.
 
