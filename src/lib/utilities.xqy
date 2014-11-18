@@ -45,7 +45,7 @@ declare function utilities:get-url-host(
   $url as xs:string
 ) as xs:string?
 {
-  let $tokens := 
+  let $tokens :=
     if ($url ne '')
     then
       fn:tokenize($url, '/')
@@ -53,12 +53,12 @@ declare function utilities:get-url-host(
       ''
 
   return(
-    (: 
+    (:
        Host is after second '/'.  Example:
          http://myhost/path
 
        token[1] = http:
-       token[2] = 
+       token[2] =
        token[3] = myhost
        token[4] = path
     :)
@@ -80,7 +80,7 @@ declare function utilities:get-referring-host(
 ) as xs:string?
 {
   (: Get host from request header <referer> (when available) :)
-  let $host := 
+  let $host :=
     let $ref-host := utilities:get-url-host(xdmp:get-request-header('referer', ''))
     return
       if ($ref-host ne '')
@@ -88,6 +88,10 @@ declare function utilities:get-referring-host(
         $ref-host
       else
         xdmp:get-request-header('host')
-  
+
   return($host)
+};
+
+declare function utilities:highlight($doc, $query) {
+  cts:highlight($doc, $query, <span class="highlight">{$cts:text}</span>)
 };
