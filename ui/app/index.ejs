@@ -5,6 +5,7 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <base href="/">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!-- build:css(.tmp) styles/all.css -->
@@ -28,7 +29,7 @@
           <li ng-show="model.user.authenticated"><a href="/create">Create</a></li>
         </ul>
         <div class="navbar-form navbar-left">
-          <ml-remote-input></ml-remote-input>
+          <ml-remote-input template="fa"></ml-remote-input>
         </div>
         <div ml-user username="model.user.name" password="model.user.password" authenticated="model.user.authenticated" login="login(username, password)" logout="logout()" loginerror="model.user.loginError"/>
       </div><!-- /.navbar-collapse -->
@@ -40,7 +41,7 @@
 
     <!-- build:js scripts/plugins.js -->
     <script src="bower_components/jquery/jquery.js"></script>
-    <script src="/bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -48,11 +49,11 @@
     <script src="bower_components/ng-ckeditor/ng-ckeditor.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/ml-utils/ml-utils.min.js"></script>
-    <script src="/bower_components/ml-common-ng/dist/ml-common-ng.min.js"></script>
-    <script src="/bower_components/ml-search-ng/dist/ml-search-ng.js"></script>
-    <script src="/bower_components/ml-search-ng/dist/ml-search-ng-tpls.min.js"></script>
+    <script src="bower_components/ml-common-ng/dist/ml-common-ng.min.js"></script>
+    <script src="bower_components/ml-search-ng/dist/ml-search-ng.js"></script>
+    <script src="bower_components/ml-search-ng/dist/ml-search-ng-tpls.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- endbuild -->
 
@@ -65,7 +66,6 @@
     <script src="user/user-srv.js"></script>
     <script src="search/search.js"></script>
     <script src="search/search-ctrl.js"></script>
-    <script src="search/facets-dir.js"></script>
     <script src="common/common.js"></script>
     <script src="scripts/directives/add-comment.js"></script>
     <script src="scripts/directives/autocomplete.js"></script>
