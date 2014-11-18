@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 var http = require('http');
+var path = require('path');
+var ui = path.join(__dirname, 'ui/app');
 
 function getAuth(options, session) {
   'use strict';
@@ -27,6 +29,9 @@ exports.buildExpress = function(options) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
+
+  app.set('views', ui);
+  app.set('view engine', 'ejs');
 
   function proxy(req, res) {
     var queryString = req.originalUrl.split('?')[1];
@@ -170,11 +175,13 @@ exports.buildExpress = function(options) {
   });
 
   app.put('/v1*', function(req, res){
-    if (req.session.user === undefined) {
+    var user = req.session.user;
+    var escapedUserName = (user && user.name) ? user.name.replace(/([\(\)[{*+.$^\\|?\-])/g, '\\$1') : '';
+    if (user === undefined) {
       res.send(401, 'Unauthorized');
     } else if (req.path === '/v1/documents' &&
       req.query.uri.match('/users/') &&
-      req.query.uri.match(new RegExp('/users/[^(' + req.session.user.name + ')]+.json'))) {
+      req.query.uri.match(new RegExp('/users/[^(' + escapedUserName + ')]+.json'))) {
       // The user is try to PUT to a profile document other than his/her own. Not allowed.
       res.send(403, 'Forbidden');
     } else {
@@ -195,7 +202,9 @@ exports.buildExpress = function(options) {
 
   // Redirect all other traffic to Angular
   app.use(express.static(__dirname + '/ui/app'));
-  app.use('/*', express.static(__dirname + '/ui/app'));
+  app.use('/*', function(req, res){
+    res.render('index');
+  });
 
   return app;
 };
