@@ -10,11 +10,11 @@ angular.module('demoCat', [
   'ml.search',
   'ml.search.tpls',
   'ml.utils'])
-  .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+  .config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
 
     'use strict';
-
     $locationProvider.html5Mode(true);
+    $locationProvider.hashPrefix('!');
 
     $routeProvider
       .when('/', {
@@ -26,7 +26,7 @@ angular.module('demoCat', [
         templateUrl: '/views/create.html',
         controller: 'CreateCtrl'
       })
-      .when('/detail', {
+      .when('/detail:uri*', {
         templateUrl: '/views/demo.html',
         controller: 'DemoCtrl'
       })
