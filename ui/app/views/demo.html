@@ -1,16 +1,16 @@
-<div class="row detail">
-  <h2 class="col-md-12">{{model.demo.name}}</h2>
-  <editable class="desc col-md-12" enabled="model.user.authenticated" edit-model="model.demo.description" edit-type="richtext" save="saveField('description', model.demo.description)" rich-text-options="model.editorOptions"/>
+<div class="row detail" ng-if="model.user.authenticated">
+  <h2 class="col-md-12">{{model.demo.name}} <a class="btn btn-primary btn-xs" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a></h2>
+  <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
   <div class="col-md-12">
     <label>Hosted at</label>
-    <editable class="host" enabled="model.user.authenticated" edit-model="model.demo.host" edit-type="link" save="saveField('host', model.demo.host)"/>
-    (<editable class="host-type" enabled="model.user.authenticated" edit-model="model.demo.hostType" edit-type="text" save="saveField('hostType', model.demo.hostType)"/>)
+    <a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
+    (<span class="value">{{model.demo.hostType}}</span>)
   </div>
   <div class="credentials col-md-12">
     <label>Credentials</label>
-    <editable enabled="model.user.authenticated" edit-model="model.demo.username" edit-type="text" save="saveField('username', model.demo.username)"/>
-    /
-    <editable enabled="model.user.authenticated" edit-model="model.demo.password" edit-type="text" save="saveField('password', model.demo.password)"/>
+    <ul>
+      <li ng-repeat="creds in model.demo.credentials">{{creds.username}} / {{creds.password}}</li>
+    </ul>
   </div>
   <div class="browsers col-md-12">
     <label>Browsers</label>
@@ -18,22 +18,26 @@
       <li ng-repeat="browser in model.demo.browsers">{{browser}}</li>
     </ul>
   </div>
-  <items enabled="model.user.authenticated" edit-items="model.demo.features" item-choices="model.featureChoices" label="Features"
-            edit-type="inline" mode="view" save="saveField('features', model.demo.features)"/>
-  <items enabled="model.user.authenticated" edit-items="model.demo.domains" item-choices="model.domainChoices" label="Domains"
-            edit-type="inline" mode="view" save="saveField('domains', model.demo.domains)"/>
+  <ul class="items-view col-md-12">
+    <label>Features</label>
+    <li ng-repeat="feature in model.demo.features">{{feature}}</li>
+  </ul>
+  <ul class="items-view col-md-12">
+    <label>Domains</label>
+    <li ng-repeat="domain in model.demo.domains">{{domain}}</li>
+  </ul>
   <div class="repo col-md-12">
     <label>Code repo</label>
-    <editable enabled="model.user.authenticated" edit-model="model.demo.repo" edit-type="text" save="saveField('repo', model.demo.repo)"/>
+    <span class="value">{{model.demo.repo}}</span>
   </div>
   <div class="maintainer col-md-12">
     <label>Maintainer</label>
-    <editable enabled="model.user.authenticated" edit-model="model.demo.maintainer" edit-type="text" save="saveField('maintainer', model.demo.maintainer)"/>
-    (<editable enabled="model.user.authenticated" edit-model="model.demo.email" edit-type="link" save="saveField('email', model.demo.email)" prefix="mailto:"/>)
+    <span class="value">{{model.demo.maintainer}}</span>
+    (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.host}}</a>)
   </div>
   <div class="version col-md-12">
     <label>MarkLogic version</label>
-    <editable enabled="model.user.authenticated" edit-model="model.demo.version" edit-type="text" save="saveField('version', model.demo.version)"/>
+    <span class="value">{{model.demo.version}}</span>
   </div>
   <div class="open-bugs col-md-12">
     <label>Open Bugs & RFEs</label>
@@ -60,16 +64,25 @@
         <autocomplete ng-model="model.additionalBug.assignee" data="model.users" click-activation="true" ></autocomplete>
       </fieldset>
       <div class="col-md-12">
-        <a class="col-md-1" href="#" ng-click="resetBugForm(); showBugForm = false">Cancel</a>
+        <a class="col-md-1" href ng-click="resetBugForm(); showBugForm = false">Cancel</a>
         <button class="btn btn-primary btn-xs" ng-click="addBug(model.additionalBug)">Add</button>
       </div>
     </form>
     <div class="bug col-md-12" ng-repeat="bug in model.demo.bugs | filter: { status: 'open' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
-        <li class="bug-status"><label>Status:</label> <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
-        <li class="bug-type"><label>Type:</label> <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
-        <li class="bug-status"><label>Assigned to:</label> <editable ng-click="populateUsers()" enabled="model.user.authenticated" edit-model="bug.assignee" edit-type="autocomplete" edit-options="model.users" save="updateItemInArray('file-bug',bug.id,'assignee',bug.assignee)"></editable></li>
+        <li class="bug-status">
+          <label>Status:</label>
+          <span class="value">{{bug.status}}</span>
+        </li>
+        <li class="bug-type">
+          <label>Type:</label>
+          <span class="value">{{bug.type}}</span>
+        </li>
+        <li class="bug-status">
+          <label>Assigned to:</label>
+          <span class="value">{{bug.assignee}}</span>
+        </li>
         <li class="bug-dateTime"><label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
         <li class="bug-browser"><label>Browser:</label> {{bug.browser}}</li>
       </ul>
@@ -77,13 +90,19 @@
   </div>
   <div class="closed-bugs col-md-12">
     <label>Closed Bugs & RFEs</label>
-    <a href="#" ng-show="!showClosedBugs" ng-click="showClosedBugs = true">Expand</a>
-    <a href="#" ng-show="showClosedBugs" ng-click="showClosedBugs = false">Collapse</a>
+    <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true">Expand</a>
+    <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false">Collapse</a>
     <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo.bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
-        <li class="bug-status"><label>Status:</label> <editable enabled="model.user.authenticated" edit-model="bug.status" edit-type="select" edit-options="model.bugStatuses" save="updateItemInArray('file-bug',bug.id,'status',bug.status)"></editable></li>
-        <li class="bug-status"><label>Type:</label> <editable enabled="model.user.authenticated" edit-model="bug.type" edit-type="select" edit-options="model.bugChoices" save="updateItemInArray('file-bug',bug.id,'type',bug.type)"></editable></li>
+        <li class="bug-status">
+          <label>Status:</label>
+          <span class="value">{{bug.status}}</span>
+        </li>
+        <li class="bug-status">
+          <label>Type:</label>
+          <span class="value">{{bug.type}}</span>
+        </li>
         <li class="bug-status"><label>Assigned to:</label> {{bug.assignee}}</li>
         <li class="bug-dateTime"><label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
         <li class="bug-browser"><label>Browser:</label> {{bug.browser}}</li>

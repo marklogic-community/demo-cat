@@ -26,6 +26,7 @@ var options = {
 gulp.task('server', function () {
   fs.writeFileSync('gulp-server.pid', process.pid.toString(), 'ascii');
   var server = require('./server.js').buildExpress(options);
+  console.log('Listening on port ' + options.appPort);
   server.listen(options.appPort);
 });
 
@@ -81,6 +82,6 @@ gulp.task('autotest', function() {
 });
 
 // Default Task
-gulp.task('default', ['jshint', 'less', 'scripts', 'watch'], function() {
+gulp.task('default', ['jshint', 'less', 'scripts', 'watch', 'server'], function() {
   fs.writeFileSync('gulp-default.pid', process.pid.toString(), 'ascii');
 });
