@@ -2,9 +2,12 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('CreateCtrl', ['$scope', 'Features', 'Domains', 'User', '$window', '$http', function ($scope, features, domains, user, win, $http) {
+    .controller('CreateCtrl', CreateCtrl);
+
+  CreateCtrl.$inject = ['$scope', 'Features', 'Domains', 'demoService', 'User', '$location', 'edit', 'demo', '$routeParams'];
+  function CreateCtrl($scope, features, domains, demoService, user, $location, edit, demo, $routeParams) {
       var model = {
-        demo: {
+        demo: demo || {
           name: '',
           description: '',
           host: '',
@@ -14,8 +17,10 @@
           domains: [],
           languages: [],
           bugs: [],
-          comments: []
+          comments: [],
+          credentials: []
         },
+        edit: edit,
         featureChoices: features.list(),
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
@@ -45,19 +50,35 @@
             $scope.model.demo.browsers.push(browser);
           }
         },
+        addCredentials: function() {
+          model.demo.credentials.push({username: null, password: null});
+        },
+        removeCredentials: function(index) {
+          model.demo.credentials.splice(index, 1);
+        },
         submit: function() {
-          $http.post('/demo/create', $scope.model.demo, {
-            params: {
-              format: 'json',
-              directory: '/demos/',
-              extension: '.json',
-              'perm:demo-cat-role': 'read',
-              'perm:demo-cat-registered-role': 'update'
-            }
-          }).then(function(response) {
-            win.location.href = '/detail?uri=' + response.data.href.replace(/(.*\?uri=)/, '');
+          var promise;
+          if (edit) {
+            promise = demoService.save(model.demo, $routeParams.uri);
+          }
+          else {
+            promise = demoService.create(model.demo);
+          }
+
+          promise.then(function(response) {
+            // var uri = response.data.href.replace(/(.*\?uri=)/, '');
+            var uri = response.uri;//$routeParams.uri;
+            $location.path('/detail' + uri);
           });
+        },
+        cancel: function() {
+          if (edit) {
+            $location.path('/detail' + $routeParams.uri);
+          }
+          else {
+            $location.path('/');
+          }
         }
       });
-    }]);
+    }
 }());

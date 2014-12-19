@@ -63,6 +63,7 @@
 
       mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
         model.demo = response.data;
+        model.uri = uri;
       });
 
       angular.extend($scope, {
