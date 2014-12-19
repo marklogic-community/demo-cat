@@ -10,7 +10,10 @@ angular.module('demoCat', [
   'ml.search',
   'ml.search.tpls',
   'ml.utils'])
-  .config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
+  .config(AppConfig);
+
+  AppConfig.$inject = ['$locationProvider', '$routeProvider'];
+  function AppConfig($locationProvider, $routeProvider) {
 
     'use strict';
     $locationProvider.html5Mode(true);
@@ -24,7 +27,30 @@ angular.module('demoCat', [
       })
       .when('/create', {
         templateUrl: '/views/create.html',
-        controller: 'CreateCtrl'
+        controller: 'CreateCtrl',
+        resolve: {
+          edit: function() {
+            return false;
+          },
+          demo: function() {
+            return null;
+          }
+        }
+      })
+      .when('/edit:uri*', {
+        templateUrl: '/views/create.html',
+        controller: 'CreateCtrl',
+        resolve: {
+          edit: function() {
+            return true;
+          },
+          demo: function($route, MLRest) {
+            var uri = $route.current.params.uri;
+            return MLRest.getDocument(uri, { format: 'json' }).then(function(response) {
+              return response.data;
+            });
+          }
+        }
       })
       .when('/detail:uri*', {
         templateUrl: '/views/demo.html',
@@ -37,4 +63,4 @@ angular.module('demoCat', [
       .otherwise({
         redirectTo: '/'
       });
-  }]);
+  }

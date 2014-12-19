@@ -146,7 +146,7 @@ exports.buildExpress = function(options) {
       auth: getAuth(options, req.session)
     }, function(response) {
       console.log('created demo at: ' + response.headers.location);
-      res.write(JSON.stringify({href: response.headers.location}));
+      res.write(JSON.stringify({uri: response.headers.location.replace(/(.*\?uri=)/, '')}));
       response.on('data', function(chunk) {
         res.write(chunk);
       });
