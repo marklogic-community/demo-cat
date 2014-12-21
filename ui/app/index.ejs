@@ -25,8 +25,7 @@
       </div>
       <div class="collapse navbar-collapse" id="demo-cat-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="/">Search</a></li>
-          <li ng-show="model.user.authenticated"><a href="/create">Create</a></li>
+          <li ng-show="model.user.authenticated" class="btn btn-create"><a href="/create">Create</a></li>
         </ul>
         <div class="navbar-form navbar-left">
           <ml-remote-input template="fa"></ml-remote-input>
@@ -35,9 +34,16 @@
       </div><!-- /.navbar-collapse -->
     </nav>
     <!-- Add your site or application content here -->
-    <div ng-show="!model.user.authenticated">Please log in to see content</div>
-    <div class="container" ng-view=""></div>
-
+    <div ng-show="!model.user.authenticated" class="not-logged-in">
+      <div class="alert alert-danger col-md-4 login-error" role="alert">Please log in to see content</div>
+    </div>
+    <div class="container content" ng-view=""></div>
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted pull-left">Copyright &copy; 2014 MarkLogic Corporation. All Rights Reserved.</p>
+        <img src="/images/marklogic-poweredby.png" class="pull-right"/>
+      </div>
+    </footer>
 
     <!-- build:js scripts/plugins.js -->
     <script src="bower_components/jquery/jquery.js"></script>
