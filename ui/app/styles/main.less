@@ -3,14 +3,68 @@
 @icon-font-path:  "/fonts/";
 @FontAwesomePath:    "/fonts/";
 
+body {
+  background-color: #f1f2f2;
+}
+
+a {
+  cursor: hand;
+  cursor: pointer;
+}
+
+nav {
+  background-color: #222;
+  border-bottom: solid 1px #020202;
+
+  &:after {
+    display: block;
+    content: '';
+    background: -webkit-linear-gradient(90deg, #222150 0%, #4466ab 45%, #4466ab 55%, #222150 100%);
+    background: -moz-linear-gradient(90deg, #222150 0%, #4466ab 45%, #4466ab 55%, #222150 100%);
+    background: -o-linear-gradient(90deg, #222150 0%, #4466ab 45%, #4466ab 55%, #222150 100%);
+    background: linear-gradient(90deg, #222150 0%, #4466ab 45%, #4466ab 55%, #222150 100%);
+    height: 0.94em;
+    width: 100%;
+  }
+  .navbar-nav > li > a:hover { background-color: transparent }
+  .navbar-header { max-width: 50% }
+}
+
+.navbar-default {
+  background-color: #85b8df;
+  border: none;
+  border-radius: 0;
+
+  .navbar-brand {
+    color: #222;
+  }
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #fff;
+}
+
 .navbar-brand {
-  background-image: url(/images/logo64.png);
-  background-repeat: no-repeat;
+  background: url("/images/demo-cat-logo2.png") no-repeat 10px center rgba(0, 0, 0, 0);
   font-size: 3em;
-  height: 64px;
+  height: 80px;
   line-height: 64px;
   padding-top: 0;
   padding-left: 64px;
+  text-indent: -9999px;
+  width: 300px;
+}
+
+.btn-create {
+  background-color: #838FC0;
+  border: 1px solid #657FB8;
+  border-radius: 5px;
+  padding: 0px;
+  font-weight: bold;
+}
+
+#demo-cat-navbar-collapse-1 {
+  margin-top: 15px;
 }
 
 .item {
@@ -178,4 +232,46 @@ form[name=profileForm] {
     color: #fff;
   }
 
+}
+.login-error {
+  margin-left: 20px;
+}
+/* Footer */
+.footer {
+  background-color: #fff;
+  bottom: 0;
+  height: 71px;
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 30px;
+  border-top: 1px solid #ccc;
+}
+
+footer .text-muted {
+  font-size: 85%;
+  padding: 20px 0 0 0;
+}
+/* keep footer at bottom */
+.profile, .not-logged-in, .content { min-height: 525px; }
+
+/* Search results well */
+.panel {
+  float: left;
+  width: 40%;
+  margin: 5px;
+  min-height: 200px;
+}
+
+.panel-heading {
+  padding: 5px 15px;
+}
+
+.panel-default > .panel-heading {
+  background-color: #EBF2F7;
+  border-color: #D7E9F4;
+}
+
+.ml-badge {
+  position: relative;
+  left: -5px;
 }

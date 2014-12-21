@@ -1,6 +1,8 @@
-<div ng-repeat="result in results">
-  <h4><a ng-href="detail{{result.uri}}">{{result.metadata.name.values[0] || result.uri}}</a></h4>
-  <div class="matches">
+<div class="panel panel-default" ng-repeat="result in results">
+  <div class="panel-heading">
+    <h4><span class="pull-left badge ml-badge">ML 8</span><a ng-href="detail{{result.uri}}">{{result.metadata.name.values[0] || result.uri}}</a></h4>
+  </div>
+  <div class="matches panel-body">
     <div ng-repeat="match in result.matches">
       <span ng-repeat="text in match['match-text'] track by $index">
         <span ng-if="text.highlight === undefined">{{text}}</span>
