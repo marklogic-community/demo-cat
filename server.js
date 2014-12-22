@@ -24,7 +24,11 @@ exports.buildExpress = function(options) {
   var app = express();
 
   app.use(cookieParser());
-  app.use(expressSession({secret: '1234567890QWERTY'}));
+  app.use(expressSession({
+    secret: '1234567890QWERTY',
+    saveUninitialized: true,
+    resave: true
+  }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: true
