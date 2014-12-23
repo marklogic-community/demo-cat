@@ -44,6 +44,7 @@ exports.buildExpress = function(options) {
       headers: req.headers,
       auth: getAuth(options, req.session)
     }, function(response) {
+      res.status(response.statusCode);
       response.on('data', function(chunk) {
         res.write(chunk);
       });
@@ -86,7 +87,7 @@ exports.buildExpress = function(options) {
       auth: req.query.username + ':' + req.query.password
     }, function(response) {
       if (response.statusCode === 401) {
-        res.statusCode = 401;
+        res.status(401);
         res.send('Unauthenticated');
       } else if (response.statusCode === 404) {
         // authentication successful, but no profile defined
@@ -145,8 +146,13 @@ exports.buildExpress = function(options) {
       headers: req.headers,
       auth: getAuth(options, req.session)
     }, function(response) {
-      console.log('created demo at: ' + response.headers.location);
-      res.write(JSON.stringify({uri: response.headers.location.replace(/(.*\?uri=)/, '')}));
+      res.status(response.statusCode);
+      if (response.statusCode >= 400) {
+        console.log('creation of demo failed!');
+      } else {
+        console.log('created demo at: ' + response.headers.location);
+        res.write(JSON.stringify({uri: response.headers.location.replace(/(.*\?uri=)/, '')}));
+      }
       response.on('data', function(chunk) {
         res.write(chunk);
       });
