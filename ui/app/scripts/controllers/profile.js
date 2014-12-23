@@ -31,9 +31,11 @@
             }
           }, {
             format: 'json',
-            uri: '/users/' + $scope.model.user.name + '.json',
-            'perm:demo-cat-role': 'read',
-            'perm:demo-cat-registered-role': 'update'
+            uri: '/users/' + $scope.model.user.name + '.json'
+            // [GJo] Better to rely on default permissions..
+            //,
+            //'perm:demo-cat-role': 'read',
+            //'perm:demo-cat-registered-role': 'update'
           }).then(function(data) {
             $location.path('/');
           });
