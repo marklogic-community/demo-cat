@@ -436,36 +436,71 @@
     <emailAddress>@ml.ssl-certificate-emailAddress</emailAddress>
   </certificate>
   <roles xmlns="http://marklogic.com/xdmp/security">
+    <!-- low level roles -->
     <role>
-      <role-name>@ml.app-role</role-name>
-      <description>A role for users of the @ml.app-name application</description>
-      <role-names>
-        <role-name>rest-reader</role-name>
-        <role-name>security</role-name>
-        <role-name>admin</role-name>
-      </role-names>
+      <role-name>@ml.app-name-read-role</role-name>
+      <description>A low level read role for documents and modules of the @ml.app-name application</description>
+    </role>
+    <role>
+      <role-name>@ml.app-name-insert-role</role-name>
+      <description>A low level insert role for documents of the @ml.app-name application</description>
+    </role>
+    <role>
+      <role-name>@ml.app-name-update-role</role-name>
+      <description>A low level update role for documents of the @ml.app-name application</description>
+    </role>
+    <role>
+      <role-name>@ml.app-name-execute-role</role-name>
+      <description>A low level execute role for modules of the @ml.app-name application</description>
+    </role>
+    <role>
+      <role-name>@ml.app-name-defaults-role</role-name>
+      <description>A low level role providing default permissions for documents of the @ml.app-name application</description>
       <permissions>
         <permission>
-          <capability>execute</capability>
-          <role-name>@ml.app-role</role-name>
-        </permission>
-        <permission>
-          <capability>update</capability>
-          <role-name>@ml.app-role</role-name>
+          <capability>read</capability>
+          <role-name>@ml.app-name-read-role</role-name>
         </permission>
         <permission>
           <capability>insert</capability>
-          <role-name>@ml.app-role</role-name>
+          <role-name>@ml.app-name-insert-role</role-name>
         </permission>
         <permission>
-          <capability>read</capability>
-          <role-name>@ml.app-role</role-name>
+          <capability>update</capability>
+          <role-name>@ml.app-name-update-role</role-name>
         </permission>
       </permissions>
-      <collections>
-      </collections>
+    </role>
+    <!-- default user role -->
+    <role>
+      <role-name>@ml.app-role</role-name>
+      <description>A role for the default user of the @ml.app-name application</description>
+      <role-names>
+      </role-names>
+      <privileges>
+      </privileges>
+    </role>
+    <!-- app specific roles -->
+    <role>
+      <role-name>@ml.app-name-reader-role</role-name>
+      <description>A role for read-only user of the @ml.app-name application</description>
+      <role-names>
+        <role-name>@ml.app-name-read-role</role-name>
+        <role-name>@ml.app-name-execute-role</role-name>
+        <!-- necessary to make sure profile is readably to users with reader-role -->
+        <role-name>@ml.app-name-defaults-role</role-name>
+      </role-names>
       <privileges>
         <privilege>
+          <privilege-name>rest-reader</privilege-name>
+        </privilege>
+        <!-- less elegant to have to assign rest-writer priv to reader-role, but necessary
+             to allow updating user profile, and posting comments -->
+        <privilege>
+          <privilege-name>rest-writer</privilege-name>
+        </privilege>
+        <!-- [GJo] these seem redundant, I think they were used by the user extensions that are no longer used -->
+        <!--privilege>
           <privilege-name>admin-module-read</privilege-name>
         </privilege>
         <privilege>
@@ -488,34 +523,37 @@
         </privilege>
         <privilege>
           <privilege-name>xdmp:eval-in</privilege-name>
-        </privilege>
+        </privilege-->
       </privileges>
     </role>
     <role>
-      <role-name>@ml.app-name-registered-role</role-name>
-      <description>A role for users of the @ml.app-name application</description>
+      <role-name>@ml.app-name-writer-role</role-name>
+      <description>A role for editor users of the @ml.app-name application</description>
       <role-names>
-        <role-name>@ml.app-role</role-name>
+        <role-name>@ml.app-name-reader-role</role-name>
+        <role-name>@ml.app-name-insert-role</role-name>
+        <role-name>@ml.app-name-update-role</role-name>
+        <role-name>@ml.app-name-defaults-role</role-name>
       </role-names>
-      <permissions>
-      </permissions>
-      <collections>
-      </collections>
+      <privileges>
+      </privileges>
+    </role>
+    <role>
+      <role-name>@ml.app-name-admin-role</role-name>
+      <description>A role for admin users of the @ml.app-name application</description>
+      <role-names>
+        <role-name>@ml.app-name-writer-role</role-name>
+      </role-names>
       <privileges>
         <privilege>
           <privilege-name>rest-writer</privilege-name>
         </privilege>
       </privileges>
     </role>
+    <!-- generic amp role for amping functions -->
     <role>
-      <role-name>send-email</role-name>
-      <description>A role for amping a function to send email</description>
-      <role-names>
-      </role-names>
-      <permissions>
-      </permissions>
-      <collections>
-      </collections>
+      <role-name>@ml.app-name-amp-role</role-name>
+      <description>A role for amping function of the @ml.app-name application</description>
       <privileges>
         <privilege>
           <privilege-name>xdmp:email</privilege-name>
@@ -526,7 +564,7 @@
   <users xmlns="http://marklogic.com/xdmp/security">
     <user>
       <user-name>@ml.app-name-user</user-name>
-      <description>A user for the @ml.app-name application</description>
+      <description>The default user for the @ml.app-name application</description>
       <password>@ml.appuser-password</password>
       <role-names>
         <role-names>@ml.app-role</role-names>
@@ -536,12 +574,30 @@
     </user>
     <user>
       <user-name>bob</user-name>
-      <description>A user for the @ml.app-name application</description>
+      <description>A reader user for the @ml.app-name application</description>
       <password>bobspassword</password>
       <role-names>
-        <role-name>@ml.app-name-registered-role</role-name>
-        <role-name>rest-reader</role-name>
-        <role-name>rest-writer</role-name>
+        <role-name>@ml.app-name-reader-role</role-name>
+      </role-names>
+      <permissions/>
+      <collections/>
+    </user>
+    <user>
+      <user-name>john</user-name>
+      <description>A writer user for the @ml.app-name application</description>
+      <password>johnspassword</password>
+      <role-names>
+        <role-name>@ml.app-name-writer-role</role-name>
+      </role-names>
+      <permissions/>
+      <collections/>
+    </user>
+    <user>
+      <user-name>foo</user-name>
+      <description>A admin user for the @ml.app-name application</description>
+      <password>barspassword</password>
+      <role-names>
+        <role-name>@ml.app-name-admin-role</role-name>
       </role-names>
       <permissions/>
       <collections/>
@@ -565,7 +621,7 @@
       <local-name>send-notification</local-name>
       <doc-uri>/lib/utilities.xqy</doc-uri>
       <db-name>@ml.app-modules-db</db-name>
-      <role-name>send-email</role-name>
+      <role-name>@ml.app-name-amp-role</role-name>
     </amp>
   </amps>
   <privileges xmlns="http://marklogic.com/xdmp/security">
