@@ -98,7 +98,7 @@ exports.buildExpress = function(options) {
           name: req.query.username,
           password: req.query.password
         };
-        res.send(200, {
+        res.status(200).send({
           authenticated: true,
           username: req.query.username
         });
@@ -116,7 +116,7 @@ exports.buildExpress = function(options) {
                 fullname: json.user.fullname,
                 emails: json.user.emails
               };
-              res.send(200, {
+              res.status(200).send({
                 authenticated: true,
                 username: req.query.username,
                 profile: req.session.user.profile
@@ -172,7 +172,7 @@ exports.buildExpress = function(options) {
 
   app.get('/v1*', function(req, res){
     if (req.session.user === undefined) {
-      res.send(401, 'Unauthorized');
+      res.status(401).send('Unauthorized');
     } else {
       proxy(req, res);
     }
@@ -182,12 +182,12 @@ exports.buildExpress = function(options) {
     var user = req.session.user;
     var escapedUserName = (user && user.name) ? user.name.replace(/([\(\)[{*+.$^\\|?\-])/g, '\\$1') : '';
     if (user === undefined) {
-      res.send(401, 'Unauthorized');
+      res.status(401).send('Unauthorized');
     } else if (req.path === '/v1/documents' &&
       req.query.uri.match('/users/') &&
       req.query.uri.match(new RegExp('/users/[^(' + escapedUserName + ')]+.json'))) {
       // The user is try to PUT to a profile document other than his/her own. Not allowed.
-      res.send(403, 'Forbidden');
+      res.status(403).send('Forbidden');
     } else {
       if (req.path === '/v1/documents' && req.query.uri.match('/users/')) {
         // TODO: The user is updating the profile. Update the session info.
@@ -198,7 +198,7 @@ exports.buildExpress = function(options) {
 
   app.post('/v1*', function(req, res){
     if (req.session.user === undefined) {
-      res.send(401, 'Unauthorized');
+      res.status(401).send('Unauthorized');
     } else {
       proxy(req, res);
     }
