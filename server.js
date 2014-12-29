@@ -211,7 +211,7 @@ exports.buildExpress = function(options) {
   });
 
   // Redirect all other traffic to Angular
-  app.use(express.static(__dirname + '/ui/app'));
+  app.use(express.static(__dirname + '/ui/app', { maxAge: 30000 }));
   app.use('/*', function(req, res){
     res.render('index');
   });
