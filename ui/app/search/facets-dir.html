@@ -1,14 +1,12 @@
 <div class="facet-list">
-  <div class="chiclets">
-    <div ng-repeat="(index, facet) in facets | object2Array | filter:{selected: true}">
-      <div class="btn btn-primary" ng-repeat="value in facet.facetValues | filter:{selected: true}">
-        <span title="{{ value.name }}">{{ facet.__key }}: {{ value.name | truncate:20 }}</span>
-        <span class="glyphicon glyphicon-remove-circle icon-white" ng-click="toggle({facet: facet.__key, value: value.name})"></span>
-      </div>
-    </div>
-  </div>
   <div class="facet" ng-if="facet.facetValues.length" ng-repeat="(index, facet) in facets | object2Array">
     <h3>{{ facet.__key }}</h3>
+    <div ng-repeat="value in facet.facetValues | filter:{selected: true}">
+      <div class="btn btn-warning btn-xs facet-selected">
+        <span title="{{ value.name }}" ng-click="toggle({facet: facet.__key, value: value.name})">{{ value.name | truncate:20 }}</span>
+        <span class="glyphicon glyphicon-trash icon-white" ng-click="toggle({facet: facet.__key, value: value.name})"></span>
+      </div>
+    </div>
     <div ng-repeat="value in facet.facetValues | filter:{selected: '!'+true}">
       <a ng-click="toggle({facet: facet.__key, value: value.name})" title="{{ value.name }}">
         {{ value.name | truncate:20 }} ({{ value.count }})
