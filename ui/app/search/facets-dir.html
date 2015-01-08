@@ -2,7 +2,7 @@
   <div class="facet" ng-if="facet.facetValues.length" ng-repeat="(index, facet) in facets | object2Array">
     <h3>{{ facet.__key }}</h3>
     <div ng-repeat="value in facet.facetValues | filter:{selected: true}">
-      <div class="btn btn-warning btn-xs facet-selected">
+      <div class="btn btn-danger btn-xs facet-selected">
         <span title="{{ value.name }}" ng-click="toggle({facet: facet.__key, value: value.name})">{{ value.name | truncate:20 }}</span>
         <span class="glyphicon glyphicon-trash icon-white" ng-click="toggle({facet: facet.__key, value: value.name})"></span>
       </div>
