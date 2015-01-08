@@ -16,15 +16,15 @@
       <!-- show empty field if no emails yet -->
       <div class="row">
         <label class="col-sm-2 control-label">E-mail(s)</label>
-        <div class="col-sm-6">
-          <input type="email" name="newEmail" class="form-control" placeholder="e-mail of user" ng-model="model.newEmail">
+          <div class="col-sm-6">
+              <div class="input-group">
+                <input type="email" name="newEmail" class="form-control" placeholder="e-mail of user"   ng-model="model.newEmail">
+                <span class="input-group-addon" ng-click="addEmail()">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </span>
+              </div>
+          </div>
         </div>
-        <div class="col-sm-1">
-          <button class="btn btn-default" ng-click="addEmail()">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </div>
-      </div>
       <div class="row valid-email">
         <div class="col-sm-offset-2 col-sm-6 error" ng-show="profileForm.newEmail.$error.email">Not valid email!</div>
       </div>
@@ -42,8 +42,10 @@
       </div>
     </div>
     <div class="row">
-      <a class="col-sm-offset-5 col-sm-1" href="/">Cancel</a>
-      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+      <div class="col-sm-offset-2 col-sm-6 pull-right">
+        <a class="btn btn-default" href="/">Cancel</a>
+        <button class="btn btn-primary" ng-click="submit()">Submit</button>
+      </div>
     </div>
   </form>
 </div>
