@@ -31,12 +31,12 @@ nav {
 }
 
 .navbar-default {
-  background-color: #85b8df;
+  background-color: #222;
   border: none;
   border-radius: 0;
 
   .navbar-brand {
-    color: #222;
+    color: #fff;
   }
 }
 
@@ -45,7 +45,7 @@ nav {
 }
 
 .navbar-brand {
-  background: url("/images/demo-cat-logo2.png") no-repeat 10px center rgba(0, 0, 0, 0);
+  background: url("/images/demo-cat-logo3.png") no-repeat 10px center rgba(0, 0, 0, 0);
   font-size: 3em;
   height: 80px;
   line-height: 64px;
@@ -55,12 +55,20 @@ nav {
   width: 300px;
 }
 
+.navbar-toggle {
+  float: left;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.alert-danger.loginerror {
+  position: absolute;
+  margin-left: -280px;
+  margin-top: -10px;
+}
+
 .btn-create {
-  background-color: #838FC0;
-  border: 1px solid #657FB8;
-  border-radius: 5px;
-  padding: 0px;
-  font-weight: bold;
+  margin: 10px 0 0 10px;
 }
 
 #demo-cat-navbar-collapse-1 {
@@ -153,6 +161,7 @@ ul.bug-meta {
 
 
 .welcome {
+  color: #f5f5f5;
   margin-top: 14px;
 }
 
@@ -259,7 +268,7 @@ footer .text-muted {
   float: left;
   width: 40%;
   margin: 5px;
-  min-height: 200px;
+  height: 210px;
 }
 
 .panel-heading {
@@ -267,11 +276,34 @@ footer .text-muted {
 }
 
 .panel-default > .panel-heading {
-  background-color: #EBF2F7;
-  border-color: #D7E9F4;
+  background-color: #222;
+  border-color: #999;
+
+  h4 a {
+    color: #f5f5f5;
+  }
+
+  .ml-badge {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    left: -5px;
+    position: relative;
+  }
 }
 
-.ml-badge {
-  position: relative;
-  left: -5px;
+/* Facets*/
+.facet-selected {
+  margin: 3px 3px 3px -10px;
+  font-weight: bold;
+}
+.facet h3 {
+  border-bottom: 2px solid #222;
+}
+
+/* Search results */
+span.browsers, span.features {
+  display: block;
+}
+.browsers img {
+  width: 25px;
 }

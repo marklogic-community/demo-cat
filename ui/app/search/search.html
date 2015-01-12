@@ -5,7 +5,7 @@
 
     <div ng-if="model.search.total > 0" class="results">
 
-      <pagination ng-model="model.page" ng-change="search()" max-size="10" boundary-links="true"
+      <pagination class="pagination-sm" ng-model="model.page" ng-change="search()" max-size="10" boundary-links="true"
                   total-items="model.search.total" items-per-page="model.search['page-length']"></pagination>
 
       <ml-metrics search="model.search"></ml-metrics>
