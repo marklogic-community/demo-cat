@@ -82,10 +82,10 @@
         <input type="text" class="form-control" placeholder="7.0" ng-model="model.demo.version">
       </div>
     </div>
-    <div class="row">
-      <a class="col-sm-offset-9 col-sm-1" ng-click="cancel()">Cancel</a>
-      <button ng-if="!model.edit" class="col-sm-2 btn btn-primary" ng-click="submit()">Create</button>
-      <button ng-if="model.edit" class="col-sm-2 btn btn-primary" ng-click="submit()">Save</button>
+    <div class="row pull-right">
+      <a class="btn btn-default" ng-click="cancel()">Cancel</a>
+      <button ng-if="!model.edit" class="btn btn-primary" ng-click="submit()">Create</button>
+      <button ng-if="model.edit" class="btn btn-primary" ng-click="submit()">Save</button>
     </div>
   </form>
 </div>

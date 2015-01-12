@@ -7,6 +7,8 @@
       <span ng-repeat="text in match['match-text'] track by $index">
         <span ng-if="text.highlight === undefined">{{text}}</span>
         <span class="highlight" ng-if="text.highlight !== undefined">{{text.highlight}}</span>
+        <span class="features"><strong>Features:</strong> list, of, features</span>
+        <span class="browsers"><img src="/images/icons/chrome.png"/><img src="/images/icons/firefox.png"/><img src="/images/icons/ie.png"/><img src="/images/icons/safari.png"/></span>
       </span>
     </div>
   </div>
