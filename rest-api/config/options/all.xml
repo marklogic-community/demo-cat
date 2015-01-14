@@ -85,6 +85,8 @@
   </search:operator>
   <search:extract-metadata>
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="name"/>
+    <search:constraint-value ref="version"/>
+    <search:constraint-value ref="feature"/>
   </search:extract-metadata>
   <annotation xmlns="http://marklogic.com/appservices/search">Delta options here</annotation>
   <search:additional-query>

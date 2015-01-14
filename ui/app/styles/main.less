@@ -137,12 +137,17 @@ form .items-edit {
 
 .bug, .comment {
   margin-left: 10px;
-  &:nth-child(odd) {
-    background-color: #eee;
-  }
+  background: #fff;
+  border-bottom: 2px solid #dedede;
+  
   div {
     margin-left: 15px;
   }
+}
+
+.comment {
+  padding: 1px 15px 10px 15px;
+  margin-bottom: 20px;
 }
 
 ul.bug-meta {
@@ -301,9 +306,18 @@ footer .text-muted {
 }
 
 /* Search results */
-span.browsers, span.features {
+.features {
   display: block;
+  margin-top: 10px;
 }
-.browsers img {
-  width: 25px;
+
+/* Demo.html */
+.btn-editDemo {
+  margin-left: 20px;
+}
+.open-bugs .btn {
+  margin-left: 5px;
+}
+.comments .btn {
+  margin: -15px 0 0 5px;
 }
