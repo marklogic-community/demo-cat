@@ -1,5 +1,5 @@
 <div class="row detail" ng-if="model.user.authenticated">
-  <h2 class="col-md-12">{{model.demo.name}} <a class="btn btn-primary btn-xs" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a></h2>
+  <h2 class="col-md-12">{{model.demo.name}}<a class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a></h2>
   <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
   <div class="col-md-12">
     <label>Hosted at</label>
@@ -33,7 +33,7 @@
   <div class="maintainer col-md-12">
     <label>Maintainer</label>
     <span class="value">{{model.demo.maintainer}}</span>
-    (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.host}}</a>)
+    (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
   </div>
   <div class="version col-md-12">
     <label>MarkLogic version</label>
@@ -64,7 +64,7 @@
         <autocomplete ng-model="model.additionalBug.assignee" data="model.users" click-activation="true" ></autocomplete>
       </fieldset>
       <div class="col-md-12">
-        <a class="col-md-1" href ng-click="resetBugForm(); showBugForm = false">Cancel</a>
+        <a class="btn btn-default btn-xs" href ng-click="resetBugForm(); showBugForm = false">Cancel</a>
         <button class="btn btn-primary btn-xs" ng-click="addBug(model.additionalBug)">Add</button>
       </div>
     </form>
