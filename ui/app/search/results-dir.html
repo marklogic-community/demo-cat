@@ -11,10 +11,8 @@
     </div>
       <div class="features">
         <span class="features" ng-show="result.metadata.feature.values.length > 0"><strong>Features:</strong>
-        <span ng-repeat="value in result.metadata.feature.values">{{value}}<span ng-hide="$last">, </span></span>
- </span>
-        <!-- <em>Features</em> -->
-        <!-- <ul><li ng-repeat="metadata in result.metadata">{{ metadata.values[0] }}</li></ul> -->
+          <span ng-repeat="value in result.metadata.feature.values">{{value}}<span ng-hide="$last">, </span></span>
+        </span>
       </div>
   </div>
 </div>
