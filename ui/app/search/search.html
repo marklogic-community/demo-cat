@@ -1,6 +1,6 @@
 <div class="row" ng-show="model.user.authenticated">
-  <ml-facets class="col-md-3" facets="model.search.facets" toggle="toggleFacet(facet, value)" template="search/facets-dir.html"></ml-facets>
-  <div class="col-md-9">
+  <ml-facets class="col-md-2" facets="model.search.facets" toggle="toggleFacet(facet, value)" template="search/facets-dir.html"></ml-facets>
+  <div class="col-md-10">
     <h3 ng-if="model.search.total === 0">No results to show</h3>
 
     <div ng-if="model.search.total > 0" class="results">
