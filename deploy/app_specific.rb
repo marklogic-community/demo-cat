@@ -10,7 +10,7 @@ class ServerConfig
     original_deploy_modules
     r = execute_query %Q{
       xquery version "1.0-ml";
-      
+
       for $uri in cts:uris()
       return (
         $uri,
@@ -22,12 +22,12 @@ class ServerConfig
     },
     { :db_name => @properties["ml.modules-db"] }
   end
-  
+
   # fix content permissions
-  def permissions()
+  def fix_permissions()
     r = execute_query %Q{
       xquery version "1.0-ml";
-      
+
       for $uri in cts:uris()
       return (
         $uri,
