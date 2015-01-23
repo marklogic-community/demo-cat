@@ -12,6 +12,8 @@
           description: '',
           host: '',
           hostType: 'internal',
+          restricted: false,
+          restrictionDetails: '',
           browsers: [],
           features: [],
           domains: [],
