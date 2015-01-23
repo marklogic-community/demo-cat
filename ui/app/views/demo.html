@@ -1,47 +1,67 @@
 <div class="row detail" ng-if="model.user.authenticated">
-  <h2 class="col-md-12">{{model.demo.name}}<a class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a></h2>
+  <!-- Left col -->
+  <div class="col-md-4">
+    <div class="panel panel-danger site-details">
+      <div class="panel-heading">
+        <h3 class="panel-title">Site Details</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-show="model.demo.features">
+          <h4>Features</h4>
+          <span ng-repeat="feature in model.demo.features">{{feature}}</span>
+        </div>
+        <div ng-show="model.demo.browsers">
+          <h4>Browsers</h4>
+          <span ng-repeat="browser in model.demo.browsers">{{browser}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-warning code-details">
+      <div class="panel-heading">
+        <h3 class="panel-title">Code Details</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-show="model.demo.repo">
+          <h4>Code repo</h4>
+          <span class="value">{{model.demo.repo}}</span>
+        </div>
+        <div ng-show="model.demo.maintainer">
+          <h4>Maintainer</h4>
+          <span class="value">{{model.demo.maintainer}} (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
+          </span>
+        </div>
+        <div ng-show="model.demo.version">
+          <h4>MarkLogic version</h4>
+          <span class="value">{{model.demo.version}}</span>
+        </div>
+        <div ng-show="model.demo.host">
+          <h4>Hosted at</h4>
+          <span><a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
+          (<span class="value">{{model.demo.hostType}}</span>)</span>
+        </div>
+        <div ng-show="model.demo.credentials">
+          <h4>Credentials</h4>
+          <ul>
+            <li ng-repeat="creds in model.demo.credentials">{{creds.username}} / {{creds.password}}</li>
+          </ul>
+        </div>
+        <div ng-show="model.demo.domains">
+          <h4>Domains</h4>
+          <span ng-repeat="domain in model.demo.domains">{{domain}}</span>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Right col -->
+  <div class="col-md-8">
+    <h2 class="col-md-12">{{model.demo.name}}<a class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a></h2>
   <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
-  <div class="col-md-12">
-    <label>Hosted at</label>
-    <a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
-    (<span class="value">{{model.demo.hostType}}</span>)
-  </div>
-  <div class="credentials col-md-12">
-    <label>Credentials</label>
-    <ul>
-      <li ng-repeat="creds in model.demo.credentials">{{creds.username}} / {{creds.password}}</li>
-    </ul>
-  </div>
-  <div class="browsers col-md-12">
-    <label>Browsers</label>
-    <ul>
-      <li ng-repeat="browser in model.demo.browsers">{{browser}}</li>
-    </ul>
-  </div>
-  <ul class="items-view col-md-12">
-    <label>Features</label>
-    <li ng-repeat="feature in model.demo.features">{{feature}}</li>
-  </ul>
-  <ul class="items-view col-md-12">
-    <label>Domains</label>
-    <li ng-repeat="domain in model.demo.domains">{{domain}}</li>
-  </ul>
-  <div class="repo col-md-12">
-    <label>Code repo</label>
-    <span class="value">{{model.demo.repo}}</span>
-  </div>
-  <div class="maintainer col-md-12">
-    <label>Maintainer</label>
-    <span class="value">{{model.demo.maintainer}}</span>
-    (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
-  </div>
-  <div class="version col-md-12">
-    <label>MarkLogic version</label>
-    <span class="value">{{model.demo.version}}</span>
-  </div>
+  
   <div class="open-bugs col-md-12">
-    <label>Open Bugs & RFEs</label>
-    <button class="btn btn-primary btn-xs" ng-show="model.user.authenticated && !showBugForm" ng-click="populateUsers(); showBugForm = true;">Add</button>
+    <h3>Open Bugs & RFEs</h3>
+    <button class="btn btn-primary btn-sm" ng-show="model.user.authenticated && !showBugForm" ng-click="populateUsers(); showBugForm = true;">Add</button>
     <form ng-show="model.user.authenticated && showBugForm">
       <fieldset class="col-md-12">
         <label class="col-md-2">Description</label>
@@ -89,9 +109,9 @@
     </div>
   </div>
   <div class="closed-bugs col-md-12">
-    <label>Closed Bugs & RFEs</label>
-    <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true">Expand</a>
-    <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false">Collapse</a>
+    <h3>Closed Bugs & RFEs</h3>
+    <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-primary btn-sm">Expand</a>
+    <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-primary btn-sm">Collapse</a>
     <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo.bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
       <div>{{bug.msg}}</div>
       <ul class="bug-meta">
@@ -118,4 +138,7 @@
       {{comment.msg}}
     </article>
   </section>
+
+  </div>
 </div>
+
