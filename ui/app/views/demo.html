@@ -1,6 +1,10 @@
 <div class="row detail" ng-if="model.user.authenticated">
   <h2 class="col-md-12">{{model.demo.name}}<a class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a></h2>
   <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
+  <div class="col-md-12 text-danger restricted" ng-if="model.demo.restricted">
+    <i class="fa fa-2 fa-exclamation-triangle"></i><label>Restricted</label>
+    <div class="desc col-md-12" ng-bind-html="model.demo.restrictionDetails"></div>
+  </div>
   <div class="col-md-12">
     <label>Hosted at</label>
     <a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
