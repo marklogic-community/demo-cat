@@ -44,12 +44,12 @@ function file-bug:post(
   (: BEGIN send notification :)
   (: get demo info :)
   let $demo := fn:doc($uri)/jbasic:json
-  (: get maintainer name :)
+  (: get demo name :)
   let $demo-name as xs:string? := $demo/jbasic:name
-  (: get maintainer name :)
-  let $maintainer-name as xs:string? := $demo/jbasic:maintainer
-  (: get maintainer email :)
-  let $maintainer-email as xs:string? := $demo/jbasic:email
+  (: get technical contact name :)
+  let $tech-contact-name as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Technical Contact"]/jbasic:name
+  (: get technical contact email :)
+  let $tech-contact-email as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Technical Contact"]/jbasic:email
   (: get bug type - defect or enhancement :)
   let $bug-type as xs:string? := $json-xml/jbasic:type
   (: get referring host :)
@@ -62,7 +62,7 @@ function file-bug:post(
       <div>{$populated-xml/jbasic:msg/node()}</div>
     </div>
   return (
-    utilities:send-notification($maintainer-name, $maintainer-email, '[DemoCat] New Bug for "'||$demo-name||'"', $message),
+    utilities:send-notification($tech-contact-name, $tech-contact-email, '[DemoCat] New Bug for "'||$demo-name||'"', $message),
     xdmp:set-response-code(200, "OK"),
     document { json:transform-to-json($populated-xml) }
   )
