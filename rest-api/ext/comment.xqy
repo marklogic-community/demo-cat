@@ -45,12 +45,12 @@ function comment:post(
   (: BEGIN send notification :)
   (: get demo info :)
   let $demo := fn:doc($uri)/jbasic:json
-  (: get maintainer name :)
+  (: get demo name :)
   let $demo-name as xs:string? := $demo/jbasic:name
-  (: get maintainer name :)
-  let $maintainer-name as xs:string? := $demo/jbasic:maintainer
-  (: get maintainer email :)
-  let $maintainer-email as xs:string? := $demo/jbasic:email
+  (: get business owner name :)
+  let $biz-owner-name as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Business Owner"]/jbasic:name
+  (: get business owner email :)
+  let $biz-owner-email as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Business Owner"]/jbasic:email
   (: get referring host :)
   let $host := utilities:get-referring-host()
   (: build message :)
@@ -62,7 +62,7 @@ function comment:post(
     </div>
 
   return (
-    utilities:send-notification($maintainer-name, $maintainer-email, '[DemoCat] New Comment for "'||$demo-name||'"', $message),
+    utilities:send-notification($biz-owner-name, $biz-owner-email, '[DemoCat] New Comment for "'||$demo-name||'"', $message),
     xdmp:set-response-code(200, "OK"),
     document { json:transform-to-json($populated-xml) }
   )
