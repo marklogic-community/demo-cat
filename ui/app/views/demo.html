@@ -25,9 +25,9 @@
           <h4>Code repo</h4>
           <span class="value">{{model.demo.repo}}</span>
         </div>
-        <div ng-show="model.demo.maintainer">
-          <h4>Maintainer</h4>
-          <span class="value">{{model.demo.maintainer}} (<a ng-href="mailto:{{model.demo.email}}">{{model.demo.email}}</a>)
+        <div ng-show="model.demo.persons">
+          <h4>Points of Contact</h4>
+          <span ng-repeat="person in model.demo.persons" class="value">{{person.role}}: {{person.personName}} (<a ng-href="mailto:{{person.email}}">{{person.email}}</a>)
           </span>
         </div>
         <div ng-show="model.demo.version">
