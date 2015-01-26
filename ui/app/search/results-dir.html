@@ -1,8 +1,9 @@
-<div class="panel panel-default" ng-repeat="result in results">
+<div class="panel" ng-class="result.metadata.restricted && result.metadata.restricted.values[0] ? 'panel-danger' : 'panel-default'" ng-repeat="result in results">
   <div class="panel-heading">
     <h4><span class="pull-left badge ml-badge">ML {{result.metadata.version.values[0] }}</span><a ng-href="detail{{result.uri}}">{{result.metadata.name.values[0] || result.uri}}</a></h4>
   </div>
   <div class="matches panel-body">
+    <p ng-if="result.metadata.restricted && result.metadata.restricted.values[0]" class="text-danger restricted"><i class="fa fa-2 fa-exclamation-triangle"></i>Restricted</p>
     <div ng-repeat="match in result.matches">
       <span ng-repeat="text in match['match-text'] track by $index">
         <span ng-if="text.highlight === undefined">{{text}}</span>
@@ -15,7 +16,6 @@
         </span>
       </div>
   </div>
-</div>
-
+<div>
 
 
