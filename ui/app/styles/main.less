@@ -269,18 +269,18 @@ footer .text-muted {
 .profile, .not-logged-in, .content { min-height: 525px; }
 
 /* Search results well */
-.panel {
+.results .panel {
   float: left;
   width: 30%;
   margin: 5px;
   height: 300px;
 }
 
-.panel-heading {
+.results .panel-heading {
   padding: 5px 15px;
 }
 
-.panel-default > .panel-heading {
+.results .panel-default > .panel-heading {
   background-color: #222;
   border-color: #999;
 
@@ -303,6 +303,24 @@ footer .text-muted {
 }
 .facet h3 {
   border-bottom: 2px solid #222;
+}
+
+/* Detail page panels */  
+.panel-body {
+  overflow: scroll;
+}
+
+.site-details h3.panel-title, 
+.code-details h3.panel-title {
+  font-size: 20px;
+}
+
+.site-details span {
+  display: block;
+}
+
+.code-details span {
+  display: inline-block;
 }
 
 /* Search results */
