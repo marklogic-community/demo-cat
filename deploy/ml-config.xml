@@ -226,7 +226,7 @@
         <range-element-index>
           <scalar-type>string</scalar-type>
           <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
-          <localname>maintainer</localname>
+          <localname>personName</localname>
           <collation>http://marklogic.com/collation/codepoint</collation>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
