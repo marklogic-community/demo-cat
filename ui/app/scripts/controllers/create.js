@@ -18,12 +18,14 @@
           languages: [],
           bugs: [],
           comments: [],
-          credentials: []
+          credentials: [],
+          persons: []
         },
         edit: edit,
         featureChoices: features.list(),
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
+        personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
         user: user // GJo: a bit blunt way to insert the User service, but seems to work
       };
 
@@ -55,6 +57,12 @@
         },
         removeCredentials: function(index) {
           model.demo.credentials.splice(index, 1);
+        },
+        addPerson: function() {
+          model.demo.persons.push({personName: null, role: null, email: null});
+        },
+        removePerson: function(index) {
+          model.demo.persons.splice(index, 1);
         },
         submit: function() {
           var promise;
