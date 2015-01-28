@@ -55,6 +55,13 @@
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
+  <search:values name="features">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <search:path-index
+        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:features/jbasic:item</search:path-index>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:values>
   <search:sort-order direction="descending">
     <search:score/>
   </search:sort-order>
