@@ -34,17 +34,7 @@
       angular.extend($scope, {
         model: model,
         editorOptions: {
-          height: '100px',
-          toolbarGroups: [
-            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-            { name: 'links' }
-          ],
-          //override default options
-          toolbar: '',
-          /* jshint camelcase: false */
-          toolbar_full: ''
+          height: '100px'
         },
         updateBrowsers: function(browser) {
           var index = $scope.model.demo.browsers.indexOf(browser);
