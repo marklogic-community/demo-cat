@@ -2,9 +2,11 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('DemoCtrl',
-      ['$scope', 'MLRest', 'Features', 'Domains', 'User', '$routeParams',
-      function ($scope, mlRest, features, domains, user, $routeParams) {
+    .controller('DemoCtrl', DemoCtrl);
+
+    DemoCtrl.$inject = ['$scope', 'MLRest', 'Domains', 'User', '$routeParams', 'features'];
+
+    function DemoCtrl($scope, mlRest, domains, user, $routeParams, features) {
       var uri = $routeParams.uri;
       var commentModel =
         {
@@ -38,7 +40,7 @@
         additionalComment: commentModel,
         additionalBug: bugModel,
         edit: '',
-        featureChoices: features.list(),
+        featureChoices: features,
         domainChoices: domains.list(),
         // TODO We probably want only one place to edit browser choices
         browserChoices: ['Firefox', 'Chrome', 'IE'],
@@ -253,5 +255,5 @@
 
 
       });
-    }]);
+    }
 }());

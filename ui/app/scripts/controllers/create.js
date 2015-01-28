@@ -4,8 +4,8 @@
   angular.module('demoCat')
     .controller('CreateCtrl', CreateCtrl);
 
-  CreateCtrl.$inject = ['$scope', 'Features', 'Domains', 'demoService', 'User', '$location', 'edit', 'demo', '$routeParams'];
-  function CreateCtrl($scope, features, domains, demoService, user, $location, edit, demo, $routeParams) {
+  CreateCtrl.$inject = ['$scope', 'Domains', 'demoService', 'User', '$location', '$routeParams', 'edit', 'demo', 'features'];
+  function CreateCtrl($scope, domains, demoService, user, $location, $routeParams, edit, demo, features) {
       var model = {
         demo: demo || {
           name: '',
@@ -24,7 +24,7 @@
           persons: []
         },
         edit: edit,
-        featureChoices: features.list(),
+        featureChoices: features,
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
@@ -59,6 +59,15 @@
         },
         removeCredentials: function(index) {
           model.demo.credentials.splice(index, 1);
+        },
+        addFeature: function() {
+          if (model.demo.features.indexOf(model.featureToAdd) < 0) {
+            model.demo.features.push(model.featureToAdd);
+          }
+          delete model.featureToAdd;
+        },
+        removeFeature: function(index) {
+          model.demo.features.splice(index, 1);
         },
         addPerson: function() {
           model.demo.persons.push({personName: null, role: null, email: null});

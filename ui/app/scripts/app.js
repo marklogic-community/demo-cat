@@ -34,6 +34,9 @@ angular.module('demoCat', [
           },
           demo: function() {
             return null;
+          },
+          features: function(featuresService) {
+            return featuresService.list();
           }
         }
       })
@@ -49,12 +52,20 @@ angular.module('demoCat', [
             return MLRest.getDocument(uri, { format: 'json' }).then(function(response) {
               return response.data;
             });
+          },
+          features: function(featuresService) {
+            return featuresService.list();
           }
         }
       })
       .when('/detail:uri*', {
         templateUrl: '/views/demo.html',
-        controller: 'DemoCtrl'
+        controller: 'DemoCtrl',
+        resolve: {
+          features: function(featuresService) {
+            return featuresService.list();
+          }
+        }
       })
       .when('/profile', {
         templateUrl: '/views/profile.html',
