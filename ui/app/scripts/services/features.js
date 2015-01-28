@@ -2,62 +2,21 @@
   'use strict';
 
   angular.module('demoCat')
-    .provider('Features', function() {
+    .service('featuresService', FeaturesService);
 
-      var features = {
-        list: [
-          'Advanced Search',
-          'Alerting',
-          'ATOM',
-          'Co-Occurence (2-way)',
-          'Co-Occurence (n-way)',
-          'Content Enrichment',
-          'Content Editing',
-          'Content suggestions',
-          'Custom Publishing',
-          'Document Annotations',
-          'Document check-in/out',
-          'Document Filtering',
-          'Document Upload',
-          'Dynamic output to PDF',
-          'Dynamic output to PPT',
-          'Document versioning',
-          'ESRI ArcGIS integration',
-          'Excel export',
-          'Faceted Navigation',
-          'Full text search',
-          'Geospatial search',
-          'Google Earth export',
-          'Google Maps display',
-          'Image metadata extraction',
-          'KML export',
-          'MarkLogic Content Pump',
-          'OpenLayers display',
-          'PDF Export',
-          'Personalization',
-          'Role-based Access Control',
-          'RSS',
-          'Saved Searches',
-          'Semantics',
-          'Tableau',
-          'Tagging',
-          'Tag Cloud',
-          'Temporal search',
-          'Visualization widgets',
-          'Workflow queue'
-        ],
-        selItem: '',
-        optItem: 'Select...'
-      };
+  function FeaturesService(MLRest) {
 
-      this.$get = function() {
-        var service = {
-          list: function() {
-            return features;
-          }
-        };
+    var service = {
+      list: listFeatures
+    };
 
-        return service;
-      };
-    });
+    function listFeatures() {
+      return MLRest.values('features', { options: 'all', format: 'json' }).then(function(resp) {
+        return resp.data['values-response']['distinct-value'].map(function(value) {
+          return value._value;
+        });
+      });
+    }
+    return service;
+  }
 }());
