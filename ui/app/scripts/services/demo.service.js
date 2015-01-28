@@ -16,8 +16,9 @@
     function createDemo(demo) {
       var params = {
         format: 'json',
-        'perm:demo-cat-role': 'read',
-        'perm:demo-cat-registered-role': 'update',
+        // [GJo] Better to rely on default permissions..
+        //'perm:demo-cat-role': 'read',
+        //'perm:demo-cat-registered-role': 'update',
         directory: '/demos/',
         extension: '.json'
       };
@@ -27,7 +28,8 @@
     }
 
     function saveDemo(demo, docUri) {
-      var uri = '/v1/documents?uri=' + docUri + '&format=json&perm:demo-cat-role=read&perm:demo-cat-registered-role=update';
+                                                               // [GJo] Better to rely on default permissions..
+      var uri = '/v1/documents?uri=' + docUri + '&format=json';//'&perm:demo-cat-role=read&perm:demo-cat-registered-role=update';
       return $http.put(uri, demo).then(function(resp) {
         return { uri: docUri };
       });
