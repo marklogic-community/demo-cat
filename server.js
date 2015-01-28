@@ -24,7 +24,11 @@ exports.buildExpress = function(options) {
   var app = express();
 
   app.use(cookieParser());
-  app.use(expressSession({secret: '1234567890QWERTY'}));
+  app.use(expressSession({
+    secret: '1234567890QWERTY',
+    saveUninitialized: true,
+    resave: true
+  }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: true
@@ -44,6 +48,7 @@ exports.buildExpress = function(options) {
       headers: req.headers,
       auth: getAuth(options, req.session)
     }, function(response) {
+      res.status(response.statusCode);
       response.on('data', function(chunk) {
         res.write(chunk);
       });
@@ -86,7 +91,7 @@ exports.buildExpress = function(options) {
       auth: req.query.username + ':' + req.query.password
     }, function(response) {
       if (response.statusCode === 401) {
-        res.statusCode = 401;
+        res.status(401);
         res.send('Unauthenticated');
       } else if (response.statusCode === 404) {
         // authentication successful, but no profile defined
@@ -94,7 +99,7 @@ exports.buildExpress = function(options) {
           name: req.query.username,
           password: req.query.password
         };
-        res.send(200, {
+        res.status(200).send({
           authenticated: true,
           username: req.query.username
         });
@@ -112,7 +117,7 @@ exports.buildExpress = function(options) {
                 fullname: json.user.fullname,
                 emails: json.user.emails
               };
-              res.send(200, {
+              res.status(200).send({
                 authenticated: true,
                 username: req.query.username,
                 profile: req.session.user.profile
@@ -145,8 +150,13 @@ exports.buildExpress = function(options) {
       headers: req.headers,
       auth: getAuth(options, req.session)
     }, function(response) {
-      console.log('created demo at: ' + response.headers.location);
-      res.write(JSON.stringify({uri: response.headers.location.replace(/(.*\?uri=)/, '')}));
+      res.status(response.statusCode);
+      if (response.statusCode >= 400) {
+        console.log('creation of demo failed!');
+      } else {
+        console.log('created demo at: ' + response.headers.location);
+        res.write(JSON.stringify({uri: response.headers.location.replace(/(.*\?uri=)/, '')}));
+      }
       response.on('data', function(chunk) {
         res.write(chunk);
       });
@@ -168,7 +178,7 @@ exports.buildExpress = function(options) {
 
   app.get('/v1*', function(req, res){
     if (req.session.user === undefined) {
-      res.send(401, 'Unauthorized');
+      res.status(401).send('Unauthorized');
     } else {
       proxy(req, res);
     }
@@ -178,12 +188,12 @@ exports.buildExpress = function(options) {
     var user = req.session.user;
     var escapedUserName = (user && user.name) ? user.name.replace(/([\(\)[{*+.$^\\|?\-])/g, '\\$1') : '';
     if (user === undefined) {
-      res.send(401, 'Unauthorized');
+      res.status(401).send('Unauthorized');
     } else if (req.path === '/v1/documents' &&
       req.query.uri.match('/users/') &&
       req.query.uri.match(new RegExp('/users/[^(' + escapedUserName + ')]+.json'))) {
       // The user is try to PUT to a profile document other than his/her own. Not allowed.
-      res.send(403, 'Forbidden');
+      res.status(403).send('Forbidden');
     } else {
       if (req.path === '/v1/documents' && req.query.uri.match('/users/')) {
         // TODO: The user is updating the profile. Update the session info.
@@ -194,14 +204,14 @@ exports.buildExpress = function(options) {
 
   app.post('/v1*', function(req, res){
     if (req.session.user === undefined) {
-      res.send(401, 'Unauthorized');
+      res.status(401).send('Unauthorized');
     } else {
       proxy(req, res);
     }
   });
 
   // Redirect all other traffic to Angular
-  app.use(express.static(__dirname + '/ui/app'));
+  app.use(express.static(__dirname + '/ui/app', { maxAge: 30000 }));
   app.use('/*', function(req, res){
     res.render('index');
   });

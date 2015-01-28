@@ -47,6 +47,8 @@
             } else {
               user.loginError = true;
             }
+          }, function (error) {
+            user.loginError = true;
           });
       },
       logout: function() {

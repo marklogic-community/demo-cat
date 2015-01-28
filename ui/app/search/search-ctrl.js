@@ -12,46 +12,6 @@
             selected: []
           };
 
-      mlSearch.getFacetParams = function() {
-        var self = mlSearch,
-            facetQuery = self.getFacetQuery(),
-            queries = [],
-            facets = [];
-
-        queries = ( facetQuery['or-query'] || facetQuery['and-query'] ).queries;
-
-        _.each(queries, function(query) {
-          var constraint = query[ _.keys(query)[0] ],
-              name = constraint['constraint-name'];
-
-          _.each( constraint.value || constraint.uri, function(value) {
-            // quote values with spaces
-            if (/\s+/.test(value) && !/^"(.+)"$/.test(value)) {
-              value = '"' + value + '"';
-            }
-            facets.push( name + self.options.params.separator + value );
-          });
-        });
-
-        return facets;
-      };
-
-      mlSearch.selectFacet = function(name, value, type) {
-        var self = mlSearch;
-        if (/^"(.*)"$/.test(value)) {
-          value = value.replace(/^"(.*)"$/, '$1');
-        }
-        var active = self.activeFacets[name];
-
-        if ( active && !_.contains(active.values, value) ) {
-          active.values.push(value);
-        } else {
-          self.activeFacets[name] = { type: type, values: [value] };
-        }
-
-        return self;
-      };
-
       (function init() {
         // wire up remote input subscription
         remoteInput.initCtrl($scope, model, mlSearch, search);
