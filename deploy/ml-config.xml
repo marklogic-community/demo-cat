@@ -536,6 +536,9 @@
         <role-name>@ml.app-name-defaults-role</role-name>
       </role-names>
       <privileges>
+        <privilege>
+          <privilege-name>demos-uri</privilege-name>
+        </privilege>
       </privileges>
     </role>
     <role>
@@ -641,5 +644,10 @@
       <kind>uri</kind>
     </privilege>
 -->
+    <privilege>
+      <privilege-name>demos-uri</privilege-name>
+      <action>/demos/</action>
+      <kind>uri</kind>
+    </privilege>
   </privileges>
 </configuration>

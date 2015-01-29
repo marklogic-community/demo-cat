@@ -6,6 +6,7 @@ var expressSession = require('express-session');
 var http = require('http');
 var path = require('path');
 var ui = path.join(__dirname, 'ui/app');
+var util = require('util');
 
 function getAuth(options, session) {
   'use strict';
@@ -67,6 +68,29 @@ exports.buildExpress = function(options) {
     });
   }
 
+  function isAdmin(req, res, next) {
+    return _isType('admin', req, res, next);
+  }
+
+  function isWriter(req, res, next) {
+    return _isType('writer', req, res, next);
+  }
+
+  function _isType(type, req, res, next) {
+    if (!determineIfHasType(req.session.user, type)) {
+      res.status(403).send('Forbidden');
+    } else {
+      return next();
+    }
+  }
+
+  function determineIfHasType(user, type) {
+    if (!(user && user.profile && user.profile.webroles)) {
+      return false;
+    }
+    return user.profile.webroles.indexOf(type) > -1;
+  }
+
   app.get('/user/status', function(req, res) {
     if (req.session.user === undefined) {
       res.send('{"authenticated": false}');
@@ -74,7 +98,8 @@ exports.buildExpress = function(options) {
       res.send({
         authenticated: true,
         username: req.session.user.name,
-        profile: req.session.user.profile
+        profile: req.session.user.profile,
+        webroles: req.session.user.webroles
       });
     }
   });
@@ -86,47 +111,37 @@ exports.buildExpress = function(options) {
     var login = http.get({
       hostname: options.mlHost,
       port: options.mlPort,
-      path: '/v1/documents?uri=/users/' + req.query.username + '.json',
+      //path: '/v1/documents?uri=/users/' + req.query.username + '.json',
+      path: '/v1/resources/profile',
       headers: req.headers,
       auth: req.query.username + ':' + req.query.password
     }, function(response) {
       if (response.statusCode === 401) {
         res.status(401);
         res.send('Unauthenticated');
-      } else if (response.statusCode === 404) {
-        // authentication successful, but no profile defined
+      } else {
+        // authentication successful, remember the username
         req.session.user = {
           name: req.query.username,
           password: req.query.password
         };
-        res.status(200).send({
-          authenticated: true,
-          username: req.query.username
-        });
-      } else {
-        if (response.statusCode === 200) {
-          // authentication successful, remember the username
-          req.session.user = {
-            name: req.query.username,
-            password: req.query.password
+        response.on('data', function(chunk) {
+          console.log('chunk: ' + chunk);
+          var json = JSON.parse(chunk);
+          req.session.user.profile = {};
+
+          if (json.user !== undefined) {
+            req.session.user.profile.fullname = json.user.fullname;
+            req.session.user.profile.emails = json.user.emails;
           };
-          response.on('data', function(chunk) {
-            var json = JSON.parse(chunk);
-            if (json.user !== undefined) {
-              req.session.user.profile = {
-                fullname: json.user.fullname,
-                emails: json.user.emails
-              };
-              res.status(200).send({
-                authenticated: true,
-                username: req.query.username,
-                profile: req.session.user.profile
-              });
-            } else {
-              console.log('did not find chunk.user');
-            }
+          req.session.user.profile.webroles = json.webroles;
+
+          res.status(200).send({
+            authenticated: true,
+            username: req.query.username,
+            profile: req.session.user.profile
           });
-        }
+        });
       }
     });
 
@@ -142,6 +157,8 @@ exports.buildExpress = function(options) {
 
   app.post('/demo/create', function(req, res) {
     var queryString = req.originalUrl.split('?')[1];
+    console.log('demo queryString: ' + queryString);
+    console.log('auth: ' + getAuth(options, req.session));
     var mlReq = http.request({
       hostname: options.mlHost,
       port: options.mlPort,
@@ -184,7 +201,7 @@ exports.buildExpress = function(options) {
     }
   });
 
-  app.put('/v1*', function(req, res){
+  app.put('/v1*', isWriter, function(req, res){
     var user = req.session.user;
     var escapedUserName = (user && user.name) ? user.name.replace(/([\(\)[{*+.$^\\|?\-])/g, '\\$1') : '';
     if (user === undefined) {
@@ -202,7 +219,7 @@ exports.buildExpress = function(options) {
     }
   });
 
-  app.post('/v1*', function(req, res){
+  app.post('/v1*', isWriter, function(req, res){
     if (req.session.user === undefined) {
       res.status(401).send('Unauthorized');
     } else {
