@@ -155,10 +155,8 @@ exports.buildExpress = function(options) {
     res.send();
   });
 
-  app.post('/demo/create', function(req, res) {
+  app.post('/demo/create', isWriter, function(req, res) {
     var queryString = req.originalUrl.split('?')[1];
-    console.log('demo queryString: ' + queryString);
-    console.log('auth: ' + getAuth(options, req.session));
     var mlReq = http.request({
       hostname: options.mlHost,
       port: options.mlPort,

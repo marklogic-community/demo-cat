@@ -40,6 +40,7 @@
               if (result.data.profile !== undefined) {
                 user.fullname = result.data.profile.fullname;
                 user.emails = result.data.profile.emails;
+                user.webroles = result.data.profile.webroles;
                 $route.reload();
               } else {
                 $location.path('/profile');
