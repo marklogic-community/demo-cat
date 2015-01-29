@@ -38,8 +38,6 @@ declare function profile:get(
 
   let $_ := map:put($profile, "webroles", $webroles-array)
 
-  let $_ := xdmp:log($profile)
-
   return document{ xdmp:to-json($profile) }
 };
 
