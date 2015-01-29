@@ -47,9 +47,13 @@ end
 class ServerConfig < MLClient
 
   # needed to determine if Roxy is running inside a jar
-  @@is_jar = __FILE__.match(/jar:file:.*/) != nil
+  @@is_jar = is_jar?
   @@path = @@is_jar ? "./deploy" : "../.."
   @@context = @@is_jar ? Dir.pwd : __FILE__
+
+  def self.path
+    @@path
+  end
 
   def initialize(options)
     @options = options
@@ -64,6 +68,7 @@ class ServerConfig < MLClient
     @bootstrap_port_four = @properties["ml.bootstrap-port-four"]
     @bootstrap_port_five = @properties["ml.bootstrap-port-five"]
     @use_https = @properties["ml.use-https"] == "true"
+    @protocol = "http#{@use_https ? 's' : ''}"
 
     super(
       :user_name => @properties["ml.user"],
@@ -103,6 +108,8 @@ class ServerConfig < MLClient
     end
   end
 
+  # This method exists to return a path relative to roxy
+  # when running as regular old Roxy or as a jar
   def ServerConfig.expand_path(path)
 #    logger.info("path: #{path}")
 #    logger.info("context: #{@@context}")
@@ -123,13 +130,16 @@ class ServerConfig < MLClient
       Dir.mktmpdir do |tmp_dir|
         logger.debug(tmp_dir)
 
-        FileUtils.mkdir_p tmp_dir + "/bin"
-        FileUtils.cp(ServerConfig.expand_path("#{@@path}/lib/ml.rb"), tmp_dir + "/bin/roxy.rb")
+        temp_roxy_dir = tmp_dir + "/roxy"
+        Dir.mkdir temp_roxy_dir
 
-        FileUtils.cp_r(ServerConfig.expand_path("#{@@path}/lib"), tmp_dir)
-        FileUtils.cp(ServerConfig.expand_path("#{@@path}/app_specific.rb"), tmp_dir + "/lib/app_specific.rb")
+        FileUtils.mkdir_p temp_roxy_dir + "/bin"
+        FileUtils.cp(ServerConfig.expand_path("#{@@path}/lib/ml.rb"), temp_roxy_dir + "/bin/roxy.rb")
 
-        Dir.chdir(tmp_dir) do
+        FileUtils.cp_r(ServerConfig.expand_path("#{@@path}/lib"), temp_roxy_dir)
+        FileUtils.cp_r(ServerConfig.expand_path("#{@@path}/sample"), temp_roxy_dir)
+
+        Dir.chdir(temp_roxy_dir) do
           Warbler::Application.new.run
           FileUtils.cp(Dir.glob("*.jar")[0], jar_file)
         end
@@ -140,15 +150,30 @@ class ServerConfig < MLClient
   end
 
   def self.init
+    # input files
+    if @@is_jar
+      sample_config = "roxy/sample/ml-config.sample.xml"
+      sample_properties = "roxy/sample/build.sample.properties"
+      sample_options = "roxy/sample/all.sample.xml"
+      sample_rest_properties = "roxy/sample/properties.sample.xml"
+    else
     sample_config = ServerConfig.expand_path("#{@@path}/sample/ml-config.sample.xml")
     sample_properties = ServerConfig.expand_path("#{@@path}/sample/build.sample.properties")
+      sample_options = ServerConfig.expand_path("#{@@path}/sample/all.sample.xml")
+      sample_rest_properties = ServerConfig.expand_path("#{@@path}/sample/properties.sample.xml")
+    end
+
+    # output files
     build_properties = ServerConfig.expand_path("#{@@path}/build.properties")
-    options_dir = ServerConfig.expand_path("#{@@path}/../rest-api/config/options")
+    options_file = ServerConfig.expand_path("#{@@path}/../rest-api/config/options/all.xml")
+    rest_properties = ServerConfig.expand_path("#{@@path}/../rest-api/config/properties.xml")
+
+    # dirs to create
     rest_ext_dir = ServerConfig.expand_path("#{@@path}/../rest-api/ext")
     rest_transforms_dir = ServerConfig.expand_path("#{@@path}/../rest-api/transforms")
-    options_file = ServerConfig.expand_path("#{@@path}/../rest-api/config/options/all.xml")
-    sample_options = ServerConfig.expand_path("#{@@path}/sample/all.sample.xml")
+    options_dir = ServerConfig.expand_path("#{@@path}/../rest-api/config/options")
 
+    # get supplied options
     force = find_arg(['--force']).present?
     force_props = find_arg(['--force-properties']).present?
     force_config = find_arg(['--force-config']).present?
@@ -156,7 +181,7 @@ class ServerConfig < MLClient
     server_version = find_arg(['--server-version'])
 
     # Check for required --server-version argument value
-    if (!server_version.present? || server_version == '--server-version' || !(%w(4 5 6 7).include? server_version))
+    if (!server_version.present? || server_version == '--server-version' || !(%w(4 5 6 7 8).include? server_version))
       server_version = prompt_server_version
     end
 
@@ -165,7 +190,7 @@ class ServerConfig < MLClient
       error_msg << "build.properties has already been created."
     else
       #create clean properties file
-      FileUtils.cp sample_properties, build_properties
+      copy_file sample_properties, build_properties
 
       properties_file = File.read(build_properties)
 
@@ -206,10 +231,8 @@ class ServerConfig < MLClient
       FileUtils.mkdir_p rest_ext_dir
       FileUtils.mkdir_p rest_transforms_dir
       FileUtils.mkdir_p options_dir
-      FileUtils.cp sample_options, options_file
-      FileUtils.cp(
-        ServerConfig.expand_path("#{@@path}/sample/properties.sample.xml"),
-        ServerConfig.expand_path("#{@@path}/../rest-api/config/properties.xml"))
+      copy_file sample_options, options_file
+      copy_file sample_rest_properties, rest_properties
     end
 
     target_config = ServerConfig.expand_path(ServerConfig.properties["ml.config.file"])
@@ -218,30 +241,34 @@ class ServerConfig < MLClient
       error_msg << "ml-config.xml has already been created."
     else
       #create clean marklogic configuration file
-      FileUtils.cp sample_config, target_config
+      copy_file sample_config, target_config
     end
 
     raise HelpException.new("init", error_msg.join("\n")) if error_msg.length > 0
   end
 
   def self.initcpf
+    if @@is_jar
+      sample_config = "roxy/sample/pipeline-config.sample.xml"
+    else
     sample_config = ServerConfig.expand_path("#{@@path}/sample/pipeline-config.sample.xml")
+    end
     target_config = ServerConfig.expand_path("#{@@path}/pipeline-config.xml")
 
     force = find_arg(['--force']).present?
     if !force && File.exists?(target_config)
       raise HelpException.new("initcpf", "cpf configuration has already been created.")
     else
-      FileUtils.cp sample_config, target_config
+      copy_file sample_config, target_config
     end
   end
 
   def self.prompt_server_version
     puts 'Required option --server-version=[version] not specified with valid value.
 
-What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
+What is the version number of the target MarkLogic server? [5, 6, 7, or 8]'
     server_version = $stdin.gets.chomp.to_i
-    server_version = 6 if server_version == 0
+    server_version = 7 if server_version == 0
     server_version
   end
 
@@ -362,7 +389,7 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
       r = execute_query_4 query, properties
     elsif @server_version == 5 || @server_version == 6
       r = execute_query_5 query, properties
-    else
+    else # 7 or 8
       r = execute_query_7 query, properties
     end
 
@@ -373,27 +400,53 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
 
   def restart
     group = ARGV.shift
-    if group
-      logger.info "Restarting MarkLogic Server group #{group} on #{@hostname}"
+    # Exclude any argument passed from command line.
+    if group && group.index("-") == 0
+      group = nil
+    end
+
+    if group && group == "cluster"
+      logger.info "Restarting MarkLogic Server cluster of #{@hostname}"
+    elsif group
+      logger.info "Restarting MarkLogic Server group #{group}"
     else
-      logger.info "Restarting MarkLogic Server on #{@hostname}"
+      logger.info "Restarting MarkLogic Server group of #{@hostname}"
     end
     logger.debug "this: #{self}"
     setup = File.read ServerConfig.expand_path("#{@@path}/lib/xquery/setup.xqy")
     r = execute_query %Q{#{setup} setup:do-restart("#{group}")}
+    logger.debug "code: #{r.code.to_i}"
+
+    r.body = parse_json(r.body)
+    logger.info r.body
   end
 
   def config
-    logger.info get_config
+    setup = File.read ServerConfig.expand_path("#{@@path}/lib/xquery/setup.xqy")
+    r = execute_query %Q{
+      #{setup}
+      try {
+        setup:rewrite-config(#{get_config})
+      } catch($ex) {
+        xdmp:log($ex),
+        fn:concat($ex/err:format-string/text(), '&#10;See MarkLogic Server error log for more details.')
+      }
+    }
+    logger.debug "code: #{r.code.to_i}"
+
+    r.body = parse_json(r.body)
+    logger.info r.body
   end
 
   def bootstrap
     raise ExitException.new("Bootstrap requires the target environment's hostname to be defined") unless @hostname.present?
 
-    logger.info "Bootstrapping your project into MarkLogic on #{@hostname}..."
+    logger.info "Bootstrapping your project into MarkLogic #{@properties['ml.server-version']} on #{@hostname}..."
     setup = File.read(ServerConfig.expand_path("#{@@path}/lib/xquery/setup.xqy"))
     r = execute_query %Q{#{setup} setup:do-setup(#{get_config})}
+    logger.debug "code: #{r.code.to_i}"
 
+    r.body = parse_json(r.body)
     logger.debug r.body
 
     if r.body.match("error log")
@@ -412,12 +465,105 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
   end
 
   def wipe
-    logger.info "Wiping MarkLogic setup for your project on #{@hostname}..."
+    if @environment != "local"
+      expected_response = %Q{I WANT TO WIPE #{@environment.upcase}}
+      print %Q{
+*******************************************************************************
+WARNING!!! You are attempting to wipe your #{@environment.upcase} environment!
+
+This will remove everything that Roxy has bootstrapped. It's quite dangerous.
+*******************************************************************************
+
+Are you sure you want to do this?
+
+In order to proceed please type: #{expected_response}
+:> }
+      response = $stdin.gets.chomp
+      if response != expected_response
+        logger.info "\nAborting wipe on #{@environment}"
+        return
+      end
+    end
+
+    appbuilder = find_arg(['--app-builder'])
     setup = File.read(ServerConfig.expand_path("#{@@path}/lib/xquery/setup.xqy"))
-    r = execute_query %Q{#{setup} setup:do-wipe(#{get_config})}
+
+    if (appbuilder != nil)
+      logger.info "Wiping MarkLogic App-Builder deployment #{appbuilder} from #{@hostname}..."
+      config = %Q{
+        <configuration>
+          <http-servers xmlns="http://marklogic.com/xdmp/group">
+            <http-server>
+              <http-server-name>#{appbuilder}</http-server-name>
+            </http-server>
+          </http-servers>
+          <assignments xmlns="http://marklogic.com/xdmp/assignments">
+            <assignment>
+              <forest-name>#{appbuilder}-modules-1</forest-name>
+            </assignment>
+          </assignments>
+          <databases xmlns="http://marklogic.com/xdmp/database">
+            <database>
+              <database-name>#{appbuilder}-modules</database-name>
+              <forests>
+                <forest-id name="#{appbuilder}-modules-1"/>
+              </forests>
+            </database>
+          </databases>
+        </configuration>
+      }
+    else
+      databases = find_arg(['--databases']) || '##none##'
+      forests = find_arg(['--forests']) || '##none##'
+      servers = find_arg(['--servers']) || '##none##'
+
+      logger.debug %Q{(#{databases}), (#{forests}), (#{servers})}
+
+      if databases != '##none##' || forests != '##none##' || servers != '##none##'
+
+        if (databases.split(',') & ['App-Services', 'Documents', 'Extensions', 'Fab', 'Last-Login', 'Meters', 'Modules', 'Schemas', 'Security', 'Triggers']).length > 0
+          logger.warn "\nWARN: Cannot wipe built-in databases..\n"
+          return
+        end
+        if (forests.split(',') & ['App-Services', 'Documents', 'Extensions', 'Fab', 'Last-Login', 'Meters', 'Modules', 'Schemas', 'Security', 'Triggers']).length > 0
+          logger.warn "\nWARN: Cannot wipe built-in forests..\n"
+          return
+        end
+        if (servers.split(',') & ['Admin', 'App-Services', 'HealthCheck', 'Manage']).length > 0
+          logger.warn "\nWARN: Cannot wipe built-in servers..\n"
+          return
+        end
+
+        databases = quote_arglist(databases)
+        forests = quote_arglist(forests)
+        servers = quote_arglist(servers)
+
+        logger.info "Getting wipe configuration from #{@hostname}..."
+        logger.debug %Q{calling setup:get-configuration((#{databases}), (#{forests}), (#{servers}), (9999999), (9999999), ("##none##"))..}
+        r = execute_query %Q{#{setup} setup:get-configuration((#{databases}), (#{forests}), (#{servers}), (9999999), (9999999), ("##none##"))}
+
+        config = parse_json(r.body)
+        logger.info "Wiping MarkLogic #{databases}, #{forests}, #{servers} from #{@hostname}..."
+      else
+        logger.info "Wiping MarkLogic setup for your project from #{@hostname}..."
+        config = get_config
+      end
+    end
+
+    #logger.debug %Q{#{setup} setup:do-wipe(#{config})}
+    r = execute_query %Q{#{setup} setup:do-wipe(#{config})}
+    logger.debug "code: #{r.code.to_i}"
+
+    r.body = parse_json(r.body)
     logger.debug r.body
 
-    if r.body.match("<error:error")
+    if r.body.match("RESTART_NOW")
+      logger.warn "***************************************"
+      logger.warn "*** WIPE NOT COMPLETE, RESTART REQUIRED"
+      logger.warn "***************************************"
+      logger.info "... NOTE: RERUN WIPE AFTER RESTART TO COMPLETE!"
+      return false
+    elsif r.body.match("<error:error") || r.body.match("error log")
       logger.error r.body
       logger.error "... Wipe FAILED"
       return false
@@ -437,35 +583,29 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
     setup = File.read(ServerConfig.expand_path("#{@@path}/lib/xquery/setup.xqy"))
     begin
       r = execute_query %Q{#{setup} setup:validate-install(#{get_config})}
-      logger.info "code: #{r.code.to_i}"
-      logger.info r.body
+      logger.debug "code: #{r.code.to_i}"
 
-      if r.body.match('"result":"<error:error')
-        JSON.parse(r.body).each do |item|
-          logger.error item['result']
-        end
-        result = false
-      elsif r.body.match("<error:error")
+      r.body = parse_json(r.body)
+      logger.debug r.body
+
+      if r.body.match("<error:error") || r.body.match("error log")
         logger.error r.body
+        logger.info "... Validation ERROR"
         result = false
       else
         logger.info "... Validation SUCCESS"
         result = true
       end
     rescue Net::HTTPFatalError => e
-      if e.response.body.match('"result":"<error:error')
-        JSON.parse(e.response.body).each do |item|
-          logger.error item['result']
-        end
-        result = false
-      else
-        logger.error e.response.body
-      end
+      e.response.body = parse_json(e.response.body)
+      logger.error e.response.body
       logger.error "... Validation FAILED"
       result = false
     end
     result
   end
+
+  alias_method :validate, :validate_install
 
   def deploy
     what = ARGV.shift
@@ -497,7 +637,7 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
     dir = ARGV.shift
     db = find_arg(['--db']) || @properties['ml.content-db']
     remove_prefix = find_arg(['--remove-prefix'])
-    remove_prefix = ServerConfig.expand_path(remove_prefix) if remove_prefix
+    remove_prefix = File.expand_path(remove_prefix) if remove_prefix
     quiet = find_arg(['--quiet'])
 
     add_prefix = find_arg(['--add-prefix'])
@@ -513,7 +653,7 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
 
     options[:batch_commit] = batch
     options[:permissions] = permissions(@properties['ml.app-role'], Roxy::ContentCapability::ER) unless options[:permissions]
-    xcc.load_files(ServerConfig.expand_path(dir), options)
+    xcc.load_files(File.expand_path(dir), options)
   end
 
   #
@@ -561,14 +701,14 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
       else
         testTearDown = "&runteardown=true"
       end
-      r = go %Q{http://#{@hostname}:#{@properties["ml.test-port"]}/test/list}, "get"
+      r = go(%Q{http://#{@hostname}:#{@properties["ml.test-port"]}/test/default.xqy?func=list}, "get")
       suites = []
       r.body.split(">").each do |line|
         suites << line.gsub(/.*suite path="([^"]+)".*/, '\1').strip if line.match("suite path")
       end
 
       suites.each do |suite|
-        r = go %Q{http://#{@hostname}:#{@properties["ml.test-port"]}/test/run?suite=#{url_encode(suite)}&format=junit#{suiteTearDown}#{testTearDown}}, "get"
+        r = go(%Q{http://#{@hostname}:#{@properties["ml.test-port"]}/test/default.xqy?func=run&suite=#{url_encode(suite)}&format=junit#{suiteTearDown}#{testTearDown}}, "get")
         logger.info r.body
       end
     end
@@ -723,7 +863,7 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
 
           logger.debug "Options after resolving properties:"
           lines = options.split(/[\n\r]+/).reject { |line| line.empty? || line.match("^#") }
-          
+
           lines.each do |line|
             logger.debug line
           end
@@ -742,9 +882,9 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
 
       args = ARGV.join(" ")
 
-      runme = %Q{java -cp #{classpath} #{@properties['ml.mlcp-vmargs']} com.marklogic.contentpump.ContentPump #{args} #{connection_string}}
+      runme = %Q{java -cp "#{classpath}" #{@properties['ml.mlcp-vmargs']} com.marklogic.contentpump.ContentPump #{args} #{connection_string}}
     else
-      runme = %Q{java -cp #{classpath} com.marklogic.contentpump.ContentPump}
+      runme = %Q{java -cp "#{classpath}" com.marklogic.contentpump.ContentPump}
     end
 
     logger.debug runme
@@ -773,7 +913,7 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
     # Create or update environment properties file
     filename = "#{@environment}.properties"
     properties = {}
-    properties_file = ServerConfig.expand_path("../#{filename}", File.dirname(@@context))
+    properties_file = ServerConfig.expand_path("#{@@path}/#{filename}")
     begin
       if (File.exists?(properties_file))
         properties = ServerConfig.load_properties(properties_file, "")
@@ -785,29 +925,49 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
     end
     properties["user"] = user
     properties["password"] = password
-    open(properties_file, 'w') {
-      |f|
+    File.open(properties_file, 'w') do |f|
       properties.each do |k,v|
         f.write "#{k}=#{v}\n"
       end
-    }
+    end
     logger.info "wrote #{properties_file}"
   end
 
   def capture
     full_config = find_arg(['--full-ml-config'])
+    config = find_arg(['--ml-config'])
     target_db = find_arg(['--modules-db'])
+    appbuilder = find_arg(['--app-builder'])
+
+    if (appbuilder != nil)
+      serverstats = execute_query %Q{
+        xquery version "1.0-ml";
+
+        let $status := xdmp:server-status(xdmp:host(), xdmp:server("#{appbuilder}"))
+        return (
+          string($status//*:port),
+          $status//*:modules/xdmp:database-name(.)
+        )
+      }
+
+      logger.debug parse_json(serverstats.body)
+
+      serverstats.body = parse_json(serverstats.body).split(/[\r\n]+/)
+
+      port = serverstats.body[0]
+      target_db = serverstats.body[1]
+    end
 
     # check params
-    if full_config == nil && target_db == nil
-      raise HelpException.new("capture", "either full-ml-config or modules-db is required")
+    if full_config == nil && config == nil && target_db == nil
+      raise HelpException.new("capture", "either full-ml-config, ml-config or modules-db is required")
     elsif target_db != nil && @properties['ml.app-type'] != 'rest'
       raise ExitException.new("This is a #{@properties['ml.app-type']} application; capture modules only works for app-type=rest")
     end
 
     # retrieve full setup config from environment
-    if full_config != nil
-      capture_environment_config
+    if full_config != nil || config != nil
+      capture_environment_config(full_config)
     end
 
     # retrieve modules from selected database from environment
@@ -825,6 +985,13 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
       )
       FileUtils.rm_rf("#{tmp_dir}/src/#{@properties['ml.group']}/")
 
+      # Make sure REST properties are in accurate format, so you can directly deploy them again..
+      if (port != nil)
+        r = go("http://#{@hostname}:#{port}/v1/config/properties", "get")
+        r.body = parse_json(r.body)
+        File.open("#{@properties['ml.rest-options.dir']}/properties.xml", 'wb') { |file| file.write(r.body) }
+      end
+
       # If we have an application/custom directory, we've probably done a capture
       # before. Don't overwrite that directory. Kill the downloaded custom directory
       # to avoid overwriting.
@@ -838,6 +1005,22 @@ What is the version number of the target MarkLogic server? [4, 5, 6, or 7]'
     end
   end
 
+  def settings
+    arg = ARGV.shift
+    if arg
+      setup = File.read ServerConfig.expand_path("#{@@path}/lib/xquery/setup.xqy")
+      r = execute_query %Q{#{setup} setup:list-settings("#{arg}")}
+      r.body = parse_json(r.body)
+      logger.info r.body
+    else
+      logger.info %Q{
+Usage: ml [env] settings [group|host|database|task-server|http-server|odbc-server|xdbc-server|webdav-server]
+
+Provides listings of various kinds of settings supported within ml-config.xml.
+      }
+    end
+  end
+  
 private
 
   def save_files_to_fs(target_db, target_dir)
@@ -869,7 +1052,7 @@ private
           },
           { :db_name => target_db }
 
-          File.open("#{target_dir}#{uri}", 'w') { |file| file.write(r.body) }
+          File.open("#{target_dir}#{uri}", 'wb') { |file| file.write(r.body) }
         end
       end
     else
@@ -886,8 +1069,8 @@ private
           # create the directory so that it will exist when we try to save files
           Dir.mkdir("#{target_dir}" + uri)
         else
-          r = go "http#{@use_https ? 's' : ''}://#{@hostname}:#{@bootstrap_port}/qconsole/endpoints/view.xqy?dbid=#{db_id}&uri=#{uri}", "get"
-          File.open("#{target_dir}#{uri}", 'w') { |file| file.write(r.body) }
+          r = go("#{@protocol}://#{@hostname}:#{@bootstrap_port}/qconsole/endpoints/view.xqy?dbid=#{db_id}&uri=#{uri}", "get")
+          File.open("#{target_dir}#{uri}", 'wb') { |file| file.write(r.body) }
         end
       end
     end
@@ -901,25 +1084,50 @@ private
   # schemas; CPF configuration; along with users and roles. For users and roles, we probably need an interactive system --
   # we don't want or need to capture built-in users and roles. If the application uses app-level security, then we
   # could start with "Capture user #{default user}?" and then check on each role that user has.
-  def capture_environment_config
+  def capture_environment_config(full_config)
     raise ExitException.new("Capture requires the target environment's hostname to be defined") unless @hostname.present?
 
+    if (full_config == nil)
+      databases = quote_arglist(find_arg(['--databases']) || "#{@properties["ml.content-db"]},#{@properties["ml.modules-db"]},#{@properties["ml.triggers-db"]},#{@properties["ml.schemas-db"]},#{@properties["ml.app-modules-db"]}")
+      # TODO: take content-forests-per-host into account properly, just taking first by default
+      forests = quote_arglist(find_arg(['--forests']) || "#{@properties["ml.content-db"]},#{@properties["ml.content-db"]}-001-1,#{@properties["ml.modules-db"]},#{@properties["ml.triggers-db"]},#{@properties["ml.schemas-db"]},,#{@properties["ml.app-modules-db"]}")
+      # TODO: include dav, xdbc, odbc servers?
+      servers = quote_arglist(find_arg(['--servers']) || "#{@properties["ml.app-name"]}")
+      mimes = quote_arglist(find_arg(['--mime-types']) || "##none##")
+
+      # setup.xqy expects ids for users and roles, unfortunately
+      #users = quote_arglist(find_arg(['--users'])) || '9999999'
+      #roles = quote_arglist(find_arg(['--roles'])) || '9999999'
+      # TODO: fix setup.xqy to (also) accept users/roles by name
+      # TODO: add app-user, default-user, and app-role as defaults
+      users = '9999999' # non-existing id
+      roles = '9999999' # non-existing id
+    end
+
     logger.info "Capturing configuration of MarkLogic on #{@hostname}..."
+    logger.debug %Q{calling setup:get-configuration((#{databases}), (#{forests}), (#{servers}), (#{users}), (#{roles}), (#{mimes}))..}
     setup = File.read(ServerConfig.expand_path("#{@@path}/lib/xquery/setup.xqy"))
-    r = execute_query %Q{#{setup} setup:get-configuration((), (), (), (), (), ())}
+    r = execute_query %Q{#{setup} setup:get-configuration((#{databases}), (#{forests}), (#{servers}), (#{users}), (#{roles}), (#{mimes}))}
+    r.body = parse_json(r.body)
 
     if r.body.match("error log")
       logger.error r.body
       logger.error "... Capture FAILED"
       return false
     else
-      JSON.parse(r.body).each do |item|
-        contents = item['result']
-        name = "#{@properties["ml.config.file"].sub( %r{.xml}, '' )}-#{@properties["ml.environment"]}.xml"
-        File.open(name, 'w') { |file| file.write(contents) }
-        logger.info("... Captured full configuration into #{name}")
-      end
+      name = "#{@properties["ml.config.file"].sub( %r{.xml}, '' )}-#{@properties["ml.environment"]}.xml"
+      File.open(name, 'wb') { |file| file.write(r.body) }
+      logger.info("... Captured full configuration into #{name}")
       return true
+    end
+  end
+
+  def quote_arglist(arglist)
+    if arglist != nil
+      # TODO: remove duplicates
+      args = arglist.split(/[,]+/).reject { |arg| arg.empty? }
+      arglist = args.join("\",\"")
+      return "\"#{arglist}\""
     end
   end
 
@@ -970,12 +1178,32 @@ private
     load_html_as_xml = @properties['ml.load-html-as-xml']
     load_js_as_binary = @properties['ml.load-js-as-binary']
     load_css_as_binary = @properties['ml.load-css-as-binary']
+    folders_to_ignore = @properties['ml.ignore-folders']
 
     modules_databases.each do |dest_db|
+      if dest_db == "filesystem"
+        logger.info "Skipping deployment of src to #{dest_db}.."
+        break
+      end
+      
       ignore_us = []
       ignore_us << "^#{test_dir}.*$" unless test_dir.blank? || deploy_tests?(dest_db)
       ignore_us << "^#{app_config_file}$"
       ignore_us << "^#{test_config_file}$"
+      ignore_us << "^#{folders_to_ignore}$" unless folders_to_ignore.blank?
+
+      src_permissions = permissions(@properties['ml.app-role'], Roxy::ContentCapability::ER)
+
+      if ['rest', 'hybrid'].include? @properties["ml.app-type"]
+        # This app uses the REST API, so grant permissions to the rest roles. This allows REST extensions to call
+        # modules not deployed through the REST API.
+        # These roles are present in MarkLogic 6+.
+        src_permissions.push permissions('rest-admin', Roxy::ContentCapability::RU)
+        src_permissions.push permissions('rest-extension-user', Roxy::ContentCapability::EXECUTE)
+        src_permissions.flatten!
+      end
+
+      @logger.debug("source permissions: #{src_permissions}")
 
       total_count = load_data xquery_dir,
                               :add_prefix => "/",
@@ -984,7 +1212,8 @@ private
                               :ignore_list => ignore_us,
                               :load_html_as_xml => load_html_as_xml,
                               :load_js_as_binary => load_js_as_binary,
-                              :load_css_as_binary => load_css_as_binary
+                              :load_css_as_binary => load_css_as_binary,
+                              :permissions => src_permissions
 
       if File.exist? app_config_file
         buffer = File.read app_config_file
@@ -996,7 +1225,7 @@ private
                                        buffer,
                                        :db => dest_db,
                                        :add_prefix => File.join(@properties["ml.modules-root"], "app/config"),
-                                       :permissions => permissions(@properties['ml.app-role'], Roxy::ContentCapability::ER)
+                                       :permissions => src_permissions
       end
 
       if deploy_tests?(dest_db) && File.exist?(test_config_file)
@@ -1009,7 +1238,7 @@ private
                                        buffer,
                                        :db => dest_db,
                                        :add_prefix => File.join(@properties["ml.modules-root"], "test"),
-                                       :permissions => permissions(@properties['ml.app-role'], Roxy::ContentCapability::EXECUTE)
+                                       :permissions => src_permissions
       end
 
       # REST API applications need some files put into a collection.
@@ -1041,6 +1270,11 @@ private
         rest_modules_db = @properties['ml.modules-db']
       end
 
+      if ['filesystem', 'file-system', '0'].include? rest_modules_db
+        logger.warn "\nWARN: Cannot deploy REST features to a REST-api running from file-system!\n"
+        return
+      end
+
       if (@properties.has_key?('ml.rest-options.dir') && File.exist?(@properties['ml.rest-options.dir']))
         prop_path = "#{@properties['ml.rest-options.dir']}/properties.xml"
         if (File.exist?(prop_path))
@@ -1053,7 +1287,7 @@ private
       else
         logger.info "\nNo REST API options found in: #{@properties['ml.rest-options.dir']}";
       end
-      
+
       deploy_ext()
       deploy_transform()
     end
@@ -1078,8 +1312,8 @@ private
   def deploy_transform
     transform = find_arg(['--file'])
     path = @properties['ml.rest-transforms.dir']
-    if !transform.blank? 
-      path += "/#{transformname}" 
+    if !transform.blank?
+      path += "/#{transformname}"
     end
 
     # Deploy transforms to the REST API server
@@ -1146,11 +1380,13 @@ private
 
   def clean_content
     logger.info "Cleaning #{@properties['ml.content-db']} on #{@hostname}"
-    execute_query %Q{
+    r = execute_query %Q{
       for $id in xdmp:database-forests(xdmp:database("#{@properties['ml.content-db']}"))
       return
-        xdmp:forest-clear($id)
+        try { xdmp:forest-clear($id) } catch ($ignore) { fn:concat("Skipped forest ", xdmp:forest-name($id), "..") }
     }
+    r.body = parse_json(r.body)
+    logger.info r.body
   end
 
   def deploy_cpf
@@ -1202,8 +1438,7 @@ private
         :server => @hostname,
         :app_port => @properties["ml.app-port"],
         :rest_port => @properties["ml.rest-port"],
-        :logger => @logger,
-        :auth_method => @properties["ml.authentication-method"]
+        :logger => @logger
       })
     else
       @mlRest
@@ -1215,19 +1450,23 @@ private
   end
 
   def execute_query_4(query, properties)
-    r = go "http#{@use_https ? 's' : ''}://#{@hostname}:#{@bootstrap_port}/use-cases/eval2.xqy", "post", {}, {
+    url = "#{@protocol}://#{@hostname}:#{@bootstrap_port}/use-cases/eval2.xqy"
+    params = {
       :queryInput => query
     }
+    r = go(url, "post", {}, params)
   end
 
   def get_any_db_id
-    r = go "http#{@use_https ? 's' : ''}://#{@hostname}:#{@bootstrap_port}/manage/LATEST/databases?format=xml", "get"
+    url = "#{@protocol}://#{@hostname}:#{@bootstrap_port}/manage/LATEST/databases?format=xml"
+    r = go(url, "get")
     return nil unless r.code.to_i == 200
     dbid = $1 if r.body =~ /.*<idref>([^<]+)<\/idref>.*/
   end
 
   def get_db_id(db_name)
-    r = go "http#{@use_https ? 's' : ''}://#{@hostname}:#{@bootstrap_port}/manage/LATEST/databases?format=xml", "get"
+    url = "#{@protocol}://#{@hostname}:#{@bootstrap_port}/manage/LATEST/databases?format=xml"
+    r = go(url, "get")
     return nil unless r.code.to_i == 200
 
     use_next_line = false
@@ -1244,7 +1483,8 @@ private
   end
 
   def get_sid(app_name)
-    r = go "http#{@use_https ? 's' : ''}://#{@hostname}:#{@bootstrap_port}/manage/LATEST/servers?format=xml", "get"
+    url = "#{@protocol}://#{@hostname}:#{@bootstrap_port}/manage/LATEST/servers?format=xml"
+    r = go(url, "get")
     return nil unless r.code.to_i == 200
 
     previous_line = ""
@@ -1258,6 +1498,30 @@ private
     end
 
     nil
+  end
+
+  def create_roxy_workspace
+    ws_id = nil
+    q_id = nil
+
+    url = "#{@protocol}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/workspaces.xqy"
+
+    # weird stuff on windows is fixed by {} for params
+    r = go(url, "post", {}, {})
+    return nil unless r.code.to_i == 200
+
+    r.body.split("\n").each do |line|
+      ws_id = $1 if line =~ /.*"workspace":\{"id":"(\d+)".*/
+      q_id = $1 if line =~ /.*"queries":\[\{"id":"(\d+)".*/
+    end
+
+    return ws_id, q_id
+  end
+
+  def delete_workspace(ws_id)
+    url = "#{@protocol}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/workspaces.xqy?wsid=#{ws_id}"
+    r = go(url, "delete")
+    return ws_id unless r.code.to_i == 200
   end
 
   def execute_query_5(query, properties = {})
@@ -1276,21 +1540,24 @@ private
 
     db_id = get_any_db_id if db_id.nil? && sid.nil?
 
+    url = "#{@protocol}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/eval.xqy"
     if db_id.present?
       logger.debug "using dbid: #{db_id}"
-      r = go "http#{@use_https ? 's' : ''}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/eval.xqy", "post", {}, {
+      params = {
         :dbid => db_id,
         :resulttype => "text",
         :q => query
       }
+      r = go(url, "post", {}, params)
       logger.debug r.body
     else
       logger.debug "using sid: #{sid}"
-      r = go "http#{@use_https ? 's' : ''}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/eval.xqy", "post", {}, {
+      params = {
         :sid => sid,
         :resulttype => "text",
         :q => query
       }
+      r = go(url, "post", {}, params)
       logger.debug r.body
     end
 
@@ -1313,23 +1580,26 @@ private
       sid = get_sid("Manage")
     end
 
+    ws_id, q_id = create_roxy_workspace()
+    raise ExitException.new("Can't create Roxy workspace in QConsole") unless ws_id && q_id
+
     db_id = get_any_db_id if db_id.nil? && sid.nil?
 
+    # necessary to work around weirdness on windows
+    headers = {
+      'content-type' => 'text/plain'
+    }
+
+    url = "#{@protocol}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/evaler.xqy?wsid=#{ws_id}&qid=#{q_id}&action=eval&querytype=xquery&dirty=true"
     if db_id.present?
-      logger.debug "using dbid: #{db_id}"
-      r = go("http#{@use_https ? 's' : ''}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/evaler.xqy?dbid=#{db_id}&action=eval&querytype=xquery",
-             "post",
-             {},
-             nil,
-             query)
+      url = url + "&dbid=#{db_id}"
+      r = go(url, "post", headers, nil, query)
     else
-      logger.debug "using sid: #{sid}"
-      r = go("http#{@use_https ? 's' : ''}://#{@hostname}:#{@qconsole_port}/qconsole/endpoints/evaler.xqy?sid=#{sid}&action=eval&querytype=xquery",
-             "post",
-             {},
-             nil,
-             query)
+      url = url + "&sid=#{sid}"
+      r = go(url, "post", headers, nil, query)
     end
+
+    delete_workspace(ws_id) if ws_id
 
     raise ExitException.new(JSON.pretty_generate(JSON.parse(r.body))) if r.body.match(/\{"error"/)
 

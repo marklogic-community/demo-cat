@@ -25,6 +25,7 @@ class Help
         credentials   Configures user and password for the given environment
         info          Returns settings for the given environment
         restart       Restarts the given environment
+        validate      Compare your ml-config against the given environment
         wipe          Removes your application from the given environment
 
       Deployment/Data commands (with environment):
@@ -33,6 +34,7 @@ class Help
         load          Loads a file or folder into the given environment
         mlcp          Runs MLCP against the given environment
         recordloader  Runs RecordLoader against the given environment
+        settings      Lists all supported settings for a given environment
         test          Runs xquery unit tests against the given environment
         xqsync        Runs XQSync against the given environment
 
@@ -191,14 +193,15 @@ class Help
 
   def self.restart
     <<-DOC.strip_heredoc
-      Usage: ml {env} restart [group] [options]
+      Usage: ml {env} restart [{groupname}|cluster] [options]
 
       General options:
         -v, [--verbose]  # Verbose output
 
       Restart the MarkLogic process in the given environment on each host in the
       specified group. If no group is specified, restart the MarkLogic process
-      on each host in the group to which the target host belongs.
+      on each host in the group to which the target host belongs. Use 'cluster'
+      to restart all hosts within the cluster to which the target belongs.
     DOC
   end
 
