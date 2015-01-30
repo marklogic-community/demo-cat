@@ -17,9 +17,14 @@ require 'Help'
 require 'server_config'
 require 'framework'
 require 'util'
-require 'app_specific'
 require 'upgrader'
 require 'scaffold'
+
+if is_jar?
+  require ServerConfig.expand_path("./deploy/app_specific")
+else
+  require 'app_specific'
+end
 
 def need_help?
   find_arg(['-h', '--help']) != nil
@@ -55,8 +60,16 @@ if RUBY_VERSION < "1.8.7"
 
     WARNING!!!
     You are using a very old version of Ruby: #{RUBY_VERSION}
-    Roxy works best with Ruby 1.8.7 or greater.
+    Roxy works best with Ruby 1.9.3 or greater.
     Proceed with caution.
+  MSG
+elsif RUBY_VERSION < "1.9.3"
+  @logger.warn <<-MSG
+
+    WARNING!!!
+    Ruby version 1.9.3 is the oldest supported version. You are running
+    Ruby #{RUBY_VERSION}. Some features may not work. You are encouraged to
+    upgrade to Ruby 1.9.3+.
   MSG
 end
 
@@ -143,25 +156,32 @@ rescue Net::HTTPServerException => e
   case e.response
   when Net::HTTPUnauthorized then
     @logger.error "Invalid login credentials for #{@properties["environment"]} environment!!"
+    raise e
   else
     @logger.error e
     @logger.error e.response.body
+    raise e
   end
 rescue Net::HTTPFatalError => e
   @logger.error e
   @logger.error e.response.body
+  raise e
 rescue DanglingVarsException => e
   @logger.error "WARNING: The following configuration variables could not be validated:"
   e.vars.each do |k,v|
     @logger.error "#{k}=#{v}"
   end
+  raise e
 rescue HelpException => e
   Help.doHelp(@logger, e.command, e.message)
+  raise e
 rescue ExitException => e
   @logger.error e
+  raise e
 rescue Exception => e
   @logger.error e
   @logger.error e.backtrace
+  raise e
 end
 
 if @profile then

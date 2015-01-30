@@ -89,7 +89,7 @@ module Roxy
     # Throw a Timeout::Error if a connection isn't established within this number of seconds
     HTTP_CONNECTION_OPEN_TIMEOUT            = 5
     # Throw a Timeout::Error if no data have been read on this connnection within this number of seconds
-    HTTP_CONNECTION_READ_TIMEOUT            = 120
+    HTTP_CONNECTION_READ_TIMEOUT            = 300
     # Length of the post-error probationary period during which all requests will fail
     HTTP_CONNECTION_RETRY_DELAY             = 15
 
@@ -375,9 +375,10 @@ module Roxy
           response = @http.request(request, &block)
 
           if (response.code.to_i == 401)
-            if request_params[:auth_method] == "basic"
+            auth_method = $1.downcase if response['www-authenticate'] =~ /^(\w+) (.*)/
+            if (auth_method == "basic")
               request.basic_auth(@user_name, @password)
-            else
+            elsif (auth_method == "digest")
               request.digest_auth(@user_name, @password, response)
             end
             response = @http.request(request, &block)
