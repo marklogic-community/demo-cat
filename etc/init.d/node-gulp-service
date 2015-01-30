@@ -57,7 +57,7 @@ start() {
     echo ""
     daemon --user=root \
       forever start -p $FOREVER_DIR --pidFile $PIDFILE -l $LOGFILE -o $LOGFILE \
-        -e $LOGFILE -a -d -v /usr/bin/gulp default --cwd=$SOURCE_DIR
+        -e $LOGFILE -a -d -v /usr/bin/gulp watch --cwd=$SOURCE_DIR
     RETVAL=$?
     echo ""
   fi
