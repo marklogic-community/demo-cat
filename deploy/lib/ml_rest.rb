@@ -7,7 +7,6 @@ module Roxy
       if !@port or @port == ""
         @port = options[:app_port]
       end
-      @auth_method = options[:auth_method]
       @http = Roxy::Http.new({
         :logger => @logger
       })
@@ -44,19 +43,18 @@ module Roxy
           file = open(d, "rb")
           contents = file.read
 
-          if contents.match('<properties')
+          if contents.match('<map:map')
+            # Properties file needs to be updated
+            raise ExitException.new "#{d} is in an old format; changes to this file won't take effect. See https://github.com/marklogic/roxy/wiki/REST-properties-format-change"
+          else
             # Properties is in the correct format
             # @logger.debug "methods: #{methods}"
             url = "http://#{@hostname}:#{@port}/v1/config/properties"
 
-            @logger.debug "url: #{url}"
-            r = go url, "put", headers, nil, contents, @auth_method
+            r = go(url, "put", headers, nil, contents)
             if (r.code.to_i < 200 && r.code.to_i > 206)
               @logger.error("code: #{r.code.to_i} body:#{r.body}")
             end
-          else
-            # Properties file needs to be updated
-            raise ExitException.new "#{d} is in an old format; changes to this file won't take effect. See https://github.com/marklogic/roxy/wiki/REST-properties-format-change"
           end
         end
       else
@@ -111,8 +109,7 @@ module Roxy
           end
           @logger.debug "loading: #{d}"
 
-          @logger.debug "url: #{url}"
-          r = go url, "put", headers, nil, contents, @auth_method
+          r = go(url, "put", headers, nil, contents)
           if (r.code.to_i < 200 && r.code.to_i > 206)
             @logger.error("code: #{r.code.to_i} body:#{r.body}")
           end
@@ -201,8 +198,7 @@ module Roxy
           end
           @logger.debug "loading: #{d}"
 
-          @logger.debug "url: #{url}"
-          r = go url, "put", headers, nil, contents, @auth_method
+          r = go(url, "put", headers, nil, contents)
           if (r.code.to_i < 200 && r.code.to_i > 206)
             @logger.error("code: #{r.code.to_i} body:#{r.body}")
           end
