@@ -19,6 +19,7 @@
             statusDetails: '',
             lastStatusTimestamp: new Date().toJSON()
           },
+          script: '',
           browsers: [],
           features: [],
           technologies: [],
@@ -44,6 +45,7 @@
 
       angular.extend($scope, {
         model: model,
+        scriptFile: [],
         editorOptions: {
           height: '100px'
         },
@@ -91,10 +93,10 @@
         submit: function() {
           var promise;
           if (edit) {
-            promise = demoService.save(model.demo, $routeParams.uri);
+            promise = demoService.save(model.demo, model.scriptFile, $routeParams.uri);
           }
           else {
-            promise = demoService.create(model.demo);
+            promise = demoService.create(model.demo, model.scriptFile);
           }
 
           promise.then(function(response) {
@@ -112,5 +114,6 @@
           }
         }
       });
+
     }
 }());
