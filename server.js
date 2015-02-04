@@ -1,6 +1,7 @@
 /*jshint node: true */
 
 var bodyParser = require('body-parser');
+var multer  = require('multer');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 var http = require('http');
@@ -33,9 +34,19 @@ exports.buildExpress = function(options) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
+  app.use(multer({dest: './uploads/', includeEmptyFields: false}));
 
   app.set('views', ui);
   app.set('view engine', 'ejs');
+
+  var jsonPattern = /^\[[^\]]*\]$/;
+
+  function replacer(key, value) {
+    if (typeof value === 'string' && jsonPattern.test(value)) {
+      return eval(value);
+    }
+    return value;
+  }
 
   function proxy(req, res) {
     var queryString = req.originalUrl.split('?')[1];
@@ -156,14 +167,18 @@ exports.buildExpress = function(options) {
 
   app.post('/demo/create', isWriter, function(req, res) {
     var queryString = req.originalUrl.split('?')[1];
-    var mlReq = http.request({
+    var params = {
       hostname: options.mlHost,
       port: options.mlPort,
       method: 'POST',
       path: '/v1/documents?' + queryString,
       headers: req.headers,
       auth: getAuth(options, req.session)
-    }, function(response) {
+    };
+    delete params.headers['content-length'];
+    params.headers['content-type'] = 'application/json;charset=UTF-8';
+    //delete params.headers['content-type'];
+    var mlReq = http.request(params, function(response) {
       res.status(response.statusCode);
       if (response.statusCode >= 400) {
         console.log('creation of demo failed!');
@@ -180,7 +195,7 @@ exports.buildExpress = function(options) {
     });
 
     if (req.body !== undefined) {
-      mlReq.write(JSON.stringify(req.body));
+      mlReq.write(JSON.stringify(req.body, replacer));
       mlReq.end();
     }
 

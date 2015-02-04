@@ -12,6 +12,7 @@
     'ml.common',
     'ml.search',
     'ml.search.tpls',
+    'angularFileUpload',
     'ml.utils',
     'http-auth-interceptor'])
     .config(AppConfig)
