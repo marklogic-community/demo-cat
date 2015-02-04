@@ -15,7 +15,8 @@
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^0.2.1",
     "karma": "^0.12.3",
-    "yargs": "^1.2.1"
+    "yargs": "^1.2.1",
+    "multer": "~0.1.7"
   },
   "devDependencies": {
     "karma-jasmine": "^0.1.5",
