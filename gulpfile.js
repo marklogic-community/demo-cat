@@ -39,7 +39,7 @@ gulp.task('jshint', function() {
 
 // Compile Our Less
 gulp.task('less', function() {
-  return gulp.src('ui/app/styles/*.less')
+  return gulp.src('ui/app/styles/main.less')
     .pipe(less())
     .pipe(gulp.dest('ui/app/styles/'));
 });

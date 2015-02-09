@@ -2,9 +2,12 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('ProfileCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
+    .controller('ProfileCtrl', ProfileCtrl);
+
+    ProfileCtrl.$inject = ['$scope', 'MLRest', '$location', 'user'];
+    function ProfileCtrl($scope, mlRest, $location, user) {
       var model = {
-        user: user, // GJo: a bit blunt way to insert the User service, but seems to work
+        user: user,
         newEmail: ''
       };
 
@@ -41,5 +44,5 @@
           });
         }
       });
-    }]);
+    }
 }());
