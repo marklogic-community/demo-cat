@@ -6,7 +6,6 @@ var expressSession = require('express-session');
 var http = require('http');
 var path = require('path');
 var ui = path.join(__dirname, 'ui/app');
-var util = require('util');
 
 function getAuth(options, session) {
   'use strict';
@@ -68,9 +67,9 @@ exports.buildExpress = function(options) {
     });
   }
 
-  function isAdmin(req, res, next) {
-    return _isType('admin', req, res, next);
-  }
+  // function isAdmin(req, res, next) {
+  //   return _isType('admin', req, res, next);
+  // }
 
   function isWriter(req, res, next) {
     return _isType('writer', req, res, next);
@@ -93,7 +92,8 @@ exports.buildExpress = function(options) {
 
   app.get('/user/status', function(req, res) {
     if (req.session.user === undefined) {
-      res.send('{"authenticated": false}');
+      res.status(401);
+      res.send('Unauthenticated');
     } else {
       res.send({
         authenticated: true,
@@ -133,7 +133,7 @@ exports.buildExpress = function(options) {
           if (json.user !== undefined) {
             req.session.user.profile.fullname = json.user.fullname;
             req.session.user.profile.emails = json.user.emails;
-          };
+          }
           req.session.user.profile.webroles = json.webroles;
 
           res.status(200).send({
@@ -214,6 +214,15 @@ exports.buildExpress = function(options) {
         // TODO: The user is updating the profile. Update the session info.
       }
       proxy(req, res);
+    }
+  });
+
+  app.get('/edit/demos/*', function(req, res) {
+    if (!determineIfHasType(req.session.user, 'writer')) {
+      res.status(404).send('Not Found');
+    }
+    else {
+      res.next();
     }
   });
 

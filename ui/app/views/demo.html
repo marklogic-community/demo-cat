@@ -1,4 +1,4 @@
-<div class="row detail" ng-if="model.user.authenticated">
+<div class="row detail">
   <!-- Left col -->
   <div class="col-md-4">
     <div class="panel panel-danger site-details">
@@ -65,8 +65,8 @@
 
     <div class="open-bugs col-md-12">
       <h3>Open Bugs & RFEs</h3>
-      <button class="btn btn-primary btn-sm" ng-show="model.user.authenticated && !showBugForm" ng-click="populateUsers(); showBugForm = true;">Add</button>
-      <form ng-show="model.user.authenticated && showBugForm">
+      <button class="btn btn-primary btn-sm" ng-show="!showBugForm" ng-click="populateUsers(); showBugForm = true;">Add</button>
+      <form ng-show="showBugForm">
         <fieldset class="col-md-12">
           <label class="col-md-2">Description</label>
           <textarea ng-model="model.additionalBug.msg" name="bugDescription" required></textarea>
@@ -140,7 +140,7 @@
     </div>
     <section class="comments col-md-12">
       <h3>Comments</h3>
-      <add-comment add-model="model.additionalComment.msg" authenticated="model.user.authenticated" save="addComment(model.additionalComment)"></add-comment>
+      <add-comment add-model="model.additionalComment.msg" save="addComment(model.additionalComment)"></add-comment>
       <article class="comment" ng-repeat="comment in model.demo.comments | orderBy:'-dateTime'" data-id="{{comment.id}}">
         <h4>Comment by {{comment.username}}</h4>
         <p class="dateTime">on {{comment.dateTime}}</p>

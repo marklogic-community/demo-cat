@@ -8,14 +8,10 @@
     return {
       restrict: 'E',
       scope: {
-        authenticated: '=authenticated',
         addModel: '=addModel',
         save: '&save'
       },
-      templateUrl: '/scripts/directives/add-comment.html',
-      link: function($scope) {
-        
-      }
+      templateUrl: '/scripts/directives/add-comment.html'
     };
   }]);
 }());

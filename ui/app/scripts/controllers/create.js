@@ -4,8 +4,8 @@
   angular.module('demoCat')
     .controller('CreateCtrl', CreateCtrl);
 
-  CreateCtrl.$inject = ['$scope', 'Domains', 'demoService', 'User', '$location', '$routeParams', 'edit', 'demo', 'features'];
-  function CreateCtrl($scope, domains, demoService, user, $location, $routeParams, edit, demo, features) {
+  CreateCtrl.$inject = ['$scope', 'Domains', 'demoService', '$location', '$routeParams', 'edit', 'demo', 'features'];
+  function CreateCtrl($scope, domains, demoService, $location, $routeParams, edit, demo, features) {
       var model = {
         demo: demo || {
           name: '',
@@ -27,8 +27,7 @@
         featureChoices: features,
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
-        personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
-        user: user // GJo: a bit blunt way to insert the User service, but seems to work
+        personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact']
       };
 
       angular.extend($scope, {
