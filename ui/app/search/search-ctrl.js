@@ -2,24 +2,19 @@
   'use strict';
 
   angular.module('demoCat.search')
-    .controller('SearchCtrl', ['$scope', '$location', 'User', 'MLSearchFactory', 'MLRemoteInputService', function ($scope, $location, user, searchFactory, remoteInput) {
+    .controller('SearchCtrl', ['$scope', '$location', 'MLSearchFactory', 'MLRemoteInputService', function ($scope, $location, searchFactory, remoteInput) {
       var mlSearch = searchFactory.newContext(),
           model = {
             page: 1,
             qtext: '',
             search: {},
-            user: user,
+            user: null,
             selected: []
           };
 
       (function init() {
         // wire up remote input subscription
         remoteInput.initCtrl($scope, model, mlSearch, search);
-
-        // run a search when the user logs in
-        $scope.$watch('model.user.authenticated', function() {
-          search();
-        });
 
         // capture initial URL params in mlSearch and ctrl model
         mlSearch.fromParams().then(function() {
@@ -40,6 +35,8 @@
             });
           }
         });
+
+        search();
       })();
 
       function updateSearchResults(data) {
@@ -53,11 +50,6 @@
       }
 
       function search(qtext) {
-        if ( !model.user.authenticated ) {
-          model.search = {};
-          return;
-        }
-
         if ( arguments.length ) {
           model.qtext = qtext;
         }
