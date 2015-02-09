@@ -4,37 +4,38 @@
   angular.module('demoCat')
     .controller('DemoCtrl', DemoCtrl);
 
-    DemoCtrl.$inject = ['$scope', 'MLRest', 'Domains', 'User', '$routeParams', 'features'];
+    DemoCtrl.$inject = ['$scope', 'MLRest', 'Domains', '$routeParams', 'features', 'demo', 'user'];
 
-    function DemoCtrl($scope, mlRest, domains, user, $routeParams, features) {
+    function DemoCtrl($scope, mlRest, domains, $routeParams, features, demo, user) {
       var uri = $routeParams.uri;
-      var commentModel =
-        {
-          // set by model binding
-          msg:'',
-          // the values below are set server-side
-          id: null,
-          username: null,
-          dateTime: null
-        };
-      var bugModel =
-        {
-          // set by model binding
-          msg:'',
-          browser: '',
-          status: 'open',
-          type: '',
-          assignee: '',
-          // the values below are set server-side
-          id: null,
-          username: null,
-          dateTime: null
-        };
+      var commentModel = {
+        // set by model binding
+        msg: '',
+        // the values below are set server-side
+        id: null,
+        username: null,
+        dateTime: null
+      };
+
+      var bugModel = {
+        // set by model binding
+        msg: '',
+        browser: '',
+        status: 'open',
+        type: '',
+        assignee: '',
+        // the values below are set server-side
+        id: null,
+        username: null,
+        dateTime: null
+      };
+
       var model = {
         // your model stuff here
+        uri: $routeParams.uri,
         demo: {
-          comments:[],
-          bugs:[]
+          comments: [],
+          bugs: []
         },
         // additional comment model used for new
         additionalComment: commentModel,
@@ -60,13 +61,12 @@
           /* jshint camelcase: false */
           toolbar_full: ''
         },
-        user: user // GJo: a bit blunt way to insert the User service, but seems to work
+        user: user
       };
 
-      mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
-        model.demo = response.data;
-        model.uri = uri;
-      });
+      if (demo) {
+        model.demo = demo;
+      }
 
       angular.extend($scope, {
         model: model,
@@ -159,7 +159,7 @@
             }
           ).then(
             function(result){
-              $scope.addToDemoArray('bugs',result);
+              $scope.addToDemoArray('bugs',result.data);
               $scope.resetBugForm();
             }
           );
@@ -213,7 +213,7 @@
 
         resetCommentForm: function(result) {
           // add the comment to the demo model to update UI
-          $scope.addToDemoArray('comments',result);
+          $scope.addToDemoArray('comments', result.data);
           $scope.model.additionalComment.msg = '';
         },
 
@@ -252,8 +252,6 @@
                 );
           }
         }
-
-
       });
     }
 }());
