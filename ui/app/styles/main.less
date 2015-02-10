@@ -3,6 +3,20 @@
 @icon-font-path:  "/fonts/";
 @FontAwesomePath:    "/fonts/";
 
+/* Panel width responsive resizing */
+.results .panel {
+  width: 100%; /* width for smallest view*/
+}
+/* Panel collapsing: Small devices (tablets, 768px and up) */
+@media (min-width: @screen-sm-min) { 
+  .results .panel { width: 30%; }
+}
+
+/* Panel collapsing:  Medium devices (desktops, 992px and up) */
+@media (min-width: @screen-md-min) { 
+  .results .panel { width: 30%; }
+}
+
 body {
   background-color: #f1f2f2;
 }
@@ -233,7 +247,6 @@ footer .text-muted {
 /* Search results well */
 .results .panel {
   float: left;
-  width: 30%;
   margin: 5px;
   height: 300px;
 }
