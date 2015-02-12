@@ -17,7 +17,7 @@
 
     <!-- Add your site or application content here -->
     <div class="container-fluid content" ng-view=""></div>
-    <footer class="footer">
+    <footer ng-class="{true: 'footer loggedout', false: 'footer loggedin'}[user == unauthenticated]">
       <div class="container-fluid">
         <p class="text-muted pull-left">Copyright &copy; 2014 MarkLogic Corporation. All Rights Reserved.</p>
         <img src="/images/marklogic-poweredby.png" class="pull-right"/>
