@@ -10,12 +10,10 @@
         <span class="highlight" ng-if="text.highlight !== undefined">{{text.highlight}}</span>
       </span>
     </div>
-      <div class="features">
-        <span class="features" ng-show="result.metadata.feature.values.length > 0"><strong>Features:</strong>
-          <span ng-repeat="value in result.metadata.feature.values">{{value}}<span ng-hide="$last">, </span></span>
-        </span>
-      </div>
+    <div class="features">
+      <span class="features" ng-show="result.metadata.feature.values.length > 0"><strong>Features:</strong>
+        <span ng-repeat="value in result.metadata.feature.values">{{value}}<span ng-hide="$last">, </span></span>
+      </span>
+    </div>
   </div>
-<div>
-
-
+</div>
