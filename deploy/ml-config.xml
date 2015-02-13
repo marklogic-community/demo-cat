@@ -91,6 +91,8 @@
       <modules name="@ml.app-modules-db"/>
       <root>@ml.modules-root</root>
       <authentication>@ml.authentication-method</authentication>
+      <internal-security>@ml.internal-security</internal-security>
+      <external-security name="@ml.external-security"/>
       <default-user name="@ml.default-user"/>
       <url-rewriter>@ml.url-rewriter</url-rewriter>
       <error-handler>@ml.error-handler</error-handler>
@@ -426,15 +428,17 @@
     @ml.triggers-db-xml
     @ml.schemas-db-xml
   </databases>
-  <certificate xmlns="http://marklogic.com/xdmp/pki">
-    <name>@ml.ssl-certificate-template</name>
-    <countryName>@ml.ssl-certificate-countryName</countryName>
-    <stateOrProvinceName>@ml.ssl-certificate-stateOrProvinceName</stateOrProvinceName>
-    <localityName>@ml.ssl-certificate-localityName</localityName>
-    <organizationName>@ml.ssl-certificate-organizationName</organizationName>
-    <organizationalUnitName>@ml.ssl-certificate-organizationalUnitName</organizationalUnitName>
-    <emailAddress>@ml.ssl-certificate-emailAddress</emailAddress>
-  </certificate>
+  <!--certificates xmlns="http://marklogic.com/xdmp/pki">
+    <certificate>
+      <name>@ml.ssl-certificate-template</name>
+      <countryName>@ml.ssl-certificate-countryName</countryName>
+      <stateOrProvinceName>@ml.ssl-certificate-stateOrProvinceName</stateOrProvinceName>
+      <localityName>@ml.ssl-certificate-localityName</localityName>
+      <organizationName>@ml.ssl-certificate-organizationName</organizationName>
+      <organizationalUnitName>@ml.ssl-certificate-organizationalUnitName</organizationalUnitName>
+      <emailAddress>@ml.ssl-certificate-emailAddress</emailAddress>
+    </certificate>
+  </certificates-->
   <roles xmlns="http://marklogic.com/xdmp/security">
     <!-- low level roles -->
     <role>
@@ -525,6 +529,11 @@
           <privilege-name>xdmp:eval-in</privilege-name>
         </privilege-->
       </privileges>
+      <external-names>
+        <external-name>CN=NL-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Unassigned-US-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=HQ-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+      </external-names>
     </role>
     <role>
       <role-name>@ml.app-name-writer-role</role-name>
@@ -540,6 +549,9 @@
           <privilege-name>demos-uri</privilege-name>
         </privilege>
       </privileges>
+      <external-names>
+        <external-name>CN=SE,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+      </external-names>
     </role>
     <role>
       <role-name>@ml.app-name-admin-role</role-name>
@@ -552,6 +564,9 @@
           <privilege-name>rest-writer</privilege-name>
         </privilege>
       </privileges>
+      <external-names>
+        <external-name>CN=Vanguard,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+      </external-names>
     </role>
     <!-- generic amp role for amping functions -->
     <role>
@@ -650,4 +665,18 @@
       <kind>uri</kind>
     </privilege>
   </privileges>
+  <external-securities xmlns="http://marklogic.com/xdmp/security">
+    <external-security>
+      <external-security-name>marklogic-ldap</external-security-name>
+      <description>Authentication against MarkLogic LDAP</description>
+      <authentication>ldap</authentication>
+      <cache-timeout>300</cache-timeout>
+      <authorization>ldap</authorization>
+      <ldap-server-uri>ldap://ldap.marklogic.com:3268</ldap-server-uri>
+      <ldap-base>OU=Employees,OU=CORP,DC=marklogic,DC=com</ldap-base>
+      <ldap-attribute>sAMAccountName</ldap-attribute>
+      <ldap-default-user>@ml.ldap-user</ldap-default-user>
+      <ldap-password>@ml.ldap-password</ldap-password>
+    </external-security>
+  </external-securities>
 </configuration>
