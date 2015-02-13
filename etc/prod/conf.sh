@@ -15,11 +15,11 @@ SOURCE_DIR=/space/projects/$NAME.live
 
 # port at which node server should be listening
 #APP_PORT=9040
-APP_PORT=9070
+APP_PORT=4000
 
 # MarkLogic host to which node server should proxy
 #ML_HOST=localhost
 
 # MarkLogic port to which node server should proxy
 #ML_PORT=8040
-ML_PORT=8020
+ML_PORT=8070

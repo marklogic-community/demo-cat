@@ -1,6 +1,6 @@
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
-for $doc in xdmp:directory("/demos/", "infinity")
+for $doc in xdmp:directory("/demos/", "infinity")[./jbasic:json/jbasic:maintainer]
 let $current-maintainer := $doc/jbasic:json/jbasic:maintainer
 let $current-email := $doc/jbasic:json/jbasic:email
 let $current-role := "Technical Contact"
@@ -53,4 +53,4 @@ let $op :=
   else
     ()
 
-return fn:concat("Updated maintainer for ", fn:document-uri($doc))
+return fn:concat("Updated maintainer for ", xdmp:node-uri($doc))
