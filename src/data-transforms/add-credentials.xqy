@@ -23,5 +23,7 @@ let $new-o :=
       }
     }
   }
-return
+let $_ :=
   xdmp:node-replace($o, $new-o)
+
+return fn:concat("Updated credentials for ", xdmp:node-uri($o))

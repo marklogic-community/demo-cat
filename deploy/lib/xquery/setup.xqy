@@ -4301,8 +4301,6 @@ declare function setup:create-roles(
 {
   for $role in $import-config/sec:roles/sec:role
   let $role-name as xs:string := $role/sec:role-name
-  let $description as xs:string? := $role/sec:description
-  let $collections as xs:string* := $role/sec:collections/sec:collection/fn:string()
   let $eval-options :=
     <options xmlns="xdmp:eval">
       <database>{$default-security}</database>
@@ -4314,13 +4312,15 @@ declare function setup:create-roles(
     (
       xdmp:eval(
         'import module namespace sec="http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
-         declare variable $role-name as xs:string external;
-         declare variable $description as xs:string external;
-         declare variable $collections as element() external;
-         sec:create-role($role-name, $description, (), (), $collections/*)',
-        (xs:QName("role-name"), $role-name,
-         xs:QName("description"), fn:string($description),
-         xs:QName("collections"), <w>{for $c in $collections return <w>{$c}</w>}</w>),
+         declare variable $role as element(sec:role) external;
+         let $role-name as xs:string := $role/sec:role-name
+         let $description as xs:string? := $role/sec:description
+         let $collections as xs:string* := $role/sec:collections/sec:collection/fn:string()
+         let $compartment as xs:string? := $role/sec:compartment
+         let $external-names as xs:string* := $role/sec:external-names/sec:external-name/fn:string()
+         return
+         sec:create-role($role-name, $description, (), (), $collections/*, $compartment, $external-names)',
+        (xs:QName("role"), $role),
         $eval-options),
         setup:add-rollback("roles", $role)
     ),
@@ -4348,36 +4348,36 @@ declare function setup:create-roles(
        xs:QName("description"), fn:string($description)),
       $eval-options),
 
-      xdmp:eval(
-        'import module namespace sec="http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
-         declare variable $role-name as xs:string external;
-         declare variable $role-names as element() external;
-         sec:role-set-roles($role-name, $role-names/*)',
-        (xs:QName("role-name"), $role-name,
-         xs:QName("role-names"), <w>{for $r in $role-names return <w>{$r}</w>}</w>),
-    $eval-options),
+    xdmp:eval(
+      'import module namespace sec="http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
+       declare variable $role-name as xs:string external;
+       declare variable $role-names as element() external;
+       sec:role-set-roles($role-name, $role-names/*)',
+      (xs:QName("role-name"), $role-name,
+       xs:QName("role-names"), <w>{for $r in $role-names return <w>{$r}</w>}</w>),
+       $eval-options),
 
-      xdmp:eval(
-        'import module namespace sec="http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
-         declare variable $role-name as xs:string external;
-         declare variable $permissions as element() external;
-         sec:role-set-default-permissions($role-name, $permissions/*)',
-        (
-          xs:QName("role-name"), $role-name,
-          xs:QName("permissions"),
-          <w>
-          {
-            for $p in $permissions
-            return
-              xdmp:eval('
-                declare variable $p external;
+    xdmp:eval(
+      'import module namespace sec="http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
+       declare variable $role-name as xs:string external;
+       declare variable $permissions as element() external;
+       sec:role-set-default-permissions($role-name, $permissions/*)',
+      (
+        xs:QName("role-name"), $role-name,
+        xs:QName("permissions"),
+        <w>
+        {
+          for $p in $permissions
+          return
+            xdmp:eval('
+              declare variable $p external;
 
-                xdmp:permission($p/sec:role-name, $p/sec:capability)',
-                (xs:QName("p"), $p))
-          }
-          </w>
-        ),
-    $eval-options),
+              xdmp:permission($p/sec:role-name, $p/sec:capability)',
+              (xs:QName("p"), $p))
+        }
+        </w>
+      ),
+      $eval-options),
 
     if ($collections) then
       xdmp:eval(
@@ -4390,6 +4390,16 @@ declare function setup:create-roles(
         $eval-options)
     else (),
 
+    xdmp:eval(
+      'import module namespace sec="http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
+       declare variable $role as element(sec:role) external;
+       let $role-name as xs:string := $role/sec:role-name
+       let $external-names as xs:string* := $role/sec:external-names/sec:external-name/fn:string()
+       return
+       sec:role-set-external-names($role-name, $external-names)',
+      (xs:QName("role"), $role),
+      $eval-options),
+      
     (: remove the privileges before adding them back :)
     xdmp:eval(
         'import module namespace sec="http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
