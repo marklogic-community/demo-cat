@@ -400,7 +400,7 @@
       <word-searches>false</word-searches>
       <word-positions>false</word-positions>
       <fast-phrase-searches>false</fast-phrase-searches>
-      <fast-reverse-searches>false</fast-reverse-searches>
+      <fast-reverse-searches>true</fast-reverse-searches>
       <fast-case-sensitive-searches>false</fast-case-sensitive-searches>
       <fast-diacritic-sensitive-searches>false</fast-diacritic-sensitive-searches>
       <fast-element-word-searches>false</fast-element-word-searches>
@@ -493,6 +493,7 @@
         <role-name>@ml.app-name-execute-role</role-name>
         <!-- necessary to make sure profile is readably to users with reader-role -->
         <role-name>@ml.app-name-defaults-role</role-name>
+        <role-name>alert-user</role-name>
       </role-names>
       <privileges>
         <privilege>
@@ -558,6 +559,7 @@
       <description>A role for admin users of the @ml.app-name application</description>
       <role-names>
         <role-name>@ml.app-name-writer-role</role-name>
+        <role-name>alert-admin</role-name>
       </role-names>
       <privileges>
         <privilege>

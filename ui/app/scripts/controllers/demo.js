@@ -252,7 +252,7 @@
           );
         }
       },
-      
+
       addMemo: function() {
         var memo = { title: null, body: null };
         showModal('/views/modals/edit-memo.html', 'New memo', memo, validateMemo)
@@ -278,9 +278,19 @@
       removeMemo: function(index) {
         model.demo.memos.splice(index, 1);
         saveMemos();
+      },
+      isFollowing: function() {
+        if(model.user.follows.indexOf(model.uri) > -1 ) {
+          return true;
+        }
+        else {
+          return false;
+        }
+
       }
+
     });
-    
+
     function validateMemo(memo) {
       var alerts = [];
       if (! memo.title) {
@@ -291,11 +301,11 @@
       }
       return alerts;
     }
-    
+
     function saveMemos(memo) {
       demoService.save(model.demo, uri);
     }
-    
+
     function showModal(template, title, model, validate) {
       return $modal.open({
         templateUrl: template+'',
