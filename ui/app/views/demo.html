@@ -61,9 +61,9 @@
   <!-- Right col -->
   <div class="col-md-8">
     <h2 class="col-md-12">{{model.demo.name}}<a ng-show="model.user.isWriter()" class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a>
-      <a class="btn btn-success btn-xs btn-follow" href="#"  data-toggle="tooltip" title="Receive emails when this demo is updated" ng-hide="isFollowing()">
+      <a class="btn btn-success btn-xs btn-follow" data-toggle="tooltip" title="Receive emails when this demo is updated" ng-hide="isFollowing()" ng-click="follow()">
         <i class="fa fa-envelope"></i> Follow this demo</a>
-      <a href="#" class="btn btn-danger btn-xs btn-follow"  data-toggle="tooltip" title="Stop receiving emails when this demo is updated" ng-show="isFollowing()">
+      <a class="btn btn-danger btn-xs btn-follow"  data-toggle="tooltip" title="Stop receiving emails when this demo is updated" ng-show="isFollowing()" ng-click="unfollow()">
         <i class="fa fa-envelope"></i> Unfollow this demo</a>
     </h2>
     <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>

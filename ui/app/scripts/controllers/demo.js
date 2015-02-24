@@ -280,13 +280,53 @@
         saveMemos();
       },
       isFollowing: function() {
-        if(model.user.follows.indexOf(model.uri) > -1 ) {
+        var pos = model.user.follows.map(function(e) { return e.followUri; }).indexOf(model.uri);
+        if(pos > -1 ) {
           return true;
         }
         else {
           return false;
         }
 
+      },
+      follow: function() {
+        mlRest.callExtension('follow',
+            {
+              method: 'POST',
+              data: '',
+              params: {
+                'rs:uri': uri
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          ).then(
+              function(result) {
+                // TODO: Check result
+                model.user.follows.push(result.data);
+              });
+
+      },
+      unfollow: function() {
+        mlRest.callExtension('follow',
+            {
+              method: 'DELETE',
+              data: '',
+              params: {
+                'rs:uri': uri
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          ).then(
+              function(result) {
+                var toDelete = model.user.follows.map(function(e) { return e.followUri; }).indexOf(model.uri);
+                if(toDelete > -1) {
+                  model.user.follows.splice(toDelete, 1);
+                }
+              });
       }
 
     });
