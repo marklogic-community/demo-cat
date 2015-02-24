@@ -59,7 +59,8 @@
         //override default options
         toolbar: '',
         /* jshint camelcase: false */
-        toolbar_full: ''
+        toolbar_full: '',
+        followError: false
       },
       user: user
     };
@@ -290,22 +291,29 @@
 
       },
       follow: function() {
-        mlRest.callExtension('follow',
-            {
-              method: 'POST',
-              data: '',
-              params: {
-                'rs:uri': uri
-              },
-              headers: {
-                'Content-Type': 'application/json'
+        // Only allow the user to follow if they have set an email in their profile
+        if(model.user.emails && model.user.emails.length > 0){
+          mlRest.callExtension('follow',
+              {
+                method: 'POST',
+                data: '',
+                params: {
+                  'rs:uri': uri
+                },
+                headers: {
+                  'Content-Type': 'application/json'
+                }
               }
-            }
-          ).then(
-              function(result) {
-                // TODO: Check result
-                model.user.follows.push(result.data);
-              });
+            ).then(
+                function(result) {
+                  // TODO: Check result
+                  model.user.follows.push(result.data);
+                  model.followError = false;
+                });
+        }
+        else {
+          model.followError = true;
+        }
 
       },
       unfollow: function() {

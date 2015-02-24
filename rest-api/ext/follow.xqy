@@ -5,6 +5,7 @@ module namespace follow = "http://marklogic.com/rest-api/resource/follow";
 import module namespace alert = "http://marklogic.com/xdmp/alert" at "/MarkLogic/alert.xqy";
 import module namespace json = "http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 import module namespace json-helper = "http://marklogic.com/demo-cat/json-helper" at "/lib/json-helper.xqy";
+import module namespace utilities =  "http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
 
 declare namespace roxy = "http://marklogic.com/roxy";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
@@ -28,7 +29,7 @@ function follow:get(
 {
   map:put($context, "output-types", "application/json"),
   xdmp:set-response-code(501, "OK"),
-  document { "GET called on the ext service extension" }
+  document { "Not implemented" }
 };
 
 (:
@@ -43,7 +44,7 @@ function follow:put(
 {
   map:put($context, "output-types", "application/json"),
   xdmp:set-response-code(501, "OK"),
-  document { "PUT called on the ext service extension" }
+  document { "Not implemented" }
 };
 
 (:
@@ -62,7 +63,10 @@ function follow:post(
   let $username := xdmp:get-current-user()
   let $profile-uri := fn:concat("/users/",$username,".json")
   let $profile := fn:doc($profile-uri)/jbasic:json
-  let $emails := $profile/jbasic:user/jbasic:emails/jbasic:item/data()
+  let $emails := $profile/jbasic:user/jbasic:emails/jbasic:item/string()
+  let $fullname := $profile/jbasic:user/jbasic:fullname/string()
+  let $host := utilities:get-referring-host()
+
 
   (: First add the rule.  We'll need the id :)
   let $rule := alert:make-rule(
@@ -72,6 +76,12 @@ function follow:post(
       cts:document-query($uri),
       "send-demo-email",
       element alert:options {
+        element alert:hostname {
+          $host
+        },
+        element alert:fullname {
+            $fullname
+          },
         for $email in $emails
          return
            element alert:email-address{
@@ -134,7 +144,6 @@ function follow:delete(
   let $delete := xdmp:node-delete($gone-node)
 
   return (
-    xdmp:log(("Deleted! ", $uri)),
     xdmp:set-response-code(200, "OK"),
     document { json:transform-to-json($gone-node)}
   )

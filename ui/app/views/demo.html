@@ -66,8 +66,10 @@
       <a class="btn btn-danger btn-xs btn-follow"  data-toggle="tooltip" title="Stop receiving emails when this demo is updated" ng-show="isFollowing()" ng-click="unfollow()">
         <i class="fa fa-envelope"></i> Unfollow this demo</a>
     </h2>
+    <div class="col-md-8">
+      <alert type="danger" ng-show="model.followError"> You must have an email set in your account to follow a demo. <a href="/profile">Set one up now.</a></alert>
+    </div>
     <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
-
     <div class="memos col-md-12">
       <h3>Memos</h3>
       <button class="btn btn-primary btn-sm" ng-show="model.user.isWriter()" ng-click="addMemo()">Add</button>
