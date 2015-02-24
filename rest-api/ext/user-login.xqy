@@ -2,6 +2,9 @@ xquery version "1.0-ml";
 
 module namespace user = "http://marklogic.com/rest-api/resource/user-login";
 
+import module namespace json1="http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
+
+
 declare namespace roxy = "http://marklogic.com/roxy";
 
 (:
@@ -34,7 +37,8 @@ function user:get(
           return
             map:entry("profile", map:new((
               map:entry("fullname", $profile//*:fullname/data(.)),
-              map:entry("emails", json:to-array($profile//*:emails/*:item/data(.)))
+              map:entry("emails", json:to-array($profile//*:emails/*:item/data(.))),
+              map:entry("follows", json1:transform-to-json($profile//*:follows/*:json))
             )))
         ))
       )
