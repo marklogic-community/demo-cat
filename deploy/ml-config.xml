@@ -158,6 +158,7 @@
       <collection-lexicon>true</collection-lexicon>
       <directory-creation>manual</directory-creation>
       <maintain-last-modified>false</maintain-last-modified>
+      <fast-reverse-searches>true</fast-reverse-searches>
 <!--
       <fragment-roots>
         <fragment-root>
