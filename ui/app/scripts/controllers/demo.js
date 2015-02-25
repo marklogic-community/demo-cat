@@ -57,7 +57,8 @@
         //override default options
         toolbar: '',
         /* jshint camelcase: false */
-        toolbar_full: ''
+        toolbar_full: '',
+        followError: false
       },
       user: user
     };
@@ -276,7 +277,64 @@
       removeMemo: function(index) {
         model.demo.memos.splice(index, 1);
         saveMemos();
+      },
+      isFollowing: function() {
+        var pos = model.user.follows.map(function(e) { return e.followUri; }).indexOf(model.uri);
+        if(pos > -1 ) {
+          return true;
+        }
+        else {
+          return false;
+        }
+
+      },
+      follow: function() {
+        // Only allow the user to follow if they have set an email in their profile
+        if(model.user.emails && model.user.emails.length > 0){
+          mlRest.callExtension('follow',
+              {
+                method: 'POST',
+                data: '',
+                params: {
+                  'rs:uri': uri
+                },
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              }
+            ).then(
+                function(result) {
+                  // TODO: Check result
+                  model.user.follows.push(result.data);
+                  model.followError = false;
+                });
+        }
+        else {
+          model.followError = true;
+        }
+
+      },
+      unfollow: function() {
+        mlRest.callExtension('follow',
+            {
+              method: 'DELETE',
+              data: '',
+              params: {
+                'rs:uri': uri
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          ).then(
+              function(result) {
+                var toDelete = model.user.follows.map(function(e) { return e.followUri; }).indexOf(model.uri);
+                if(toDelete > -1) {
+                  model.user.follows.splice(toDelete, 1);
+                }
+              });
       }
+
     });
 
     function validateMemo(memo) {

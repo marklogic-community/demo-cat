@@ -3,6 +3,8 @@ xquery version "1.0-ml";
 module namespace user = "http://marklogic.com/rest-api/resource/user-status";
 
 import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
+import module namespace json1="http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
+
 
 declare namespace roxy = "http://marklogic.com/roxy";
 
