@@ -158,6 +158,7 @@
       <collection-lexicon>true</collection-lexicon>
       <directory-creation>manual</directory-creation>
       <maintain-last-modified>false</maintain-last-modified>
+      <fast-reverse-searches>true</fast-reverse-searches>
 <!--
       <fragment-roots>
         <fragment-root>
@@ -501,6 +502,7 @@
         <role-name>@ml.app-name-execute-role</role-name>
         <!-- necessary to make sure profile is readably to users with reader-role -->
         <role-name>@ml.app-name-defaults-role</role-name>
+        <role-name>alert-user</role-name>
       </role-names>
       <privileges>
         <privilege>
@@ -566,6 +568,7 @@
       <description>A role for admin users of the @ml.app-name application</description>
       <role-names>
         <role-name>@ml.app-name-writer-role</role-name>
+        <role-name>alert-admin</role-name>
       </role-names>
       <privileges>
         <privilege>

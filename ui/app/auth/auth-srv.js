@@ -45,6 +45,14 @@
 
         user.isWriter = isWriter;
         user.isAdmin = isAdmin;
+
+        if (u.profile.follows) {
+          user.follows = u.profile.follows;
+        }
+        else {
+          // Start with an empty array if user isn't following a demo yet
+          user.follows = [];
+        }
       }
 
       function isWriter() {
