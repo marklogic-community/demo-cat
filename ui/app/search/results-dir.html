@@ -15,5 +15,10 @@
         <span ng-repeat="value in result.metadata.feature.values">{{value}}<span ng-hide="$last">, </span></span>
       </span>
     </div>
+    <div class="features">
+      <span class="features" ng-show="result.metadata.technology.values.length > 0"><strong>Technologies:</strong>
+        <span ng-repeat="value in result.metadata.technology.values">{{value}}<span ng-hide="$last">, </span></span>
+      </span>
+    </div>
   </div>
 </div>
