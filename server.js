@@ -133,6 +133,7 @@ exports.buildExpress = function(options) {
           if (json.user !== undefined) {
             req.session.user.profile.fullname = json.user.fullname;
             req.session.user.profile.emails = json.user.emails;
+            req.session.user.profile.follows = json.user.follows;
           }
           req.session.user.profile.webroles = json.webroles;
 
@@ -227,6 +228,14 @@ exports.buildExpress = function(options) {
   });
 
   app.post('/v1*', isWriter, function(req, res){
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
+  app.delete('/v1/resources/follow*', function(req, res){
     if (req.session.user === undefined) {
       res.status(401).send('Unauthorized');
     } else {
