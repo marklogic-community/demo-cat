@@ -41,6 +41,9 @@
           },
           features: function(featuresService) {
             return featuresService.list();
+          },
+          technologies: function(technologiesService) {
+            return technologiesService.list();
           }
         }
       })
@@ -67,6 +70,9 @@
           },
           features: function(featuresService) {
             return featuresService.list();
+          },
+          technologies: function(technologiesService) {
+            return technologiesService.list();
           }
         }
       })
@@ -79,9 +85,6 @@
             return MLRest.getDocument(uri, { format: 'json' }).then(function(response) {
               return response.data;
             });
-          },
-          features: function(featuresService) {
-            return featuresService.list();
           },
           user: function(AuthenticationService) {
             return AuthenticationService.getUser();
