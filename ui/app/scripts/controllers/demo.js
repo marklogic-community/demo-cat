@@ -4,9 +4,9 @@
   angular.module('demoCat')
     .controller('DemoCtrl', DemoCtrl);
 
-  DemoCtrl.$inject = ['$scope', 'MLRest', 'Domains', '$routeParams', 'features', 'demo', 'user', '$modal', '$sce', 'demoService', '$sanitize'];
+  DemoCtrl.$inject = ['$scope', 'MLRest', '$routeParams', 'demo', 'user', '$modal', '$sce', 'demoService', '$sanitize'];
 
-  function DemoCtrl($scope, mlRest, domains, $routeParams, features, demo, user, $modal, $sce, demoService, $sanitize) {
+  function DemoCtrl($scope, mlRest, $routeParams, demo, user, $modal, $sce, demoService, $sanitize) {
     var uri = $routeParams.uri;
     var commentModel = {
       // set by model binding
@@ -41,8 +41,6 @@
       additionalComment: commentModel,
       additionalBug: bugModel,
       edit: '',
-      featureChoices: features,
-      domainChoices: domains.list(),
       // TODO We probably want only one place to edit browser choices
       browserChoices: ['Firefox', 'Chrome', 'IE'],
       bugChoices: ['defect', 'enhancement'],
@@ -252,7 +250,7 @@
           );
         }
       },
-      
+
       addMemo: function() {
         var memo = { title: null, body: null };
         showModal('/views/modals/edit-memo.html', 'New memo', memo, validateMemo)
@@ -280,7 +278,7 @@
         saveMemos();
       }
     });
-    
+
     function validateMemo(memo) {
       var alerts = [];
       if (! memo.title) {
@@ -291,11 +289,11 @@
       }
       return alerts;
     }
-    
+
     function saveMemos(memo) {
       demoService.save(model.demo, uri);
     }
-    
+
     function showModal(template, title, model, validate) {
       return $modal.open({
         templateUrl: template+'',

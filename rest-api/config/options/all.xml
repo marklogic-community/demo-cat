@@ -47,6 +47,14 @@
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
+  <search:constraint name="technology">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:path-index
+        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:technologies/jbasic:item</search:path-index>
+      <search:facet-option>limit=15</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:constraint>
   <search:constraint name="domain">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:path-index
@@ -59,6 +67,13 @@
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
       <search:path-index
         xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:features/jbasic:item</search:path-index>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:values>
+  <search:values name="technologies">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <search:path-index
+        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:technologies/jbasic:item</search:path-index>
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:values>
@@ -94,6 +109,7 @@
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="name"/>
     <search:constraint-value ref="version"/>
     <search:constraint-value ref="feature"/>
+    <search:constraint-value ref="technology"/>
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="restricted"/>
   </search:extract-metadata>
   <annotation xmlns="http://marklogic.com/appservices/search">Delta options here</annotation>
