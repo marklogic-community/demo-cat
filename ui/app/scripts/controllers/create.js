@@ -4,10 +4,10 @@
   angular.module('demoCat')
     .controller('CreateCtrl', CreateCtrl);
 
-  CreateCtrl.$inject = ['$scope', 'Domains', 'demoService', '$location', '$routeParams', 'edit', 'demo', 'features'];
-  function CreateCtrl($scope, domains, demoService, $location, $routeParams, edit, demo, features) {
+  CreateCtrl.$inject = ['$scope', 'Domains', 'demoService', '$location', '$routeParams', 'edit', 'demo', 'features', 'technologies'];
+  function CreateCtrl($scope, domains, demoService, $location, $routeParams, edit, demo, features, technologies) {
       var model = {
-        demo: demo || {
+        demo: angular.extend({
           name: '',
           description: '',
           host: '',
@@ -16,15 +16,17 @@
           restrictionDetails: '',
           browsers: [],
           features: [],
+          technologies: [],
           domains: [],
           languages: [],
           bugs: [],
           comments: [],
           credentials: [],
           persons: []
-        },
+        }, demo),
         edit: edit,
         featureChoices: features,
+        technologyChoices: technologies,
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact']
@@ -57,6 +59,15 @@
         },
         removeFeature: function(index) {
           model.demo.features.splice(index, 1);
+        },
+        addTechnology: function() {
+          if (model.demo.technologies.indexOf(model.technologyToAdd) < 0) {
+            model.demo.technologies.push(model.technologyToAdd);
+          }
+          delete model.technologyToAdd;
+        },
+        removeTechnology: function(index) {
+          model.demo.technologies.splice(index, 1);
         },
         addPerson: function() {
           model.demo.persons.push({personName: null, role: null, email: null});
