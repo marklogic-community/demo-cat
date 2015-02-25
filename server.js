@@ -90,40 +90,22 @@ exports.buildExpress = function(options) {
     return user.profile.webroles.indexOf(type) > -1;
   }
 
-  app.get('/user/status', function(req, res) {
-    if (req.session.user === undefined) {
-      res.status(401);
-      res.send('Unauthenticated');
-    } else {
-      res.send({
-        authenticated: true,
-        username: req.session.user.name,
-        profile: req.session.user.profile,
-        webroles: req.session.user.webroles
-      });
-    }
-  });
-
-  app.get('/user/login', function(req, res) {
-    // or maybe we can try to read the profile and distinguish between 401 and 404
-    // 404 - valid credentials, but no profile yet
-    // 401 - bad credentials
+  function getUserStatus(req, res, username, password) {
     var login = http.get({
       hostname: options.mlHost,
       port: options.mlPort,
       //path: '/v1/documents?uri=/users/' + req.query.username + '.json',
       path: '/v1/resources/profile',
       headers: req.headers,
-      auth: req.query.username + ':' + req.query.password
+      auth: username + ':' + password
     }, function(response) {
       if (response.statusCode === 401) {
-        res.status(401);
-        res.send('Unauthenticated');
+        res.status(401).send('Unauthenticated');
       } else {
         // authentication successful, remember the username
         req.session.user = {
-          name: req.query.username,
-          password: req.query.password
+          name: username,
+          password: password
         };
         response.on('data', function(chunk) {
           console.log('chunk: ' + chunk);
@@ -149,6 +131,22 @@ exports.buildExpress = function(options) {
     login.on('error', function(e) {
       console.log('login failed: ' + e.statusCode);
     });
+  }
+
+  app.get('/user/status', function(req, res) {
+    if (req.session.user === undefined) {
+      res.status(401);
+      res.send('Unauthenticated');
+    } else {
+      getUserStatus(req, res, req.session.user.name, req.session.user.password);
+    }
+  });
+
+  app.get('/user/login', function(req, res) {
+    // or maybe we can try to read the profile and distinguish between 401 and 404
+    // 404 - valid credentials, but no profile yet
+    // 401 - bad credentials
+    getUserStatus(req, res, req.query.username, req.query.password);
   });
 
   app.get('/user/logout', function(req, res) {
