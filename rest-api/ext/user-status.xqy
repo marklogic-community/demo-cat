@@ -62,8 +62,7 @@ declare function user:get(
             map:entry("username", $current),
             map:entry("profile", map:new((
               map:entry("fullname", $profile//*:fullname/data(.)),
-              map:entry("emails", json:to-array($profile//*:emails/*:item/data(.))),
-              map:entry("follows", json1:transform-to-json($profile//*:follows/*:json))
+              map:entry("emails", json:to-array($profile//*:emails/*:item/data(.)))
             )))
           ))
         )
