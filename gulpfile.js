@@ -17,7 +17,7 @@ var uglify = require('gulp-uglify');
 var options = {
   appPort: argv['app-port'] || 4000,
   mlHost: argv['ml-host'] || 'localhost',
-  mlPort: argv['ml-port'] || '8090',
+  mlPort: argv['ml-port'] || '8070',
   defaultUser: 'demo-cat-user',
   defaultPass: 'c2t2l0g'
 };
