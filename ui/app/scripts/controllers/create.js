@@ -35,7 +35,7 @@
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
-        statusChoices: ['Working', 'Not Working', 'In Development', 'Unknown']
+        statusChoices: ['Working', 'Not Working', 'In Development', 'Retired', 'Unknown']
       };
 
       if (model.demo.demoStatus && model.demo.demoStatus.lastStatusTimestamp) {
