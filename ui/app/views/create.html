@@ -12,7 +12,13 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Description</label>
+      <label class="col-sm-2 control-label">Short Description</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" placeholder="short description" ng-model="model.demo.shortdesc" maxlength="95">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Long Description</label>
       <div class="col-sm-10">
         <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.description" placeholder="In this section provide an executive summary of what the demo does. Talk about the customer problem that this is demo is addressing, without assuming that your reader is already familiar with the customer."></textarea>
       </div>
