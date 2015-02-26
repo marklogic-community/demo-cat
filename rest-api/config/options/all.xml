@@ -111,6 +111,9 @@
     <search:constraint-value ref="feature"/>
     <search:constraint-value ref="technology"/>
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="restricted"/>
+    <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="desc"/>
+    <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="description"/>
+    <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="shortdesc"/>
   </search:extract-metadata>
   <annotation xmlns="http://marklogic.com/appservices/search">Delta options here</annotation>
   <search:additional-query>
