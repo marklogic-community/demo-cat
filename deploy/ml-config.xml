@@ -561,6 +561,9 @@
       </privileges>
       <external-names>
         <external-name>CN=SE,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <!-- to be removed after User Panel testing -->
+        <external-name>CN=Marketing,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Engineers,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
       </external-names>
     </role>
     <role>
