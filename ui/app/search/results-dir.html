@@ -1,5 +1,7 @@
 <div ng-repeat="result in results">
   <h4><a ng-href="detail{{result.uri}}">{{result.metadata.name.values[0] || result.uri}}</a></h4>
+  <div class="summary">{{ result.metadata | searchsummary }}
+  <!-- I think the issue meant to show desc and not matches
   <div class="matches">
     <div ng-repeat="match in result.matches">
       <span ng-repeat="text in match['match-text'] track by $index">
@@ -8,4 +10,5 @@
       </span>
     </div>
   </div>
+  -->
 </div>
