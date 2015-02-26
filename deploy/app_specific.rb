@@ -224,6 +224,43 @@ class ServerConfig
           <alert:options/> )
       return alert:action-insert("http://marklogic.com/demo-cat/notifications", $action);
 
+      (: Connect the "demo broken" action to the alerting configuration :)
+      xquery version "1.0-ml";
+      import module namespace alert = "http://marklogic.com/xdmp/alert" at "/MarkLogic/alert.xqy";
+
+      let $action2 := alert:make-action(
+          "demo-broken-action",
+          "Action to execute when a demo is marked as broken.",
+          xdmp:database('#{@properties["ml.modules-db"]}'),
+          '/',
+          "/alerting/alert-demo-broken-action.xqy",
+          <alert:options/> )
+      return alert:action-insert("http://marklogic.com/demo-cat/notifications", $action2);
+
+
+      (: Alerting rule for detecting broken demos. :)
+      xquery version "1.0-ml";
+      import module namespace alert = "http://marklogic.com/xdmp/alert" at "/MarkLogic/alert.xqy";
+      declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
+
+      let $rule := alert:make-rule(
+          "demo-broken-rule",
+          "Rule that evaluates a demo to determine if it is broken",
+          0, (: equivalent to xdmp:user(xdmp:get-current-user()) :)
+          cts:and-query(
+              (
+                cts:element-value-query(xs:QName("jbasic:role"), "Technical Contact"),
+                cts:element-value-query(xs:QName("jbasic:status"), "Not Working")
+              )
+          ),
+          "demo-broken-action",
+          <alert:options>
+            <alert:hostname>#{@properties["ml.referring-host"]}</alert:hostname>
+          </alert:options>
+          )
+      return
+      alert:rule-insert("http://marklogic.com/demo-cat/notifications", $rule)
+
       (: Consider adding any one-off Alerting rules here. :)
 
       },
