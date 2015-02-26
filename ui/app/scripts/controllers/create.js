@@ -14,6 +14,11 @@
           hostType: 'internal',
           restricted: false,
           restrictionDetails: '',
+          demoStatus: {
+            status: 'Working',
+            statusDetails: '',
+            lastStatusTimestamp: new Date().toJSON()
+          },
           browsers: [],
           features: [],
           technologies: [],
@@ -29,8 +34,13 @@
         technologyChoices: technologies,
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
-        personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact']
+        personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
+        statusChoices: ['Working', 'Not Working', 'In Development', 'Unknown']
       };
+
+      if (model.demo.demoStatus && model.demo.demoStatus.lastStatusTimestamp) {
+        model.lastStatusTimestampPretty = new Date(model.demo.demoStatus.lastStatusTimestamp).toJSON();
+      }
 
       angular.extend($scope, {
         model: model,
@@ -74,6 +84,9 @@
         },
         removePerson: function(index) {
           model.demo.persons.splice(index, 1);
+        },
+        statusChanged: function() {
+          model.demo.demoStatus.lastStatusTimestamp = new Date().toJSON();
         },
         submit: function() {
           var promise;

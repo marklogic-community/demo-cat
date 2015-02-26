@@ -409,7 +409,7 @@
       <word-searches>false</word-searches>
       <word-positions>false</word-positions>
       <fast-phrase-searches>false</fast-phrase-searches>
-      <fast-reverse-searches>false</fast-reverse-searches>
+      <fast-reverse-searches>true</fast-reverse-searches>
       <fast-case-sensitive-searches>false</fast-case-sensitive-searches>
       <fast-diacritic-sensitive-searches>false</fast-diacritic-sensitive-searches>
       <fast-element-word-searches>false</fast-element-word-searches>
