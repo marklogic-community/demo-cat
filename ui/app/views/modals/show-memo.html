@@ -1,0 +1,12 @@
+<form class="form" role="form">
+  <div class="modal-header">
+      <h3 class="modal-title">{{model.title}}</h3>
+  </div>
+  <div class="modal-body">
+    <div compile="model.body"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary pull-right" ng-click="cancel()">Close</button>
+    <button class="btn btn-default pull-right" ng-show="user.isWriter()" ng-click="ok()">Edit</button>
+  </div>
+</form>
