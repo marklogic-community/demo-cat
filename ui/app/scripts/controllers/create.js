@@ -35,7 +35,9 @@
         domainChoices: domains.list(),
         browserChoices: ['Firefox', 'Chrome', 'IE'],
         personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
-        statusChoices: ['Working', 'Not Working', 'In Development', 'Retired', 'Unknown']
+        statusChoices: ['Working', 'Not Working', 'In Development', 'Retired', 'Unknown'],
+        formValid: false,
+        formError: false,
       };
 
       if (model.demo.demoStatus && model.demo.demoStatus.lastStatusTimestamp) {
@@ -88,8 +90,19 @@
         statusChanged: function() {
           model.demo.demoStatus.lastStatusTimestamp = new Date().toJSON();
         },
+        inputInvalid: function(input) {
+          return model.formError && !model.formValid && !input;
+        },
         submit: function() {
           var promise;
+
+          if ( $scope.createForm.$invalid || model.demo.persons.length < 1 ) {
+            $scope.createForm.$setValidity( false );
+            model.formValid = false;
+            model.formError = true;
+            return;
+          }
+
           if (edit) {
             promise = demoService.save(model.demo, $routeParams.uri);
           }
