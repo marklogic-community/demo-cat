@@ -33,7 +33,7 @@
         featureChoices: features,
         technologyChoices: technologies,
         domainChoices: domains.list(),
-        browserChoices: ['Firefox', 'Chrome', 'IE'],
+        browserChoices: ['Firefox', 'Chrome', 'IE', 'Safari'],
         personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
         statusChoices: ['Working', 'Not Working', 'In Development', 'Retired', 'Unknown'],
         formValid: false,
