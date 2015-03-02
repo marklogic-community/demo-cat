@@ -19,7 +19,7 @@
             statusDetails: '',
             lastStatusTimestamp: new Date().toJSON()
           },
-          script: '',
+          attachments: [],
           browsers: [],
           features: [],
           technologies: [],
@@ -31,6 +31,7 @@
           persons: []
         }, demo),
         edit: edit,
+        scriptFiles: [],
         featureChoices: features,
         technologyChoices: technologies,
         domainChoices: domains.list(),
@@ -92,29 +93,35 @@
         statusChanged: function() {
           model.demo.demoStatus.lastStatusTimestamp = new Date().toJSON();
         },
-        inputInvalid: function(input) {
+       inputInvalid: function(input) {
           return model.formError && !model.formValid && !input;
+        },
+        deleteAttachment: function(attachent, index) {
+          demoService.deleteAttachment($routeParams.uri, attachent).then(
+            function() {
+              model.demo.attachments.splice(index, 1);
+            }
+          );
         },
         submit: function() {
           var promise;
 
           if ( $scope.createForm.$invalid || model.demo.persons.length < 1 ) {
-            $scope.createForm.$setValidity( false );
+            // $scope.createForm.$setValidity( false );
             model.formValid = false;
             model.formError = true;
             return;
           }
 
           if (edit) {
-            promise = demoService.save(model.demo, model.scriptFile, $routeParams.uri);
+            promise = demoService.save(model.demo, model.scriptFiles, $routeParams.uri);
           }
           else {
-            promise = demoService.create(model.demo, model.scriptFile);
+            promise = demoService.create(model.demo, model.scriptFiles);
           }
 
           promise.then(function(response) {
-            // var uri = response.data.href.replace(/(.*\?uri=)/, '');
-            var uri = response.uri;//$routeParams.uri;
+            var uri = response.uri || $routeParams.uri;
             $location.path('/detail' + uri);
           });
         },

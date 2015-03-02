@@ -8,6 +8,7 @@ src/public
 deploy/local.properties
 mlcp.conf
 deploy/local-deploy.properties
+upload
 .DS_Store
 dist
 *.pid
