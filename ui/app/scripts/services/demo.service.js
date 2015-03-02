@@ -8,26 +8,27 @@
 
     var service = {
       create: createDemo,
+      deleteAttachment: deleteAttachment,
       save: saveDemo
     };
 
     var params = {
-      format: 'json',
+      format: 'json'
       // [GJo] Better to rely on default permissions..
       //'perm:demo-cat-role': 'read',
       //'perm:demo-cat-registered-role': 'update',
-      directory: '/demos/',
-      extension: '.json'
     };
 
     return service;
 
     function createDemo(demo, file) {
-      return upload(demo, file, '/demo/create?' + $.param(params));
+      var createParams = angular.extend({directory: '/demo/', extension: '.json'}, params);
+      return upload(demo, file, '/demo/create?' + $.param(createParams));
     }
 
     function saveDemo(demo, file, docUri) {
-      return upload(demo, file, '/demo/update?uri=' + docUri + '&' + $.param(params));
+      var updateParams = angular.extend({uri: docUri}, params);
+      return upload(demo, file, '/demo/update?' + $.param(updateParams));
     }
 
     function upload(demo, file, url) {
@@ -41,5 +42,8 @@
         });
     }
 
+    function deleteAttachment(demoUri, attachment) {
+      return $http['delete']('/demo/attachment',{params: {demoUri: demoUri, uri: attachment.uri}});
+    }
   }
 }());

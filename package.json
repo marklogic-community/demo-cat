@@ -16,7 +16,9 @@
     "gulp-uglify": "^0.2.1",
     "karma": "^0.12.3",
     "yargs": "^1.2.1",
-    "multer": "~0.1.7"
+    "multer": "~0.1.7",
+    "q": "^1.2.0",
+    "underscore": "^1.8.2"
   },
   "devDependencies": {
     "karma-jasmine": "^0.1.5",
