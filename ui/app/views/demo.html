@@ -28,6 +28,10 @@
           <h4>Browsers</h4>
           <span ng-repeat="browser in model.demo.browsers">{{browser}}</span>
         </div>
+        <div ng-show="model.demo.attachments && model.demo.attachments.length">
+          <h4>Attachments</h4>
+          <span ng-repeat="attachment in model.demo.attachments track by $index"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&download=true&filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a> </span>
+        </div>
       </div>
     </div>
     <div class="panel panel-warning code-details">
