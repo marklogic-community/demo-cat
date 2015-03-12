@@ -508,6 +508,22 @@ exports.buildExpress = function(options) {
     }
   });
 
+  app.post('/v1/resources/file-bug', function(req, res){
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
+  app.post('/v1/resources/comment', function(req, res){
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
   app.post('/v1*', isWriter, function(req, res){
     if (req.session.user === undefined) {
       res.status(401).send('Unauthorized');
