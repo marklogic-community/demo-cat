@@ -48,7 +48,6 @@
 
       angular.extend($scope, {
         model: model,
-        scriptFile: [],
         editorOptions: {
           height: '100px'
         },
@@ -93,7 +92,7 @@
         statusChanged: function() {
           model.demo.demoStatus.lastStatusTimestamp = new Date().toJSON();
         },
-       inputInvalid: function(input) {
+        inputInvalid: function(input) {
           return model.formError && !model.formValid && !input;
         },
         deleteAttachment: function(attachent, index) {

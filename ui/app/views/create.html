@@ -57,17 +57,12 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Demo Attachments</label>
       <div class="col-sm-10">
-        <div class="col-sm-9">
-          <input type="file" class="form-control" placeholder="file://..."  ng-multiple="true" ng-file-select ng-model="model.scriptFiles"/>
-          <div ng-repeat="attachment in model.demo.attachments track by $index">
-            <span class="form-control"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&download=true&filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a><a class="pull-right" ng-click="deleteAttachment(attachment, $index)"><i class="glyphicon glyphicon-trash"></i></a></span>
-          </div>
-          <div ng-repeat="scriptFile in model.scriptFiles">
-            <span class="form-control">{{scriptFile.name}}<a class="pull-right" ng-click="model.scriptFiles.splice($index,1)"><i class="glyphicon glyphicon-trash"></i></a></span>
-          </div>
+        <input type="file" class="form-control" placeholder="file://..."  ng-multiple="true" ng-file-select ng-model="model.scriptFiles"/>
+        <div ng-repeat="attachment in model.demo.attachments track by $index">
+          <span class="form-control"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&download=true&filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a><a class="pull-right" ng-click="deleteAttachment(attachment, $index)"><i class="glyphicon glyphicon-trash"></i></a></span>
         </div>
-        <div class="col-sm-3">
-          <button ng-file-select class="btn btn-primary" ng-multiple="true" ng-model="model.scriptFiles">Attach</button>
+        <div ng-repeat="scriptFile in model.scriptFiles">
+          <span class="form-control">{{scriptFile.name}}<a class="pull-right" ng-click="model.scriptFiles.splice($index,1)"><i class="glyphicon glyphicon-trash"></i></a></span>
         </div>
       </div>
     </div>
