@@ -358,7 +358,8 @@
       },
       showMediaModal: function (media) {
         showModal('/views/modals/show-media.html', 'Media Viewer', media);
-      }
+      },
+      trustUrl: $sce.trustAsResourceUrl
     });
 
     function validateMemo(memo) {
