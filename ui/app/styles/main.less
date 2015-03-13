@@ -8,12 +8,12 @@
   width: 100%; /* width for smallest view*/
 }
 /* Panel collapsing: Small devices (tablets, 768px and up) */
-@media (min-width: @screen-sm-min) { 
+@media (min-width: @screen-sm-min) {
   .results .panel { width: 35%; }
 }
 
 /* Panel collapsing:  Medium devices (desktops, 992px and up) */
-@media (min-width: @screen-md-min) { 
+@media (min-width: @screen-md-min) {
   .results .panel { width: 30%; }
 }
 
@@ -332,10 +332,10 @@ footer .text-muted {
   ul {
     margin-top: 1em;
     padding-left: 2em;
-    
+
     li {
       list-style: none;
-      
+
       .remove-memo {
         margin-right: 10px;
       }
@@ -361,6 +361,24 @@ footer .text-muted {
   padding-top: 5px;
 }
 .cred a, .contact a { margin-top: 5px; }
+
+.object-fit-cover {
+  img, video {
+    width:100%;
+    object-fit: cover;
+    -o-object-fit: cover;
+    -webkit-object-fit: cover;
+  }
+}
+
+.object-fit-contain {
+  img, video {
+    width:100%;
+    object-fit: contain;
+    -o-object-fit: contain;
+    -webkit-object-fit: contain;
+  }
+}
 
 @import "login.less";
 @import "header.less";
