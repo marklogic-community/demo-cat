@@ -92,7 +92,7 @@
             <div class="media-middle">
               <a ng-click="showMediaModal(media)">
                 <img class="col-sm-12" ng-if="media.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" />
-                <video class="col-sm-12" ng-if="media.mediaType === 'video'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" ></video>
+                <video class="col-sm-12 object-disable-action" ng-if="media.mediaType === 'video'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" ></video>
                 <object class="col-sm-12 object-disable-action" ng-if="!media.mediaType || media.mediaType === 'application'" class="object-fit-cover" data="{{trustUrl(media.mediaUrl)}}"></object>
                 <h4 class="media-heading">{{media.mediaName}}</h4>
               </a>
