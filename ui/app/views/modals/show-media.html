@@ -3,10 +3,10 @@
       <h3 class="modal-title">{{title}}: {{model.mediaName}}</h3>
   </div>
   <div class="modal-body">
-     <img class="col-sm-12" ng-if="model.mediaType === 'image'" class="object-fit-cover" ng-src="{{model.mediaUrl}}" />
-     <video class="col-sm-12" ng-if="model.mediaType === 'video'" controls  ng-src="{{model.mediaUrl}}">
+     <img height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="model.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(model.mediaUrl)}}" />
+     <video height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="model.mediaType === 'video'" controls  ng-src="{{trustUrl(model.mediaUrl)}}">
      </video>
-     <object class="col-sm-12" ng-if="!model.mediaType || model.mediaType === 'application'" data="{{model.mediaUrl}}"></object>
+     <object height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="!model.mediaType || model.mediaType === 'application'" data="{{trustUrl(model.mediaUrl)}}"></object>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary pull-right" ng-click="cancel()">Close</button>

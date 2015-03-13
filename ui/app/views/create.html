@@ -131,6 +131,38 @@
         </div>
       </div>
     </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Media Links</label>
+      <button class="btn btn-primary btn-xs" ng-click="addMediaLink()">
+        <span class="glyphicon glyphicon-plus"></span> Add
+      </button>
+      <div ng-repeat="media in model.demo.media" class="col-sm-10 col-sm-offset-2">
+        <div class="col-sm-2">
+          <input type="text" class="form-control" placeholder="Name"  ng-model="media.mediaName"/>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" placeholder="//..."  ng-model="media.mediaUrl"/>
+        </div>
+        <div class="col-sm-1">
+          <input type="text" class="form-control" placeholder="width"  ng-model="media.mediaWidth"/>
+        </div>
+        <div class="col-sm-1">
+          <input type="text" class="form-control" placeholder="height"  ng-model="media.mediaHeight"/>
+        </div>
+        <div class="col-sm-2">
+          <select class="form-control" ng-model="media.mediaType">
+            <option value="image">image</option>
+            <option value="video">video</option>
+            <option value="application">application/embed</option>
+          </select>
+        </div>
+        <div class="col-sm-1">
+          <button class="btn btn-default" ng-click="removeMediaLink($index)">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="form-group cred">
       <label class="col-sm-2 control-label">Credentials</label>
       <div class="col-sm-8">
