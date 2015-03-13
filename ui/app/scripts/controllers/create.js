@@ -20,6 +20,7 @@
             lastStatusTimestamp: new Date().toJSON()
           },
           attachments: [],
+          media: [],
           browsers: [],
           features: [],
           technologies: [],
@@ -73,6 +74,12 @@
         },
         removeFeature: function(index) {
           model.demo.features.splice(index, 1);
+        },
+        addMediaLink: function() {
+          model.demo.media.push({mediaUrl: null, mediaType: null});
+        },
+        removeMediaLink: function(index) {
+          model.demo.media.splice(index, 1);
         },
         addTechnology: function() {
           if (model.demo.technologies.indexOf(model.technologyToAdd) < 0) {
