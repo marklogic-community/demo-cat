@@ -44,7 +44,7 @@ exports.buildExpress = function(options) {
 
   function replacer(key, value) {
     if (typeof value === 'string' && jsonPattern.test(value)) {
-      return eval(value);
+      return JSON.parse('{ "toArray":' + value + '}').toArray;
     }
     return value;
   }
@@ -168,6 +168,7 @@ exports.buildExpress = function(options) {
 
   function submitDocument(req, doc, queryParams, fileMeta) {
     fileMeta = fileMeta || {};
+    var mimeType = fileMeta.mimeType || 'application/json;charset=UTF-8';
     var d = q.defer();
     var queryParts = [];
     for (var key in queryParams) {
@@ -185,7 +186,7 @@ exports.buildExpress = function(options) {
       auth: getAuth(options, req.session)
     };
     delete params.headers['content-length'];
-    params.headers['content-type'] = 'application/json;charset=UTF-8';
+    params.headers['content-type'] = mimeType;
     //delete params.headers['content-type'];
     var mlReq = http.request(params, function(response) {
       if (response.statusCode >= 400) {
@@ -286,7 +287,6 @@ exports.buildExpress = function(options) {
   function submitAttachments(req) {
     var promises = [];
     var files = Array.isArray(req.files.file) ? req.files.file : [req.files.file];
-
     files.forEach(function(file) {
       if (file && file.path) {
         var d = q.defer();
@@ -304,7 +304,9 @@ exports.buildExpress = function(options) {
                 extension: extension
               },
               {
-                attachmentName: (file.originalname || file.name)
+                attachmentName: (file.originalname || file.name),
+                mimeType: file.mimetype,
+                size: file.size
               }
             )
           );
@@ -322,11 +324,10 @@ exports.buildExpress = function(options) {
       hostname: options.mlHost,
       port: options.mlPort,
       method: 'GET',
-      path: '/v1/documents?uri=' + req.query.uri + '&format=binary',
+      path: '/v1/documents?uri=' + req.query.uri + '&format=binary&transform=stream',
       headers: req.headers,
       auth: getAuth(options, req.session)
     };
-    delete params.headers['content-length'];
     var mlReq = http.request(params, function(response) {
       if (response.statusCode >= 400) {
         res.status(response.statusCode).send('Error!');
@@ -412,7 +413,8 @@ exports.buildExpress = function(options) {
           attachments.push(fileMeta);
         }
       });
-      attachments.concat(demo.attachments);
+      var oldAttachments = replacer(attachments, demo.attachments);
+      demo.attachments = _.flatten([oldAttachments,attachments]);
       submitDocument(
         req,
         JSON.stringify(demo, replacer),
@@ -437,8 +439,8 @@ exports.buildExpress = function(options) {
           attachments.push(fileMeta);
         }
       });
-      attachments.concat(demo.attachments);
-      demo.attachments = attachments;
+      var oldAttachments = replacer(attachments, demo.attachments);
+      demo.attachments = _.flatten([oldAttachments,attachments]);
       var queryString = req.originalUrl.split('?')[1];
       var params = {
         hostname: options.mlHost,
@@ -464,9 +466,8 @@ exports.buildExpress = function(options) {
 
       if (demo !== undefined) {
         mlReq.write(JSON.stringify(demo, replacer));
-        mlReq.end();
       }
-
+      mlReq.end();
       mlReq.on('error', function(e) {
         console.log('Problem with request: ' + e.message);
       });

@@ -84,6 +84,23 @@
     <div class="shortdesc col-md-12" ng-bind-html="model.demo.shortdesc"></div>
     <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
 
+    <div ng-if="model.demo.media.length" class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Media</div>
+        <div class="panel-body">
+          <div ng-repeat="media in model.demo.media" class="text-center col-sm-3">
+            <div class="media-middle">
+              <a ng-click="showMediaModal(media)">
+                <img class="col-sm-12" ng-if="media.mediaType === 'image'" class="object-fit-cover" ng-src="{{media.mediaUrl}}" />
+                <video class="col-sm-12" ng-if="media.mediaType === 'video'" class="object-fit-cover" ng-src="{{media.mediaUrl}}" ></video>
+                <object class="col-sm-12" ng-if="!media.mediaType || media.mediaType === 'application'" class="object-fit-cover" data="{{media.mediaUrl}}"></object>
+                <h4 class="media-heading">{{media.mediaName}}</h4>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="memos col-md-12">
       <h3>Memos</h3>
       <button class="btn btn-primary btn-sm" ng-show="model.user.isWriter()" ng-click="addMemo()">Add</button>
