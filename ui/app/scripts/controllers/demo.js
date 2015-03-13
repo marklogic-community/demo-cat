@@ -62,9 +62,31 @@
       },
       user: user
     };
-
     if (demo) {
-      model.demo = demo;
+      var imageExtensions = ['jpeg','jpg','gif','png'];
+      var videoExtensions = ['webm','ogg','mp4'];
+      var applicationExtensions = ['pdf'];
+      var mediaExtensions = _.flatten([imageExtensions,videoExtensions,applicationExtensions]);
+      model.demo = angular.extend({media:[]},demo);
+      angular.forEach(model.demo.attachments, function(attachment) {
+        var extension = attachment.uri.replace(/^.*\.([^\.]+)$/, '$1');
+        if (mediaExtensions.indexOf(extension) > -1) {
+          var mediaType;
+          if (imageExtensions.indexOf(extension) > -1) {
+            mediaType =  'image';
+          } else if (videoExtensions.indexOf(extension) > -1) {
+            mediaType =  'video';
+          } else {
+            mediaType = 'application';
+          }
+          model.demo.media.push({
+            mediaName: attachment.attachmentName,
+            mediaUrl: '/demo/attachment?uri='+attachment.uri,
+            mediaType: mediaType,
+            contentType: mediaType + '/' + extension
+          });
+        }
+      });
     }
 
     angular.extend($scope, {
@@ -333,8 +355,10 @@
                   model.user.follows.splice(toDelete, 1);
                 }
               });
+      },
+      showMediaModal: function (media) {
+        showModal('/views/modals/show-media.html', 'Media Viewer', media);
       }
-
     });
 
     function validateMemo(memo) {
