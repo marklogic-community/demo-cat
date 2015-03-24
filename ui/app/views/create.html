@@ -1,7 +1,7 @@
 <div>
   <div class="row">
     <div class="col-sm-2"></div>
-    <div class="col-sm-10">
+    <div class="col-sm-8">
       <h2 ng-if="!model.edit">Create a Demo</h2>
       <h2 ng-if="model.edit">Edit a Demo</h2>
       <p class="text-danger" ng-if="model.formError &amp;&amp; !model.formValid">
@@ -11,40 +11,45 @@
   </div>
   <form class="form-horizontal" name="createForm">
     <div class="form-group">
-      <label class="col-sm-2 control-label" ng-class="{ 'text-danger': inputInvalid( model.demo.name ) }">Name *</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" placeholder="name of demo" ng-model="model.demo.name" required>
+      <div class="col-sm-8 col-sm-offset-2">
+        <strong class="required"><span>*</span> <em>required</em></strong>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label"  ng-class="{ 'text-danger': inputInvalid( model.demo.shortdesc ) }">Short Description *</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" placeholder="short description" ng-model="model.demo.shortdesc" maxlength="95" required>
+      <label class="col-sm-2 control-label required" ng-class="{ 'text-danger': inputInvalid( model.demo.name ) }">Demo Name<span>*</span></label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="model.demo.name" required>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Long Description</label>
-      <div class="col-sm-10">
+      <label class="col-sm-2 control-label required" popover="This is shown as search snippet" popover-placement="bottom" popover-trigger="mouseenter" ng-class="{ 'text-danger': inputInvalid( model.demo.shortdesc ) }">Short Description<span>*</span></label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" popover="Limited to 95 characters" popover-placement="bottom" popover-trigger="mouseenter" ng-model="model.demo.shortdesc" maxlength="95" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" popover="Use this to provide a longer summary of the demo. Use Memo's for extra material." popover-placement="bottom" popover-trigger="mouseenter">Long Description</label>
+      <div class="col-sm-8">
         <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.description" placeholder="In this section provide an executive summary of what the demo does. Talk about the customer problem that this is demo is addressing, without assuming that your reader is already familiar with the customer."></textarea>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label restricted" ng-class="{ 'text-danger': !model.formError }">Restriction</label>
+      <label class="col-sm-2 control-label restricted">Restriction</label>
       <div class="col-sm-3">
-        <label class="checkbox-inline restricted" ng-class="{ 'text-danger': !model.formError }">
+        <label class="checkbox-inline restricted">
           <input type="checkbox" ng-model="model.demo.restricted">Access Restricted
         </label>
       </div>
     </div>
     <div class="form-group" ng-if="model.demo.restricted">
       <label class="col-sm-2 control-label text-danger restricted">Restriction Details</label>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.restrictionDetails" placeholder="In this section provide details regarding the restrictions associated with this demo."></textarea>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Hosted at</label>
-      <div class="col-sm-8">
+      <div class="col-sm-6">
         <input type="url" class="form-control" ng-model="model.demo.host" placeholder="http://...">
       </div>
       <div class="col-sm-2">
@@ -56,7 +61,7 @@
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Demo Attachments</label>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <input type="file" class="form-control" placeholder="file://..."  ng-multiple="true" ng-file-select ng-model="model.scriptFiles"/>
         <div ng-repeat="attachment in model.demo.attachments track by $index">
           <span class="form-control"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&download=true&filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a><a class="pull-right" ng-click="deleteAttachment(attachment, $index)"><i class="glyphicon glyphicon-trash"></i></a></span>
@@ -73,7 +78,7 @@
       </button>
     </div>
     <div class="form-group">
-      <div ng-repeat="cred in model.demo.credentials" class="col-sm-10 col-sm-offset-2">
+      <div ng-repeat="cred in model.demo.credentials" class="col-sm-8 col-sm-offset-2">
         <label class="col-sm-1 control-label">username</label>
         <div class="col-sm-4">
           <input type="text" class="form-control" ng-model="cred.username">
@@ -98,32 +103,32 @@
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Features</label>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <input type="text" class="feature-input form-control" ng-model="model.featureToAdd" typeahead="choice for choice in model.featureChoices"/>
         <button class="btn btn-primary btn-xs" ng-click="addFeature()">
           <span class="glyphicon glyphicon-plus"></span> Add
         </button>
       </div>
-      <div class="col-sm-10 col-sm-offset-2">
+      <div class="col-sm-8 col-sm-offset-2">
         <span class="feature" ng-repeat="feature in model.demo.features" class="btn btn-primary">{{feature}}<i class="remove-feature fa fa-times-circle" ng-click="removeFeature($index)"></i></span>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Technologies Used</label>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <input type="text" class="feature-input form-control" ng-model="model.technologyToAdd" typeahead="choice for choice in model.technologyChoices"/>
         <button class="btn btn-primary btn-xs" ng-click="addTechnology()">
           <span class="glyphicon glyphicon-plus"></span> Add
         </button>
       </div>
-      <div class="col-sm-10 col-sm-offset-2">
+      <div class="col-sm-8 col-sm-offset-2">
         <span class="feature" ng-repeat="technology in model.demo.technologies" class="btn btn-primary">{{technology}}<i class="remove-feature fa fa-times-circle" ng-click="removeTechnology($index)"></i></span>
       </div>
     </div>
     <items edit-items="model.demo.domains" item-choices="model.domainChoices" edit-type="form" mode="edit" label="Domains"/>
     <div class="form-group">
       <label class="col-sm-2 control-label">Code Repository</label>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="git@... or svn or http://..." ng-model="model.demo.repo">
       </div>
     </div>
@@ -134,7 +139,7 @@
       </button>
     </div>
     <div class="form-group">
-      <div ng-repeat="person in model.demo.persons" class="col-sm-10 col-sm-offset-2">
+      <div ng-repeat="person in model.demo.persons" class="col-sm-8 col-sm-offset-2">
         <label class="col-sm-1 control-label">Role</label>
         <div class="col-sm-2">
           <select ng-options="role for role in model.personRoleChoices" ng-model="person.role">
@@ -162,7 +167,7 @@
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Demo Status</label>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <div>
           <select ng-options="status for status in model.statusChoices" ng-model="model.demo.demoStatus.status" ng-change="statusChanged()">
             <option value="" disabled>Choose Status</option>
@@ -172,17 +177,18 @@
       </div>
     </div>
     <div class="form-group">
-      <div class="col-sm-10 col-sm-offset-2">
-        <textarea placeholder="Details about the current demo status" ng-model="model.demo.demoStatus.statusDetails" rows="2" cols="100"></textarea>
+      <div class="col-sm-8 col-sm-offset-2">
+        <textarea class="form-control" placeholder="Details about the current demo status" ng-model="model.demo.demoStatus.statusDetails" rows="2" cols="100"></textarea>
       </div>
     </div>
-    <div class="col-sm-10 col-sm-offset-1">
-      <strong>* <em>required</em></strong>
-    </div>
-    <div class="row pull-right">
-      <a class="btn btn-default" ng-click="cancel()">Cancel</a>
-      <button ng-if="!model.edit" class="btn btn-primary" ng-click="submit()">Create</button>
-      <button ng-if="model.edit" class="btn btn-primary" ng-click="submit()">Save</button>
+    <div class="form-group">
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="pull-right">
+          <a class="btn btn-default" ng-click="cancel()">Cancel</a>
+          <button ng-if="!model.edit" class="btn btn-primary" ng-click="submit()">Create</button>
+          <button ng-if="model.edit" class="btn btn-primary" ng-click="submit()">Save</button>
+        </div>
+      </div>
     </div>
   </form>
 </div>
