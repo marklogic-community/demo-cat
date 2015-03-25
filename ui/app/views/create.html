@@ -44,58 +44,12 @@
         <input type="text" class="form-control" ng-model="model.demo.name" required>
       </div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label required" popover="This is shown as search snippet" popover-placement="bottom" popover-trigger="mouseenter" ng-class="{ 'text-danger': inputInvalid( model.demo.shortdesc ) }">Short Description<span>*</span></label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" popover="Limited to 95 characters" popover-placement="bottom" popover-trigger="mouseenter" ng-model="model.demo.shortdesc" maxlength="95" required>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" popover="Use this to provide a longer summary of the demo. Use Memo's for extra material." popover-placement="bottom" popover-trigger="mouseenter">Long Description</label>
-      <div class="col-sm-8">
-        <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.description" placeholder="In this section provide an executive summary of what the demo does. Talk about the customer problem that this is demo is addressing, without assuming that your reader is already familiar with the customer."></textarea>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Features</label>
-      <div class="col-sm-8">
-        <input type="text" class="feature-input form-control" ng-model="model.featureToAdd" typeahead="choice for choice in model.featureChoices"/>
-        <button class="btn btn-primary btn-xs" ng-click="addFeature()">
-          <span class="glyphicon glyphicon-plus"></span> Add
-        </button>
-      </div>
-      <div class="col-sm-8 col-sm-offset-2">
-        <span class="feature" ng-repeat="feature in model.demo.features" class="btn btn-primary">{{feature}}<i class="remove-feature fa fa-times-circle" ng-click="removeFeature($index)"></i></span>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Technologies Used</label>
-      <div class="col-sm-8">
-        <input type="text" class="feature-input form-control" ng-model="model.technologyToAdd" typeahead="choice for choice in model.technologyChoices"/>
-        <button class="btn btn-primary btn-xs" ng-click="addTechnology()">
-          <span class="glyphicon glyphicon-plus"></span> Add
-        </button>
-      </div>
-      <div class="col-sm-8 col-sm-offset-2">
-        <span class="feature" ng-repeat="technology in model.demo.technologies" class="btn btn-primary">{{technology}}<i class="remove-feature fa fa-times-circle" ng-click="removeTechnology($index)"></i></span>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Targeted Browser(s)</label>
-      <div class="col-sm-1" ng-repeat="browser in model.browserChoices">
-        <label class="checkbox-inline">
-          <input type="checkbox" value="{{browser}}" ng-checked="model.demo.browsers.indexOf(browser) >= 0"
-                 ng-click="updateBrowsers(browser)">{{browser}}
-        </label>
-      </div>
-    </div>
-    <items edit-items="model.demo.domains" item-choices="model.domainChoices" edit-type="form" mode="edit" label="Domains"/>
     <div class="form-group contact">
       <label class="col-sm-2 control-label required" ng-class="{ 'text-danger': inputInvalid( model.demo.persons.length ) }">Points of Contact<span>*</span></label>
       <div class="col-sm-8">
-        <button class="btn btn-primary btn-xs" ng-click="addPerson()">
-          <span class="glyphicon glyphicon-plus"></span> Add
-        </button>
+        <a class="btn btn-primary btn-xs" ng-click="addPerson()">
+          Add
+        </a>
       </div>
     </div>
     <div class="form-group contact">
@@ -114,11 +68,57 @@
         <div class="col-sm-2">
           <input type="text" class="form-control" ng-model="person.email">
         </div>
-        <button class="btn btn-danger btn-xs" ng-click="removePerson($index)">
-          <span class="glyphicon glyphicon-remove"></span>
-        </button>
+        <a class="btn btn-danger btn-xs" ng-click="removePerson($index)">
+          <span class="glyphicon glyphicon-trash icon-white"></span>
+        </a>
       </div>
     </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label required" popover="This is shown as search snippet" popover-placement="bottom" popover-trigger="mouseenter" ng-class="{ 'text-danger': inputInvalid( model.demo.shortdesc ) }">Short Description<span>*</span></label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" popover="Limited to 95 characters" popover-placement="bottom" popover-trigger="mouseenter" ng-model="model.demo.shortdesc" maxlength="95" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" popover="Use this to provide a longer summary of the demo. Use Memo's for extra material." popover-placement="bottom" popover-trigger="mouseenter">Long Description</label>
+      <div class="col-sm-8">
+        <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.description" placeholder="In this section provide an executive summary of what the demo does. Talk about the customer problem that this is demo is addressing, without assuming that your reader is already familiar with the customer."></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Features</label>
+      <div class="col-sm-8">
+        <input type="text" class="feature-input form-control" ng-model="model.featureToAdd" typeahead="choice for choice in model.featureChoices"/>
+        <a class="btn btn-primary btn-xs" ng-click="addFeature()">
+          <span class="glyphicon glyphicon-plus"></span>
+        </a>
+      </div>
+      <div class="col-sm-8 col-sm-offset-2">
+        <span class="feature" ng-repeat="feature in model.demo.features" class="btn btn-primary">{{feature}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeFeature($index)"></i></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Technologies Used</label>
+      <div class="col-sm-8">
+        <input type="text" class="feature-input form-control" ng-model="model.technologyToAdd" typeahead="choice for choice in model.technologyChoices"/>
+        <a class="btn btn-primary btn-xs" ng-click="addTechnology()">
+          <span class="glyphicon glyphicon-plus"></span>
+        </a>
+      </div>
+      <div class="col-sm-8 col-sm-offset-2">
+        <span class="feature" ng-repeat="technology in model.demo.technologies" class="btn btn-primary">{{technology}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeTechnology($index)"></i></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Targeted Browser(s)</label>
+      <div class="col-sm-1" ng-repeat="browser in model.browserChoices">
+        <label class="checkbox-inline">
+          <input type="checkbox" value="{{browser}}" ng-checked="model.demo.browsers.indexOf(browser) >= 0"
+                 ng-click="updateBrowsers(browser)">{{browser}}
+        </label>
+      </div>
+    </div>
+    <items edit-items="model.demo.domains" item-choices="model.domainChoices" edit-type="form" mode="edit" label="Domains"/>
     <div class="form-group">
       <label class="col-sm-2 control-label">Demo Attachments</label>
       <div class="col-sm-8">
@@ -134,9 +134,9 @@
     <div class="form-group cred">
       <label class="col-sm-2 control-label">Credentials</label>
       <div class="col-sm-8">
-        <button class="btn btn-primary btn-xs" ng-click="addCredentials()">
-          <span class="glyphicon glyphicon-plus"></span> Add
-        </button>
+        <a class="btn btn-primary btn-xs" ng-click="addCredentials()">
+          Add
+        </a>
       </div>
     </div>
     <div class="form-group cred">
@@ -149,9 +149,9 @@
         <div class="col-sm-3">
           <input type="text" class="form-control" ng-model="cred.password">
         </div>
-        <button class="btn btn-danger btn-xs" ng-click="removeCredentials($index)">
-          <span class="glyphicon glyphicon-remove"></span>
-        </button>
+        <a class="btn btn-danger btn-xs" ng-click="removeCredentials($index)">
+          <span class="glyphicon glyphicon-trash icon-white"></span>
+        </a>
       </div>
     </div>
     <div class="row code-details">
