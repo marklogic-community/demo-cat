@@ -347,7 +347,7 @@ footer .text-muted {
 .modal-footer button {
   margin-left: 5px;
 }
-
+/* create form */
 .control-label span {
   position: absolute;
   right: 4px;
@@ -355,7 +355,11 @@ footer .text-muted {
 .required span, .restricted {
   color: @btn-danger-bg;
 }
-
+.cred-row + .cred-row,
+.contact-row + .contact-row {
+  padding-top: 5px;
+}
+.cred button, .contact button { margin-top: 5px; }
 
 @import "login.less";
 @import "header.less";
