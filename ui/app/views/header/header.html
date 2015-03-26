@@ -10,7 +10,7 @@
   </div>
   <div class="collapse navbar-collapse" id="demo-cat-navbar-collapse-1">
     <ul class="nav navbar-nav">
-      <li ng-show="user.isWriter()"><form ng-action="/create"><button class="btn btn-danger btn-sm btn-create">Create</button></form></li>
+      <li ng-show="user.isWriter()"><form><a class="btn btn-danger btn-sm btn-create" ng-href="/create">Create</a></form></li>
     </ul>
     <div class="navbar-form navbar-left">
       <ml-remote-input template="fa"></ml-remote-input>
