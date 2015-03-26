@@ -44,7 +44,7 @@ exports.buildExpress = function(options) {
 
   function replacer(key, value) {
     if (typeof value === 'string' && jsonPattern.test(value)) {
-      return JSON.parse('{ "toArray":' + value + '}').toArray;
+      return JSON.parse('{ "json":' + value + '}').json;
     }
     return value;
   }
@@ -405,7 +405,7 @@ exports.buildExpress = function(options) {
   });
 
   app.post('/demo/create', isWriter, function(req, res) {
-    var demo = _.extend({},req.body);
+    var demo = _.extend({},req.body.data ? JSON.parse(req.body.data) : req.body);
     var attachments = [];
     submitAttachments(req).then( function(resolved) {
       resolved.forEach(function(fileMeta) {
@@ -413,8 +413,7 @@ exports.buildExpress = function(options) {
           attachments.push(fileMeta);
         }
       });
-      var oldAttachments = replacer(attachments, demo.attachments);
-      demo.attachments = _.flatten([oldAttachments,attachments]);
+      demo.attachments = _.flatten([demo.attachments,attachments]);
       submitDocument(
         req,
         JSON.stringify(demo, replacer),
@@ -431,7 +430,7 @@ exports.buildExpress = function(options) {
   });
 
   app.post('/demo/update', isWriter, function(req, res) {
-    var demo = _.extend({},req.body);
+    var demo = _.extend({},req.body.data ? JSON.parse(req.body.data) : req.body);
     var attachments = [];
     submitAttachments(req).then(function(resolved) {
       resolved.forEach(function(fileMeta) {
@@ -439,8 +438,7 @@ exports.buildExpress = function(options) {
           attachments.push(fileMeta);
         }
       });
-      var oldAttachments = replacer(attachments, demo.attachments);
-      demo.attachments = _.flatten([oldAttachments,attachments]);
+      demo.attachments = _.flatten([demo.attachments,attachments]);
       var queryString = req.originalUrl.split('?')[1];
       var params = {
         hostname: options.mlHost,
