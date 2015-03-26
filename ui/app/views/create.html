@@ -16,8 +16,8 @@
       </div>
     </div>
     <div class="row site-details">
-      <div class="col-md-9 col-md-offset-1">
-        <div class="panel panel-danger">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-primary">
           <div class="panel-heading">
             <h3 class="panel-title">Site Details</h3>
           </div>
@@ -131,12 +131,14 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group media-link">
       <label class="col-sm-2 control-label">Media Links</label>
-      <button class="btn btn-primary btn-xs" ng-click="addMediaLink()">
-        <span class="glyphicon glyphicon-plus"></span> Add
-      </button>
-      <div ng-repeat="media in model.demo.media" class="col-sm-10 col-sm-offset-2">
+      <div class="col-sm-8">
+        <a class="btn btn-primary btn-xs" ng-click="addMediaLink()">
+          Add
+        </a>
+      </div>
+      <div ng-repeat="media in model.demo.media" class="col-sm-10 col-sm-offset-2 media-row">
         <div class="col-sm-2">
           <input type="text" class="form-control" placeholder="Name"  ng-model="media.mediaName"/>
         </div>
@@ -157,9 +159,9 @@
           </select>
         </div>
         <div class="col-sm-1">
-          <button class="btn btn-default" ng-click="removeMediaLink($index)">
-            <span class="glyphicon glyphicon-remove"></span>
-          </button>
+          <a class="btn btn-danger btn-sm" ng-click="removeMediaLink($index)">
+            <span class="glyphicon glyphicon-trash icon-white"></span>
+          </a>
         </div>
       </div>
     </div>
@@ -187,8 +189,8 @@
       </div>
     </div>
     <div class="row code-details">
-      <div class="col-md-9 col-md-offset-1">
-        <div class="panel panel-warning">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-info">
           <div class="panel-heading">
             <h3 class="panel-title">Code Details</h3>
           </div>
