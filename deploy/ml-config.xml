@@ -219,6 +219,7 @@
           <range-value-positions>false</range-value-positions>
         </range-element-index>
 -->
+        <!-- ML7 / JSONXML -->
         <range-element-index>
           <scalar-type>string</scalar-type>
           <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
@@ -229,6 +230,22 @@
         <range-element-index>
           <scalar-type>string</scalar-type>
           <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
+          <localname>personName</localname>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <range-value-positions>false</range-value-positions>
+        </range-element-index>
+        
+        <!-- ML8 / JSON -->
+        <range-element-index>
+          <scalar-type>string</scalar-type>
+          <namespace-uri/>
+          <localname>version</localname>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <range-value-positions>false</range-value-positions>
+        </range-element-index>
+        <range-element-index>
+          <scalar-type>string</scalar-type>
+          <namespace-uri/>
           <localname>personName</localname>
           <collation>http://marklogic.com/collation/codepoint</collation>
           <range-value-positions>false</range-value-positions>
@@ -284,6 +301,7 @@
           <invalid-values>reject</invalid-values>
         </range-path-index>
 -->
+        <!-- ML7 / JSONXML -->
         <range-path-index>
           <scalar-type>string</scalar-type>
           <collation>http://marklogic.com/collation/codepoint</collation>
@@ -307,7 +325,31 @@
           <range-value-positions>false</range-value-positions>
           <invalid-values>ignore</invalid-values>
         </range-path-index>
+        
+        <!-- ML8 / JSON -->
+        <range-path-index>
+          <scalar-type>string</scalar-type>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <path-expression>features</path-expression>
+          <range-value-positions>false</range-value-positions>
+          <invalid-values>reject</invalid-values>
+        </range-path-index>
 
+        <range-path-index>
+          <scalar-type>string</scalar-type>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <path-expression>technologies</path-expression>
+          <range-value-positions>false</range-value-positions>
+          <invalid-values>reject</invalid-values>
+        </range-path-index>
+
+        <range-path-index>
+          <scalar-type>string</scalar-type>
+          <collation>http://marklogic.com/collation/codepoint</collation>
+          <path-expression>domains</path-expression>
+          <range-value-positions>false</range-value-positions>
+          <invalid-values>ignore</invalid-values>
+        </range-path-index>
       </range-path-indexes>
 
       <geospatial-element-indexes>

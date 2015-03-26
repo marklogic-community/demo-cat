@@ -25,21 +25,23 @@
     <search:joiner strength="50" apply="constraint" compare="GE" tokenize="word">GE</search:joiner>
     <search:joiner strength="50" apply="constraint" compare="NE" tokenize="word">NE</search:joiner>
   </search:grammar>
-  <search:constraint name="version">
+  
+  <!-- ML7 / JSONXML -->
+  <search:constraint name="ml7_version">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
       <search:facet-option>limit=10</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
-  <search:constraint name="personName">
+  <search:constraint name="ml7_personName">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:element ns="http://marklogic.com/xdmp/json/basic" name="personName"/>
       <search:facet-option>limit=10</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
-  <search:constraint name="feature">
+  <search:constraint name="ml7_feature">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:path-index
         xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:features/jbasic:item</search:path-index>
@@ -47,7 +49,7 @@
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
-  <search:constraint name="technology">
+  <search:constraint name="ml7_technology">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:path-index
         xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:technologies/jbasic:item</search:path-index>
@@ -55,7 +57,7 @@
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
-  <search:constraint name="domain">
+  <search:constraint name="ml7_domain">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <search:path-index
         xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:domains/jbasic:item</search:path-index>
@@ -63,20 +65,73 @@
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:constraint>
-  <search:values name="features">
+  
+  <search:values name="ml7_features">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
       <search:path-index
         xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:features/jbasic:item</search:path-index>
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:values>
-  <search:values name="technologies">
+  <search:values name="ml7_technologies">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
       <search:path-index
         xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:technologies/jbasic:item</search:path-index>
       <search:facet-option>frequency-order</search:facet-option>
     </search:range>
   </search:values>
+  
+  <!-- ML8 / JSON -->
+  <search:constraint name="version">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:element ns="" name="version"/>
+      <search:facet-option>limit=10</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:constraint>
+  <search:constraint name="personName">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:element ns="" name="personName"/>
+      <search:facet-option>limit=10</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:constraint>
+  <search:constraint name="feature">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:path-index>features</search:path-index>
+      <search:facet-option>limit=15</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:constraint>
+  <search:constraint name="technology">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:path-index>technologies</search:path-index>
+      <search:facet-option>limit=15</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:constraint>
+  <search:constraint name="domain">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <search:path-index>domains</search:path-index>
+      <search:facet-option>limit=15</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:constraint>
+  
+  <search:values name="features">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <search:path-index>features</search:path-index>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:values>
+  <search:values name="technologies">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <search:path-index>technologies</search:path-index>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:values>
+  
+  
   <search:sort-order direction="descending">
     <search:score/>
   </search:sort-order>
@@ -87,24 +142,16 @@
     <search:per-match-tokens>20</search:per-match-tokens>
   </search:transform-results>
   <search:return-query>1</search:return-query>
+  
   <search:operator name="results">
     <search:state name="compact">
-      <search:transform-results apply="snippet">
-        <search:preferred-elements><search:element ns="" name="body"/></search:preferred-elements>
-        <search:max-matches>1</search:max-matches>
-        <search:max-snippet-chars>150</search:max-snippet-chars>
-        <search:per-match-tokens>20</search:per-match-tokens>
-      </search:transform-results>
-    </search:state>
-    <search:state name="detailed">
-      <search:transform-results apply="snippet">
-        <search:preferred-elements><search:element ns="" name="body"/></search:preferred-elements>
-        <search:max-matches>2</search:max-matches>
-        <search:max-snippet-chars>400</search:max-snippet-chars>
-        <search:per-match-tokens>30</search:per-match-tokens>
-      </search:transform-results>
+      <!-- extract-metadata nor extract-doc-content work nicely with JSON, using raw snippet to get content -->
+      <search:transform-results apply="raw"/>
     </search:state>
   </search:operator>
+  <!-- extract-metadata nor extract-doc-content work nicely with JSON, using raw snippet to get content -->
+  <search:transform-results apply="raw"/>
+  
   <search:extract-metadata>
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="name"/>
     <search:constraint-value ref="version"/>
@@ -115,6 +162,7 @@
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="description"/>
     <search:qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="shortdesc"/>
   </search:extract-metadata>
+  
   <annotation xmlns="http://marklogic.com/appservices/search">Delta options here</annotation>
   <search:additional-query>
     <cts:directory-query xmlns:cts="http://marklogic.com/cts">
