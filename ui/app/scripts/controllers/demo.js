@@ -260,7 +260,8 @@
               }
             }
           ).then(
-            function(result){
+            function(response){
+              var result = response.data;
               // Modify the list and put the currentUser in the first position, as requested in #51
               var currentUser = $scope.model.user.name;
               result = $.grep(result, function(value) {
