@@ -56,11 +56,11 @@
       }
 
       function isWriter() {
-        return user && user.webroles.indexOf('writer') > -1;
+        return user && user.webroles && user.webroles.indexOf('writer') > -1;
       }
 
       function isAdmin() {
-        return user && user.webroles.indexOf('admin') > -1;
+        return user && user.webroles && user.webroles.indexOf('admin') > -1;
       }
 
       authService.loginConfirmed(user);
