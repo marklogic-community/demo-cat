@@ -1,19 +1,19 @@
 
-<div class="panel" ng-class="result.metadata.restricted && result.metadata.restricted.values[0] ? 'panel-danger' : 'panel-default'" ng-repeat="result in results">
+<div class="panel" ng-class="result.metadata.restricted &amp;&amp; result.metadata.restricted.values[0] ? 'panel-danger' : 'panel-default'" ng-repeat="result in results">
   <div class="panel-heading">
-    <h4><span class="pull-left badge ml-badge">ML {{result.metadata.version.values[0] }}</span><a ng-href="detail{{result.uri}}">{{result.metadata.name.values[0] || result.uri}}</a></h4>
+    <h4><span class="pull-left badge ml-badge">ML {{result.metadata.version.values[0] }}</span><a ng-href="detail{{result.uri}}">{{result.content.name || result.metadata.name.values[0] || result.uri}}</a></h4>
   </div>
   <div class="matches panel-body">
     <div class="summary">{{ result.metadata | searchsummary }}</div>
-    <p ng-if="result.metadata.restricted && result.metadata.restricted.values[0]" class="text-danger restricted"><i class="fa fa-2 fa-exclamation-triangle"></i>Restricted</p>
+    <p ng-if="result.metadata.restricted &amp;&amp; result.metadata.restricted.values[0]" class="text-danger restricted"><i class="fa fa-2 fa-exclamation-triangle"></i>Restricted</p>
     <div class="features">
       <span class="features" ng-show="result.metadata.feature.values.length > 0"><strong>Features:</strong>
-        <span ng-repeat="value in result.metadata.feature.values">{{value}}<span ng-hide="$last">, </span></span>
+        <span ng-repeat="value in result.metadata.feature.values | limitTo : 7 ">{{value}}<span ng-hide="$last">, </span><span ng-show="$last &amp;&amp; result.metadata.feature.values.length > 7">, ...</span></span>
       </span>
     </div>
     <div class="features">
       <span class="features" ng-show="result.metadata.technology.values.length > 0"><strong>Technologies:</strong>
-        <span ng-repeat="value in result.metadata.technology.values">{{value}}<span ng-hide="$last">, </span></span>
+        <span ng-repeat="value in result.metadata.technology.values | limitTo : 7 ">{{value}}<span ng-hide="$last">, </span><span ng-show="$last &amp;&amp; result.metadata.technology.values.length > 7">, ...</span></span>
       </span>
     </div>
   </div>

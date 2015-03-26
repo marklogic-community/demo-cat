@@ -26,8 +26,10 @@ declare function profile:get(
   let $username := xdmp:get-current-user()
   let $profile := fn:doc("/users/"||$username||".json")
   let $profile :=
-    if ($profile)
+    if ($profile/element())
     then json:transform-to-json-object($profile)
+    else if ($profile)
+    then xdmp:from-json($profile)
     else json:object()
 
   let $webroles := profile:get-webroles-for-user() 

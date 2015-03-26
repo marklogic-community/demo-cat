@@ -133,7 +133,7 @@ exports.buildExpress = function(options) {
 
           res.status(200).send({
             authenticated: true,
-            username: req.query.username,
+            username: req.session.user.name,
             profile: req.session.user.profile
           });
         });
