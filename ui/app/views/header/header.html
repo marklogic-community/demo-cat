@@ -17,7 +17,7 @@
     </div>
     <div class="welcome pull-right" ng-show="user.authenticated">
       <div class="navbar-collapse collapse">
-        <span class="glyphicon glyphicon-user"></span> {{username}} | <span class="profile-link"><a href="/profile">Account</a></span>
+        <span class="glyphicon glyphicon-user"></span> {{ user.fullname || user.name }} | <span class="profile-link"><a href="/profile">Account</a></span>
 
         <button class="btn btn-default btn-xs" type="button" ng-click="logout()">Logout</button>
 
