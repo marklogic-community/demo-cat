@@ -374,7 +374,7 @@
     }
 
     function saveMemos(memo) {
-      demoService.save(model.demo, uri);
+      demoService.save(model.demo, null, uri);
     }
 
     function showModal(template, title, model, validate) {
