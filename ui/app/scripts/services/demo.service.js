@@ -22,7 +22,7 @@
     return service;
 
     function createDemo(demo, file) {
-      var createParams = angular.extend({directory: '/demo/', extension: '.json'}, params);
+      var createParams = angular.extend({directory: '/demos/', extension: '.json'}, params);
       return upload(demo, file, '/demo/create?' + $.param(createParams));
     }
 
