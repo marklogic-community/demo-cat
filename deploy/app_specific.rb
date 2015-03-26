@@ -21,6 +21,8 @@ class ServerConfig
       )
     },
     { :db_name => @properties["ml.modules-db"] }
+    
+    setup_alerting
   end
 
   # aks for ldap credentials
