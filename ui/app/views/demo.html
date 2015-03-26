@@ -1,7 +1,7 @@
 <div class="row detail">
   <!-- Left col -->
-  <div class="col-md-4">
-    <div class="panel panel-danger site-details">
+  <div class="col-md-3">
+    <div class="panel panel-primary site-details">
       <div class="panel-heading">
         <h3 class="panel-title">Site Details</h3>
       </div>
@@ -34,7 +34,7 @@
         </div>
       </div>
     </div>
-    <div class="panel panel-warning code-details">
+    <div class="panel panel-info code-details">
       <div class="panel-heading">
         <h3 class="panel-title">Code Details</h3>
       </div>
@@ -69,10 +69,10 @@
         </div>
       </div>
     </div>
-  </div>
-  <!-- Right col -->
-  <div class="col-md-8">
-    <h2 class="col-md-12">{{model.demo.name}}<a ng-show="model.user.isWriter()" class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a>
+  </div><!-- /end of left col.-->
+  <!-- Center well -->
+  <div class="col-md-6">
+    <h2>{{model.demo.name}}<a ng-show="model.user.isWriter()" class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a>
       <a class="btn btn-success btn-xs btn-follow" data-toggle="tooltip" title="Receive emails when this demo is updated" ng-hide="isFollowing()" ng-click="follow()">
         <i class="fa fa-envelope"></i> Follow this demo</a>
       <a class="btn btn-danger btn-xs btn-follow"  data-toggle="tooltip" title="Stop receiving emails when this demo is updated" ng-show="isFollowing()" ng-click="unfollow()">
@@ -101,7 +101,7 @@
         </div>
       </div>
     </div>
-    <div class="memos col-md-12">
+    <div class="memos">
       <h3>Memos</h3>
       <button class="btn btn-primary btn-sm" ng-show="model.user.isWriter()" ng-click="addMemo()">Add</button>
       <ul>
@@ -111,91 +111,105 @@
         </li>
       </ul>
     </div>
-
-    <div class="open-bugs col-md-12">
-      <h3>Open Bugs & RFEs</h3>
-      <button class="btn btn-primary btn-sm" ng-show="!showBugForm" ng-click="populateUsers(); showBugForm = true;">Add</button>
-      <form ng-show="showBugForm">
-        <fieldset class="col-md-12">
-          <label class="col-md-2">Description</label>
-          <textarea ng-model="model.additionalBug.msg" name="bugDescription" required></textarea>
-        </fieldset>
-        <fieldset class="col-md-12">
-          <label class="col-md-2">Type</label>
-          <select ng-model="model.additionalBug.type" name="bugType" required>
-            <option ng-repeat="type in model.bugChoices" value="{{type}}">{{type}}</option>
-          </select>
-        </fieldset>
-        <fieldset class="col-md-12">
-          <label class="col-md-2">Browser</label>
-          <select ng-model="model.additionalBug.browser" name="bugBrowser" required>
-            <option ng-repeat="browser in model.browserChoices" value="{{browser}}">{{browser}}</option>
-          </select>
-        </fieldset>
-        <fieldset class="col-md-12">
-          <label class="col-md-2">Assignee</label>
-          <autocomplete ng-model="model.additionalBug.assignee" data="model.users" click-activation="true"></autocomplete>
-        </fieldset>
-        <div class="col-md-12">
-          <a class="btn btn-default btn-xs" href ng-click="resetBugForm(); showBugForm = false">Cancel</a>
-          <button class="btn btn-primary btn-xs" ng-click="addBug(model.additionalBug)">Add</button>
-        </div>
-      </form>
-      <div class="bug col-md-12" ng-repeat="bug in model.demo.bugs | filter: { status: 'open' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
-        <div>{{bug.msg}}</div>
-        <ul class="bug-meta">
-          <li class="bug-status">
-            <label>Status:</label>
-            <span class="value">{{bug.status}}</span>
-          </li>
-          <li class="bug-type">
-            <label>Type:</label>
-            <span class="value">{{bug.type}}</span>
-          </li>
-          <li class="bug-status">
-            <label>Assigned to:</label>
-            <span class="value">{{bug.assignee}}</span>
-          </li>
-          <li class="bug-dateTime">
-            <label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
-          <li class="bug-browser">
-            <label>Browser:</label> {{bug.browser}}</li>
-        </ul>
-      </div>
-    </div>
-    <div class="closed-bugs col-md-12">
-      <h3>Closed Bugs & RFEs</h3>
-      <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-primary btn-sm">Expand</a>
-      <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-primary btn-sm">Collapse</a>
-      <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo.bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
-        <div>{{bug.msg}}</div>
-        <ul class="bug-meta">
-          <li class="bug-status">
-            <label>Status:</label>
-            <span class="value">{{bug.status}}</span>
-          </li>
-          <li class="bug-status">
-            <label>Type:</label>
-            <span class="value">{{bug.type}}</span>
-          </li>
-          <li class="bug-status">
-            <label>Assigned to:</label> {{bug.assignee}}</li>
-          <li class="bug-dateTime">
-            <label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
-          <li class="bug-browser">
-            <label>Browser:</label> {{bug.browser}}</li>
-        </ul>
-      </div>
-    </div>
-    <section class="comments col-md-12">
+    <section class="comments">
       <h3>Comments</h3>
       <add-comment add-model="model.additionalComment.msg" save="addComment(model.additionalComment)"></add-comment>
       <article class="comment" ng-repeat="comment in model.demo.comments | orderBy:'-dateTime'" data-id="{{comment.id}}">
         <h4>Comment by {{comment.username}}</h4>
-        <p class="dateTime">on {{comment.dateTime}}</p>
+        <p class="dateTime">on {{comment.dateTime  | date:'short' }}</p>
         {{comment.msg}}
       </article>
     </section>
 
+  </div> <!-- / end center well -->
+  <!-- right col -->
+  <div class="col-md-3">
+    <div class="panel panel-danger code-details">
+      <div class="panel-heading">
+        <h3 class="panel-title">Open Bugs & RFEs</h3>
+      </div>
+      <div class="panel-body">
+        <div class="open-bugs">
+        <button class="btn btn-primary btn-sm" ng-show="!showBugForm" ng-click="  populateUsers(); showBugForm = true;">Add</button>
+        <form ng-show="showBugForm">
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" ng-model="model.additionalBug.msg" name="bugDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select class="form-control" ng-model="model.additionalBug.type" name="bugType" required>
+              <option ng-repeat="type in model.bugChoices" value="{{type}}">{{type}}</option  >
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Browser</label>
+            <select class="form-control" ng-model="model.additionalBug.browser" name="bugBrowser" required>
+              <option ng-repeat="browser in model.browserChoices" value="{{browser}}">  {{browser}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Assignee</label>
+            <autocomplete ng-model="model.additionalBug.assignee" data="model.users" click- activation="true"></autocomplete>
+          </div>
+          <div class="form-group">
+            <a class="btn btn-default btn-xs" href ng-click="resetBugForm(); showBugForm =  false">Cancel</a>
+            <a class="btn btn-primary btn-xs" ng-click="addBug(model.additionalBug)">  Add</a>
+          </div>
+        </form>
+        <div class="bug" ng-repeat="bug in model.demo.bugs | filter: { status:  'open' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
+          <div>{{bug.msg}}</div>
+          <ul class="bug-meta">
+            <li class="bug-status">
+              <label>Status:</label>
+              <span class="value">{{bug.status}}</span>
+            </li>
+            <li class="bug-type">
+              <label>Type:</label>
+              <span class="value">{{bug.type}}</span>
+            </li>
+            <li class="bug-status">
+              <label>Assigned to:</label>
+              <span class="value">{{bug.assignee}}</span>
+            </li>
+            <li class="bug-dateTime">
+              <label>Created by</label> {{bug.username}} on {{bug.dateTime | date:'short' }}</li>
+            <li class="bug-browser">
+              <label>Browser:</label> {{bug.browser}}</li>
+          </ul>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="panel panel-success code-details">
+      <div class="panel-heading">
+        <h3 class="panel-title">Closed Bugs & RFEs</h3>
+      </div>
+      <div class="panel-body">
+        <div class="closed-bugs">
+        <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-  primary btn-sm">Expand</a>
+        <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-  primary btn-sm">Collapse</a>
+        <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo. bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
+          <div>{{bug.msg}}</div>
+          <ul class="bug-meta">
+            <li class="bug-status">
+              <label>Status:</label>
+              <span class="value">{{bug.status}}</span>
+            </li>
+            <li class="bug-status">
+              <label>Type:</label>
+              <span class="value">{{bug.type}}</span>
+            </li>
+            <li class="bug-status">
+              <label>Assigned to:</label> {{bug.assignee}}</li>
+            <li class="bug-dateTime">
+              <label>Created by</label> {{bug.username}} on {{bug.dateTime}}</li>
+            <li class="bug-browser">
+              <label>Browser:</label> {{bug.browser}}</li>
+          </ul>
+        </div>
+      </div>
+      </div>
+    </div>
   </div>
 </div>
