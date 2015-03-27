@@ -141,6 +141,12 @@ form .items-edit {
   }
 }
 
+.bug div {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 0;
+}
+
 .comment {
   padding: 1px 15px 10px 15px;
   margin-bottom: 20px;
@@ -148,6 +154,7 @@ form .items-edit {
 
 ul.bug-meta {
   list-style: none;
+  padding-left: 10px;
   * {
     display: inline-block;
   }
@@ -357,10 +364,18 @@ footer .text-muted {
   color: @btn-danger-bg;
 }
 .cred-row + .cred-row,
-.contact-row + .contact-row {
+.contact-row + .contact-row,
+.media-row + .media-row {
   padding-top: 5px;
 }
-.cred a, .contact a { margin-top: 5px; }
+.media-row {
+  padding-top: 10px;
+}
+.media-row ~ .media-row {
+  padding-top: 0;
+} 
+
+.cred a, .contact a, .media-link a { margin-top: 5px; }
 
 .object-fit-cover {
   img, video {
