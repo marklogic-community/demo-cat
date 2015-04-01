@@ -88,10 +88,12 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Features</label>
       <div class="col-sm-8">
-        <input type="text" class="feature-input form-control" ng-model="model.featureToAdd" typeahead="choice for choice in model.featureChoices"/>
-        <a class="btn btn-primary btn-xs" ng-click="addFeature()">
-          <span class="glyphicon glyphicon-plus"></span>
-        </a>
+        <div class="input-group col-sm-5">
+          <input type="text" class="feature-input form-control" ng-model="model.featureToAdd" typeahead="choice for choice in model.featureChoices"/>
+          <span class="input-group-addon" ng-click="addFeature()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </span>
+        </div>
       </div>
       <div class="col-sm-8 col-sm-offset-2">
         <span class="feature" ng-repeat="feature in model.demo.features" class="btn btn-primary">{{feature}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeFeature($index)"></i></span>
@@ -100,10 +102,12 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Technologies Used</label>
       <div class="col-sm-8">
-        <input type="text" class="feature-input form-control" ng-model="model.technologyToAdd" typeahead="choice for choice in model.technologyChoices"/>
-        <a class="btn btn-primary btn-xs" ng-click="addTechnology()">
-          <span class="glyphicon glyphicon-plus"></span>
-        </a>
+        <div class="input-group col-sm-5">
+          <input type="text" class="feature-input form-control" ng-model="model.technologyToAdd" typeahead="choice for choice in model.technologyChoices"/>
+          <span class="input-group-addon" ng-click="addTechnology()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </span>
+        </div>
       </div>
       <div class="col-sm-8 col-sm-offset-2">
         <span class="feature" ng-repeat="technology in model.demo.technologies" class="btn btn-primary">{{technology}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeTechnology($index)"></i></span>
@@ -138,7 +142,7 @@
           Add
         </a>
       </div>
-      <div ng-repeat="media in model.demo.media" class="col-sm-10 col-sm-offset-2 media-row">
+      <div ng-repeat="media in model.demo.media" class="col-sm-9 col-sm-offset-2 media-row">
         <div class="col-sm-2">
           <input type="text" class="form-control" placeholder="Name"  ng-model="media.mediaName"/>
         </div>
@@ -146,10 +150,10 @@
           <input type="text" class="form-control" placeholder="//..."  ng-model="media.mediaUrl"/>
         </div>
         <div class="col-sm-1">
-          <input type="text" class="form-control" placeholder="width"  ng-model="media.mediaWidth"/>
+          <input type="text" class="form-control" placeholder="w"  ng-model="media.mediaWidth"/>
         </div>
         <div class="col-sm-1">
-          <input type="text" class="form-control" placeholder="height"  ng-model="media.mediaHeight"/>
+          <input type="text" class="form-control" placeholder="h"  ng-model="media.mediaHeight"/>
         </div>
         <div class="col-sm-2">
           <select class="form-control" ng-model="media.mediaType">
@@ -159,7 +163,7 @@
           </select>
         </div>
         <div class="col-sm-1">
-          <a class="btn btn-danger btn-sm" ng-click="removeMediaLink($index)">
+          <a class="btn btn-danger btn-xs" ng-click="removeMediaLink($index)">
             <span class="glyphicon glyphicon-trash icon-white"></span>
           </a>
         </div>
@@ -175,13 +179,13 @@
     </div>
     <div class="form-group cred">
       <div ng-repeat="cred in model.demo.credentials" class="col-sm-8 col-sm-offset-2  cred-row">
-        <label class="col-sm-2 control-label">username</label>
-        <div class="col-sm-3">
-          <input type="text" class="form-control" ng-model="cred.username">
+<!--         <label class="col-sm-2 control-label">username</label>
+ -->        <div class="col-sm-3">
+          <input type="text" class="form-control" placeholder="username" ng-model="cred.username">
         </div>
-        <label class="col-sm-2 control-label">password</label>
+        <!-- <label class="col-sm-2 control-label">password</label> -->
         <div class="col-sm-3">
-          <input type="text" class="form-control" ng-model="cred.password">
+          <input type="text" class="form-control" placeholder="password" ng-model="cred.password">
         </div>
         <a class="btn btn-danger btn-xs" ng-click="removeCredentials($index)">
           <span class="glyphicon glyphicon-trash icon-white"></span>

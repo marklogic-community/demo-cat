@@ -13,7 +13,7 @@
         </div>
         <div>
           <h4>Demo Status</h4>
-          <span ng-show="model.demo.demoStatus.status">{{model.demo.demoStatus.status}} ({{model.demo.demoStatus.lastStatusTimestamp}})</span>
+          <span ng-show="model.demo.demoStatus.status">{{model.demo.demoStatus.status}} ({{model.demo.demoStatus.lastStatusTimestamp  | date:'short' }})</span>
           <span ng-show="!model.demo.demoStatus.status">Unknown</span>
         </div>
         <div ng-show="model.demo.features">
