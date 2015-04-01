@@ -187,8 +187,8 @@
       </div>
       <div class="panel-body">
         <div class="closed-bugs">
-        <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-  primary btn-sm">Expand</a>
-        <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-  primary btn-sm">Collapse</a>
+        <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-primary btn-sm">Expand</a>
+        <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-primary btn-sm">Collapse</a>
         <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo. bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
           <div>{{bug.msg}}</div>
           <ul class="bug-meta">
