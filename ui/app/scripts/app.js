@@ -40,6 +40,9 @@
           demo: function() {
             return null;
           },
+          domains: function(domainsService) {
+            return domainsService.list();
+          },
           features: function(featuresService) {
             return featuresService.list();
           },
@@ -68,6 +71,9 @@
             return MLRest.getDocument(uri, { format: 'json' }).then(function(response) {
               return response.data;
             });
+          },
+          domains: function(domainsService) {
+            return domainsService.list();
           },
           features: function(featuresService) {
             return featuresService.list();

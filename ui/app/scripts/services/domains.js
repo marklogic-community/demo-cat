@@ -2,30 +2,23 @@
   'use strict';
 
   angular.module('demoCat')
-    .provider('Domains', function() {
+    .service('domainsService', DomainsService);
 
-      var domains = {
-        list: [
-          'DoD',
-          'Intel',
-          'PS Civilian',
-          'PS Healthcare',
-          'Comm Healthcare',
-          'FinServ',
-          'Media'
-        ],
-        selItem: '',
-        optItem: 'Select...'
-      };
+  function DomainsService(MLRest) {
 
-      this.$get = function() {
-        var service = {
-          list: function() {
-            return domains;
-          }
-        };
+    var service = {
+      list: listFeatures
+    };
 
-        return service;
-      };
-    });
+    function listFeatures() {
+      return MLRest.values('domains', { options: 'all', format: 'json' }).then(function(resp) {
+        if (resp.data['values-response']['distinct-value']) {
+          return resp.data['values-response']['distinct-value'].map(function(value) {
+            return value._value;
+          });
+        }
+      });
+    }
+    return service;
+  }
 }());
