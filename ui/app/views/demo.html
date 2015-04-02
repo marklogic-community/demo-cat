@@ -102,8 +102,8 @@
       <button class="btn btn-primary btn-sm" ng-show="model.user.isWriter()" ng-click="addMemo()">Add</button>
       <ul>
         <li ng-repeat="memo in model.demo.memos">
-          <a class="remove-memo fa fa-times-circle" ng-click="removeMemo($index)"></a>
           <a ng-click="showMemo(memo)">{{memo.title}}</a>
+          <a class="remove-memo glyphicon glyphicon-trash" ng-click="removeMemo($index)"></a>
         </li>
       </ul>
     </div>
