@@ -13,7 +13,7 @@
         </div>
         <div>
           <h4>Demo Status</h4>
-          <span ng-show="model.demo.demoStatus.status">{{model.demo.demoStatus.status}} ({{model.demo.demoStatus.lastStatusTimestamp}})</span>
+          <span ng-show="model.demo.demoStatus.status">{{model.demo.demoStatus.status}} ({{model.demo.demoStatus.lastStatusTimestamp  | date:'short' }})</span>
           <span ng-show="!model.demo.demoStatus.status">Unknown</span>
         </div>
         <div ng-show="model.demo.features">
@@ -84,25 +84,21 @@
     <div class="shortdesc col-md-12" ng-bind-html="model.demo.shortdesc"></div>
     <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
 
-    <div ng-if="model.demo.media.length" class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">Media</div>
-        <div class="panel-body">
-          <div ng-repeat="media in model.demo.media" class="text-center col-sm-3">
-            <div class="media-middle">
-              <a ng-click="showMediaModal(media)">
-                <img class="col-sm-12" ng-if="media.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" />
-                <video class="col-sm-12 object-disable-action" ng-if="media.mediaType === 'video'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" ></video>
-                <object class="col-sm-12 object-disable-action" ng-if="!media.mediaType || media.mediaType === 'application'" class="object-fit-cover" data="{{trustUrl(media.mediaUrl)}}"></object>
-                <h4 class="media-heading">{{media.mediaName}}</h4>
-              </a>
-            </div>
+    <div ng-if="model.demo.media.length" class="media col-md-12">
+      <h4>Media</h4>
+        <div ng-repeat="media in model.demo.media" class="text-center col-sm-3">
+          <div class="media-middle">
+            <a ng-click="showMediaModal(media)">
+              <img class="col-sm-12" ng-if="media.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" />
+              <video class="col-sm-12 object-disable-action" ng-if="media.mediaType === 'video'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" ></video>
+              <object class="col-sm-12 object-disable-action" ng-if="!media.mediaType || media.mediaType === 'application'" class="object-fit-cover" data="{{trustUrl(media.mediaUrl)}}"></object>
+              <h4 class="media-heading">{{media.mediaName}}</h4>
+            </a>
           </div>
         </div>
       </div>
-    </div>
-    <div class="memos">
-      <h3>Memos</h3>
+    <div class="memos col-md-12">
+      <h4>Memos</h4>
       <button class="btn btn-primary btn-sm" ng-show="model.user.isWriter()" ng-click="addMemo()">Add</button>
       <ul>
         <li ng-repeat="memo in model.demo.memos">
@@ -111,13 +107,12 @@
         </li>
       </ul>
     </div>
-    <section class="comments">
-      <h3>Comments</h3>
+    <section class="comments col-md-12">
+      <h4>Comments</h4>
       <add-comment add-model="model.additionalComment.msg" save="addComment(model.additionalComment)"></add-comment>
       <article class="comment" ng-repeat="comment in model.demo.comments | orderBy:'-dateTime'" data-id="{{comment.id}}">
-        <h4>Comment by {{comment.username}}</h4>
-        <p class="dateTime">on {{comment.dateTime  | date:'short' }}</p>
-        {{comment.msg}}
+        <h4>Comment by {{comment.username}}<span class="dateTime"> on {{comment.dateTime  | date:'short' }}</span></h4>
+        <p>{{comment.msg}}</p>
       </article>
     </section>
 
@@ -187,8 +182,8 @@
       </div>
       <div class="panel-body">
         <div class="closed-bugs">
-        <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-  primary btn-sm">Expand</a>
-        <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-  primary btn-sm">Collapse</a>
+        <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-primary btn-sm">Expand</a>
+        <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-primary btn-sm">Collapse</a>
         <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo. bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
           <div>{{bug.msg}}</div>
           <ul class="bug-meta">
