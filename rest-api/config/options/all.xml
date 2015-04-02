@@ -118,6 +118,12 @@
     </search:range>
   </search:constraint>
   
+  <search:values name="domains">
+    <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <search:path-index>domains</search:path-index>
+      <search:facet-option>frequency-order</search:facet-option>
+    </search:range>
+  </search:values>
   <search:values name="features">
     <search:range type="xs:string" collation="http://marklogic.com/collation/codepoint">
       <search:path-index>features</search:path-index>
