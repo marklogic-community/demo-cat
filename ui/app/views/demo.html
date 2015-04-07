@@ -91,7 +91,7 @@
 
     <div ng-if="model.demo.media.length" class="media col-md-12">
       <h4>Media</h4>
-        <div ng-repeat="media in model.demo.media" class="text-center col-sm-3">
+        <div ng-repeat="media in combined = model.demo.attachedMedia.concat(model.demo.media)" class="text-center col-sm-3">
           <div class="media-middle">
             <a ng-click="showMediaModal(media)">
               <img class="col-sm-12" ng-if="media.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" />
