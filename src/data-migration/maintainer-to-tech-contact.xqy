@@ -6,12 +6,12 @@ let $current-email := $doc/jbasic:json/jbasic:email
 let $current-role := "Technical Contact"
 let $persons :=
   if($current-maintainer or $current-email) then
-    element jbasic:persons {
+    element { fn:QName("http://marklogic.com/xdmp/json/basic", "persons") } {
       attribute type { "array"},
-      element jbasic:json {
+      element { fn:QName("http://marklogic.com/xdmp/json/basic", "json") } {
         attribute type { "object"},
         if($current-maintainer) then
-          element jbasic:personName {
+          element { fn:QName("http://marklogic.com/xdmp/json/basic", "personName") } {
             attribute type { "string"},
             $current-maintainer/text()
           }
@@ -19,14 +19,14 @@ let $persons :=
           ()
         ,
         if($current-email) then
-          element jbasic:email {
+          element { fn:QName("http://marklogic.com/xdmp/json/basic", "email") } {
             attribute type { "string"},
             $current-email/text()
           }
         else
           ()
         ,
-        element jbasic:role {
+        element { fn:QName("http://marklogic.com/xdmp/json/basic", "role") } {
           attribute type { "string"},
           $current-role
         }

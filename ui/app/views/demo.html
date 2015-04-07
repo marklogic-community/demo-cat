@@ -52,10 +52,15 @@
           <h4>MarkLogic version</h4>
           <span class="value">{{model.demo.version}}</span>
         </div>
+        <div ng-show="model.demo.url">
+          <h4>Accessible at</h4>
+          <span><a ng-href="{{model.demo.host}}">{{model.demo.url}}</a>
+          (<span class="value">{{model.demo.urlType}}</span>)</span>
+        </div>
         <div ng-show="model.demo.host">
           <h4>Hosted at</h4>
           <span><a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
-          (<span class="value">{{model.demo.hostType}}</span>)</span>
+          (<span class="value">{{model.demo.accessibility}}</span>)</span>
         </div>
         <div ng-show="model.demo.credentials">
           <h4>Credentials</h4>

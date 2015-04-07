@@ -89,8 +89,10 @@ class ServerConfig
 
   def migrate_data()
     fix_permissions()
+    fix_collections()
     fix_credentials()
     fix_contacts()
+    fix_hosts()
   end
 
   # fix content permissions
@@ -115,12 +117,36 @@ class ServerConfig
     logger.debug r.body
   end
 
+  def fix_collections()
+    logger.info "Fixing collections.."
+    r = execute_query %Q{
+      xquery version "1.0-ml";
+
+      for $doc in xdmp:directory('/demos/')
+      let $uri := fn:base-uri($doc)
+      return (
+        $uri,
+        xdmp:document-set-collections($uri, ('demos'))
+      ),
+      for $doc in xdmp:directory('/users/')
+      let $uri := fn:base-uri($doc)
+      return (
+        $uri,
+        xdmp:document-set-collections($uri, ('users'))
+      )
+    },
+    { :app_name => @properties["ml.app-name"] }
+
+    r.body = parse_json r.body
+    logger.debug r.body
+  end
+
   def fix_credentials()
     logger.info "Fixing credentials.."
     r = execute_query %Q{
       xquery version "1.0-ml";
 
-      xdmp:invoke("/data-transforms/add-credentials.xqy")
+      xdmp:invoke("/data-migration/add-credentials.xqy")
     },
     { :app_name => @properties["ml.app-name"] }
 
@@ -134,6 +160,19 @@ class ServerConfig
       xquery version "1.0-ml";
 
       xdmp:invoke("/data-migration/maintainer-to-tech-contact.xqy")
+    },
+    { :app_name => @properties["ml.app-name"] }
+
+    r.body = parse_json r.body
+    logger.info r.body
+  end
+
+  def fix_hosts()
+    logger.info "Fixing hosts.."
+    r = execute_query %Q{
+      xquery version "1.0-ml";
+
+      xdmp:invoke("/data-migration/host-to-url.xqy")
     },
     { :app_name => @properties["ml.app-name"] }
 
