@@ -14,9 +14,9 @@ let $new-o :=
   {
     $o/@*,
     $o/*[fn:not(self::jb:username or self::jb:password)],
-    element jb:credentials {
+    element { fn:QName("http://marklogic.com/xdmp/json/basic", "credentials") } {
       attribute type { "array" },
-      element jb:json {
+      element { fn:QName("http://marklogic.com/xdmp/json/basic", "json") } {
         attribute type { "object" },
         $username,
         $password
