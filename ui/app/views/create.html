@@ -273,6 +273,7 @@
     <div class="row form-error">
       <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.version.$touched">
         <alert ng-show="createForm.version.$error.required" type="danger" close="">MarkLogic Version is required.</alert>
+        <alert ng-show="!versionValid(createForm.version.$viewValue)" type="danger" close="">MarkLogic Version must start with number.</alert>
       </div>
     </div>
     <div class="form-group">
