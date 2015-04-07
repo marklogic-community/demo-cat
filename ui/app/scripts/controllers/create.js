@@ -2,6 +2,24 @@
   'use strict';
 
   angular.module('demoCat')
+    .filter('humanizeSize', function() {
+      return function(input) {
+        var result = '';
+        if (input && typeof(input) === 'number') {
+          if (input >= 1024 && input < 1048576) {
+            result = (input / 1024).toFixed(1) + ' Kb';
+          } else if (input >= 1048576 && input < 1073741824) {
+            result = (input / 1048576).toFixed(1) + ' Mb';
+          } else if (input >= 1073741824 && input < 1099511627776) {
+            result = (input / 1073741824).toFixed(1) + ' Gb';
+          } else {
+            result = input + ' bytes';
+          }
+        }
+
+        return result;
+      };
+    })
     .controller('CreateCtrl', CreateCtrl);
 
   CreateCtrl.$inject = ['$scope', 'domains', 'demoService', '$location', '$routeParams', 'edit', 'demo', 'features', 'technologies'];
@@ -116,6 +134,7 @@
           );
         },
         versionValid: versionValid,
+        attachmentsValid: attachmentsValid,
         submit: function() {
           var promise;
 
@@ -149,7 +168,7 @@
       });
       
       function validate(model) {
-        return contactsValid(model.demo.persons) && versionValid(model.demo.version);
+        return contactsValid(model.demo.persons) && versionValid(model.demo.version) && attachmentsValid(model.scriptFiles);
       }
       
       function contactsValid(field) {
@@ -158,6 +177,16 @@
 
       function versionValid(field) {
         return !isEmpty(field) && startsWithNumber(field);
+      }
+      
+      function attachmentsValid(files) {
+        var result = true;
+        angular.forEach(files, function(file) {
+          if (file.size > 5242880) {
+            result = false;
+          }
+        });
+        return result;
       }
       
       function isEmpty(field) {

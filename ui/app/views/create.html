@@ -176,16 +176,21 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Demo Attachments</label>
       <div class="col-sm-8">
-        <input type="file" class="form-control" placeholder="Choose file(s)"  ng-multiple="true" ng-file-select ng-model="model.scriptFiles"/>
+        <input type="file" class="form-control" placeholder="Choose file(s)"  ng-multiple="true" ng-file-select ng-model="model.scriptFiles" name="attachments"/>
         <div ng-repeat="attachment in model.demo.attachments track by $index">
           <span class="form-control"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&amp;download=true&amp;filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a><a class="pull-right" ng-click="deleteAttachment(attachment, $index)"><i class="glyphicon glyphicon-trash"></i></a></span>
         </div>
         <div ng-repeat="scriptFile in model.scriptFiles">
-          <span class="form-control">{{scriptFile.name}}<a class="pull-right" ng-click="model.scriptFiles.splice($index,1)"><i class="glyphicon glyphicon-trash"></i></a></span>
+          <span class="form-control" ng-class="{'true':'text-danger'}[scriptFile.size > 5242880]">{{scriptFile.name}} - {{scriptFile.lastModifiedDate | date:'short'}} - {{scriptFile.type}} - {{scriptFile.size | humanizeSize}}<a class="pull-right" ng-click="model.scriptFiles.splice($index,1)"><i class="glyphicon glyphicon-trash"></i></a></span>
         </div>
       </div>
       <div>
         <span class="glyphicon glyphicon-info-sign" popover="You can select multiple files at once, and repeat selection to add more. Upload size is limited to 5Mb per file." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
+    </div>
+    <div class="row form-error">
+      <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.attachments.$touched">
+        <alert ng-show="!attachmentsValid(model.scriptFiles)" type="danger" close="">One or more of your added attachments is too large.</alert>
       </div>
     </div>
     <div class="form-group media-link">
