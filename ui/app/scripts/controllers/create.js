@@ -115,6 +115,7 @@
             }
           );
         },
+        versionValid: versionValid,
         submit: function() {
           var promise;
 
