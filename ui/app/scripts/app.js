@@ -5,7 +5,7 @@
   angular.module('demoCat', [
     'ngRoute',
     'ngCkeditor',
-    'demoCat.search', 'demoCat.common',
+    'demoCat.search', 'demoCat.common', 'demoCat.home',
     'ui.bootstrap',
     'ngSanitize',
     'autocomplete',
@@ -26,6 +26,10 @@
 
     $routeProvider
       .when('/', {
+        templateUrl: '/home/home.html',
+        controller:'HomeCtrl'
+      })
+      .when('/search', {
         templateUrl: '/search/search.html',
         controller:'SearchCtrl',
         reloadOnSearch: false
