@@ -219,19 +219,20 @@
           <range-value-positions>false</range-value-positions>
         </range-element-index>
 -->
+        
         <!-- ML7 / JSONXML -->
         <range-element-index>
           <scalar-type>string</scalar-type>
           <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
-          <localname>version</localname>
+          <localname>name version personName</localname>
           <collation>http://marklogic.com/collation/codepoint</collation>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
+        
         <range-element-index>
-          <scalar-type>string</scalar-type>
+          <scalar-type>dateTime</scalar-type>
           <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
-          <localname>personName</localname>
-          <collation>http://marklogic.com/collation/codepoint</collation>
+          <localname>lastModifiedAt</localname>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
         
@@ -239,17 +240,18 @@
         <range-element-index>
           <scalar-type>string</scalar-type>
           <namespace-uri/>
-          <localname>version</localname>
+          <localname>name version personName</localname>
           <collation>http://marklogic.com/collation/codepoint</collation>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
+        
         <range-element-index>
-          <scalar-type>string</scalar-type>
+          <scalar-type>dateTime</scalar-type>
           <namespace-uri/>
-          <localname>personName</localname>
-          <collation>http://marklogic.com/collation/codepoint</collation>
+          <localname>lastModifiedAt</localname>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
+        
       </range-element-indexes>
       <range-element-attribute-indexes>
 <!--
