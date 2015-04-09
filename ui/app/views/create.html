@@ -5,11 +5,11 @@
       <h2 ng-if="!model.edit">Create a Demo</h2>
       <h2 ng-if="model.edit">Edit a Demo</h2>
       <p class="text-danger" ng-if="model.formError &amp;&amp; !model.formValid">
-        <strong><em>error</em>: missing required value(s) *</strong>
+        <alert type="danger"><strong>Invalid input, details below.</strong></alert>
       </p>
     </div>
   </div>
-  <form class="form-horizontal" name="createForm">
+  <form class="form-horizontal" name="createForm" novalidate>
     <div class="form-group">
       <div class="col-sm-8 col-sm-offset-2">
         <strong class="required"><span>*</span> <em>required</em></strong>
@@ -35,17 +35,28 @@
     <div class="form-group" ng-if="model.demo.restricted">
       <label class="col-sm-2 control-label text-danger restricted">Restriction Details</label>
       <div class="col-sm-8">
-        <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.restrictionDetails" placeholder="In this section provide details regarding the restrictions associated with this demo."></textarea>
+        <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.restrictionDetails"></textarea>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="Provide details here regarding the restrictions associated with this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label required" ng-class="{ 'text-danger': inputInvalid( model.demo.name ) }">Demo Name<span>*</span></label>
+      <label class="col-sm-2 control-label required">Demo Name<span>*</span></label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="model.demo.name" required>
+        <input type="text" class="form-control" ng-model="model.demo.name" name="demoName" maxlength="55" required>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="Try to keep the name as short as possible. Limited to 55 characters." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
+    </div>
+    <div class="row form-error">
+      <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.demoName.$touched">
+        <alert ng-show="createForm.demoName.$error.required" type="danger" close="createForm.demoName.$error.required = null">Demo Name is required.</alert>
       </div>
     </div>
     <div class="form-group contact">
-      <label class="col-sm-2 control-label required" ng-class="{ 'text-danger': inputInvalid( model.demo.persons.length ) }">Points of Contact<span>*</span></label>
+      <label class="col-sm-2 control-label required">Points of Contact<span>*</span></label>
       <div class="col-sm-8">
         <a class="btn btn-primary btn-xs" ng-click="addPerson()">
           Add
@@ -54,45 +65,65 @@
     </div>
     <div class="form-group contact">
       <div ng-repeat="person in model.demo.persons" class="col-sm-8 col-sm-offset-2 contact-row">
-        <label class="col-sm-1 control-label">Role</label>
         <div class="col-sm-3">
-          <select class="form-control col-sm-3" ng-options="role for role in model.personRoleChoices" ng-model="person.role">
+          <select class="form-control col-sm-4" ng-options="role for role in model.personRoleChoices" ng-model="person.role" name="contactRole" required>
             <option value="" disabled>Choose role</option>
           </select>
         </div>
-        <label class="col-sm-1 control-label">Name</label>
-        <div class="col-sm-2">
-          <input type="text" class="form-control" ng-model="person.personName">
+        <div class="col-sm-3">
+          <input type="text" class="form-control" placeholder="name" ng-model="person.personName" name="contactName" required>
         </div>
-        <label class="col-sm-1 control-label">Email</label>
-        <div class="col-sm-2">
-          <input type="text" class="form-control" ng-model="person.email">
+        <div class="col-sm-5">
+          <input type="email" class="form-control" placeholder="email" ng-model="person.email" name="contactEmail" required>
         </div>
         <a class="btn btn-danger btn-xs" ng-click="removePerson($index)">
           <span class="glyphicon glyphicon-trash icon-white"></span>
         </a>
       </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="Anyone from outside MarkLogic should be marked as External Contact. Anyone able to troubleshoot with access or running the demo qualifies as Technical Contact. The (Sales) person who initiated the demo should be marked as Business Owner." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label required" popover="This is shown as search snippet" popover-placement="bottom" popover-trigger="mouseenter" ng-class="{ 'text-danger': inputInvalid( model.demo.shortdesc ) }">Short Description<span>*</span></label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" popover="Limited to 95 characters" popover-placement="bottom" popover-trigger="mouseenter" ng-model="model.demo.shortdesc" maxlength="95" required>
+    <div class="row form-error">
+      <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.contactRole.$touched || createForm.contactName.$touched || createForm.contactEmail.$touched">
+        <alert ng-show="model.demo.persons.length === 0 || createForm.contactRole.$error.required || createForm.contactName.$error.required || createForm.contactEmail.$error.required" type="danger" close="">Points of Contact is required.</alert>
+        <alert ng-show="createForm.contactEmail.$error.email" type="danger" close="">Invalid email.</alert>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label" popover="Use this to provide a longer summary of the demo. Use Memo's for extra material." popover-placement="bottom" popover-trigger="mouseenter">Long Description</label>
+      <label class="col-sm-2 control-label required">Short Description<span>*</span></label>
       <div class="col-sm-8">
-        <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.description" placeholder="In this section provide an executive summary of what the demo does. Talk about the customer problem that this is demo is addressing, without assuming that your reader is already familiar with the customer."></textarea>
+        <input type="text" class="form-control" ng-model="model.demo.shortdesc" maxlength="95" name="shortDesc" required>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="Used for search result display. Limited to 95 characters." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
+    </div>
+    <div class="row form-error">
+      <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.shortDesc.$touched">
+        <alert ng-show="createForm.shortDesc.$error.required" type="danger" close="">Short Description is required.</alert>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Long Description</label>
+      <div class="col-sm-8">
+        <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.description"></textarea>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="Use the long description to provide an executive summary of what the demo does. Talk about the customer problem that this is demo is addressing, without assuming that your reader is already familiar with the customer. Use Memo's for extra material (accessible after creation)." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Features</label>
       <div class="col-sm-8">
         <div class="input-group col-sm-5">
-          <input type="text" class="feature-input form-control" ng-model="model.featureToAdd" typeahead="choice for choice in model.featureChoices"/>
+          <input type="text" class="feature-input form-control" ng-model="model.featureToAdd" typeahead="choice for choice in model.featureChoices | filter:$viewValue"/>
           <span class="input-group-addon" ng-click="addFeature()">
             <span class="glyphicon glyphicon-plus"></span>
           </span>
+        </div>
+        <div>
+          <span class="glyphicon glyphicon-info-sign" popover="Features refer to functionality used in this demo that is enabled with or provided by MarkLogic." popover-placement="bottom" popover-trigger="mouseenter"></span>
         </div>
       </div>
       <div class="col-sm-8 col-sm-offset-2">
@@ -103,10 +134,13 @@
       <label class="col-sm-2 control-label">Technologies Used</label>
       <div class="col-sm-8">
         <div class="input-group col-sm-5">
-          <input type="text" class="feature-input form-control" ng-model="model.technologyToAdd" typeahead="choice for choice in model.technologyChoices"/>
+          <input type="text" class="feature-input form-control" ng-model="model.technologyToAdd" typeahead="choice for choice in model.technologyChoices | filter:$viewValue"/>
           <span class="input-group-addon" ng-click="addTechnology()">
             <span class="glyphicon glyphicon-plus"></span>
           </span>
+        </div>
+        <div>
+          <span class="glyphicon glyphicon-info-sign" popover="Technologies refer to non-MarkLogic toolkits or libraries used in this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
         </div>
       </div>
       <div class="col-sm-8 col-sm-offset-2">
@@ -122,17 +156,41 @@
         </label>
       </div>
     </div>
-    <items edit-items="model.demo.domains" item-choices="model.domainChoices" edit-type="form" mode="edit" label="Domains"/>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Domains</label>
+      <div class="col-sm-8">
+        <div class="input-group col-sm-5">
+          <input type="text" class="feature-input form-control" ng-model="model.domainToAdd" typeahead="choice for choice in model.domainChoices | filter:$viewValue"/>
+          <span class="input-group-addon" ng-click="addDomain()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </span>
+        </div>
+        <div>
+          <span class="glyphicon glyphicon-info-sign" popover="Domains refer to vertical markets as identified within MarkLogic" popover-placement="bottom" popover-trigger="mouseenter"></span>
+        </div>
+      </div>
+      <div class="col-sm-8 col-sm-offset-2">
+        <span class="feature" ng-repeat="domain in model.demo.domains" class="btn btn-primary">{{domain}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeDomain($index)"></i></span>
+      </div>
+    </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Demo Attachments</label>
       <div class="col-sm-8">
-        <input type="file" class="form-control" placeholder="file://..."  ng-multiple="true" ng-file-select ng-model="model.scriptFiles"/>
+        <input type="file" class="form-control" placeholder="Choose file(s)"  ng-multiple="true" ng-file-select ng-model="model.scriptFiles" name="attachments"/>
         <div ng-repeat="attachment in model.demo.attachments track by $index">
-          <span class="form-control"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&download=true&filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a><a class="pull-right" ng-click="deleteAttachment(attachment, $index)"><i class="glyphicon glyphicon-trash"></i></a></span>
+          <span class="form-control"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&amp;download=true&amp;filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a><a class="pull-right" ng-click="deleteAttachment(attachment, $index)"><i class="glyphicon glyphicon-trash"></i></a></span>
         </div>
         <div ng-repeat="scriptFile in model.scriptFiles">
-          <span class="form-control">{{scriptFile.name}}<a class="pull-right" ng-click="model.scriptFiles.splice($index,1)"><i class="glyphicon glyphicon-trash"></i></a></span>
+          <span class="form-control" ng-class="{'true':'text-danger'}[scriptFile.size > 5242880]">{{scriptFile.name}} - {{scriptFile.lastModifiedDate | date:'short'}} - {{scriptFile.type}} - {{scriptFile.size | humanizeSize}}<a class="pull-right" ng-click="model.scriptFiles.splice($index,1)"><i class="glyphicon glyphicon-trash"></i></a></span>
         </div>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="You can select multiple files at once, and repeat selection to add more. Upload size is limited to 5Mb per file." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
+    </div>
+    <div class="row form-error">
+      <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.attachments.$touched">
+        <alert ng-show="!attachmentsValid(model.scriptFiles)" type="danger" close="">One or more of your added attachments is too large.</alert>
       </div>
     </div>
     <div class="form-group media-link">
@@ -144,19 +202,20 @@
       </div>
       <div ng-repeat="media in model.demo.media" class="col-sm-9 col-sm-offset-2 media-row">
         <div class="col-sm-2">
-          <input type="text" class="form-control" placeholder="Name"  ng-model="media.mediaName"/>
+          <input type="text" class="form-control" placeholder="name"  ng-model="media.mediaName"/>
         </div>
         <div class="col-sm-4">
-          <input type="text" class="form-control" placeholder="//..."  ng-model="media.mediaUrl"/>
+          <input type="url" class="form-control" placeholder="url"  ng-model="media.mediaUrl"/>
         </div>
         <div class="col-sm-1">
-          <input type="text" class="form-control" placeholder="w"  ng-model="media.mediaWidth"/>
+          <input type="number" class="form-control" placeholder="w"  ng-model="media.mediaWidth"/>
         </div>
         <div class="col-sm-1">
-          <input type="text" class="form-control" placeholder="h"  ng-model="media.mediaHeight"/>
+          <input type="number" class="form-control" placeholder="h"  ng-model="media.mediaHeight"/>
         </div>
         <div class="col-sm-2">
           <select class="form-control" ng-model="media.mediaType">
+            <option value="" disabled>Choose type</option>
             <option value="image">image</option>
             <option value="video">video</option>
             <option value="application">application/embed</option>
@@ -166,6 +225,9 @@
           <a class="btn btn-danger btn-xs" ng-click="removeMediaLink($index)">
             <span class="glyphicon glyphicon-trash icon-white"></span>
           </a>
+        </div>
+        <div>
+          <span class="glyphicon glyphicon-info-sign" popover="You can add links to media files too large to attach here. For Youtube, please use the embed url." popover-placement="bottom" popover-trigger="mouseenter"></span>
         </div>
       </div>
     </div>
@@ -191,6 +253,9 @@
           <span class="glyphicon glyphicon-trash icon-white"></span>
         </a>
       </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="User credentials for least-priv users specific for this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
     </div>
     <div class="row code-details">
       <div class="col-md-8 col-md-offset-2">
@@ -202,27 +267,57 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label required" ng-class="{ 'text-danger': inputInvalid( model.demo.version ) }">MarkLogic Version<span>*</span></label>
+      <label class="col-sm-2 control-label required">MarkLogic Version<span>*</span></label>
       <div class="col-sm-2">
-        <input type="text" class="form-control" placeholder="ex: 7.0" ng-model="model.demo.version" required>
+        <input type="text" class="form-control" ng-model="model.demo.version" name="version" required>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="6, 7.0, 8.0-1.1, ..." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
+    </div>
+    <div class="row form-error">
+      <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.version.$touched">
+        <alert ng-show="createForm.version.$error.required" type="danger" close="">MarkLogic Version is required.</alert>
+        <alert ng-show="!versionValid(createForm.version.$viewValue)" type="danger" close="">MarkLogic Version must start with number.</alert>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Accessible at</label>
+      <div class="col-sm-6">
+        <input type="url" class="form-control" ng-model="model.demo.url"/>
+      </div>
+      <div class="col-sm-2">
+        <select class="form-control" ng-model="model.demo.urlType">
+          <option>internal</option>
+          <option>external</option>
+        </select>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="URL at which to access the demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Hosted at</label>
       <div class="col-sm-6">
-        <input type="url" class="form-control" ng-model="model.demo.host" placeholder="http://...">
+        <input type="text" class="form-control" ng-model="model.demo.host">
       </div>
       <div class="col-sm-2">
-        <select class="form-control" ng-model="model.demo.hostType">
-          <option>internal</option>
-          <option>external</option>
+        <select class="form-control" ng-model="model.demo.accessibility">
+          <option>public</option>
+          <option>requires VPN</option>
         </select>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="The physical host name (or IP) of the machine or VM serving the demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Code Repository</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" placeholder="git@... or svn or http://..." ng-model="model.demo.repo">
+        <input type="text" class="form-control" ng-model="model.demo.repo">
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="git@.., svn:.., http://.., ..." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
@@ -238,15 +333,18 @@
     </div>
     <div class="form-group">
       <div class="col-sm-8 col-sm-offset-2">
-        <textarea class="form-control" placeholder="Details about the current demo status" ng-model="model.demo.demoStatus.statusDetails" rows="2" cols="100"></textarea>
+        <textarea class="form-control" ng-model="model.demo.demoStatus.statusDetails" rows="2" cols="100"></textarea>
+      </div>
+      <div>
+        <span class="glyphicon glyphicon-info-sign" popover="Optional details about the current demo status" popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
       <div class="col-sm-8 col-sm-offset-2">
         <div class="pull-right">
           <a class="btn btn-default" ng-click="cancel()">Cancel</a>
-          <button ng-if="!model.edit" class="btn btn-primary" ng-click="submit()">Create</button>
-          <button ng-if="model.edit" class="btn btn-primary" ng-click="submit()">Save</button>
+          <button type="submit" ng-if="!model.edit" class="btn btn-primary" ng-click="submit()">Create</button>
+          <button type="submit" ng-if="model.edit" class="btn btn-primary" ng-click="submit()">Save</button>
         </div>
       </div>
     </div>
