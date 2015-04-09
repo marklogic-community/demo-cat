@@ -2,9 +2,27 @@
   'use strict';
 
   angular.module('demoCat')
+    .filter('humanizeSize', function() {
+      return function(input) {
+        var result = '';
+        if (input && typeof(input) === 'number') {
+          if (input >= 1024 && input < 1048576) {
+            result = (input / 1024).toFixed(1) + ' Kb';
+          } else if (input >= 1048576 && input < 1073741824) {
+            result = (input / 1048576).toFixed(1) + ' Mb';
+          } else if (input >= 1073741824 && input < 1099511627776) {
+            result = (input / 1073741824).toFixed(1) + ' Gb';
+          } else {
+            result = input + ' bytes';
+          }
+        }
+
+        return result;
+      };
+    })
     .controller('CreateCtrl', CreateCtrl);
 
-  CreateCtrl.$inject = ['$scope', 'Domains', 'demoService', '$location', '$routeParams', 'edit', 'demo', 'features', 'technologies'];
+  CreateCtrl.$inject = ['$scope', 'domains', 'demoService', '$location', '$routeParams', 'edit', 'demo', 'features', 'technologies'];
   function CreateCtrl($scope, domains, demoService, $location, $routeParams, edit, demo, features, technologies) {
       var model = {
         demo: angular.extend({
@@ -35,12 +53,12 @@
         scriptFiles: [],
         featureChoices: features,
         technologyChoices: technologies,
-        domainChoices: domains.list(),
+        domainChoices: domains,
         browserChoices: ['Firefox', 'Chrome', 'IE', 'Safari'],
-        personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact'],
+        personRoleChoices: ['Technical Contact', 'Business Owner', 'External Contact', 'Other'],
         statusChoices: ['Working', 'Not Working', 'In Development', 'Retired', 'Unknown'],
         formValid: false,
-        formError: false,
+        formError: false
       };
 
       if (model.demo.demoStatus && model.demo.demoStatus.lastStatusTimestamp) {
@@ -67,7 +85,7 @@
           model.demo.credentials.splice(index, 1);
         },
         addFeature: function() {
-          if (model.demo.features.indexOf(model.featureToAdd) < 0) {
+          if (model.featureToAdd && model.featureToAdd !== '' && model.demo.features.indexOf(model.featureToAdd) < 0) {
             model.demo.features.push(model.featureToAdd);
           }
           delete model.featureToAdd;
@@ -76,19 +94,28 @@
           model.demo.features.splice(index, 1);
         },
         addMediaLink: function() {
-          model.demo.media.push({mediaUrl: null, mediaType: null});
+          model.demo.media.push({mediaUrl: null, mediaType: ''});
         },
         removeMediaLink: function(index) {
           model.demo.media.splice(index, 1);
         },
         addTechnology: function() {
-          if (model.demo.technologies.indexOf(model.technologyToAdd) < 0) {
+          if (model.technologyToAdd && model.technologyToAdd !== '' && model.demo.technologies.indexOf(model.technologyToAdd) < 0) {
             model.demo.technologies.push(model.technologyToAdd);
           }
           delete model.technologyToAdd;
         },
         removeTechnology: function(index) {
           model.demo.technologies.splice(index, 1);
+        },
+        addDomain: function() {
+          if (model.domainToAdd && model.domainToAdd !== '' && model.demo.domains.indexOf(model.domainToAdd) < 0) {
+            model.demo.domains.push(model.domainToAdd);
+          }
+          delete model.domainToAdd;
+        },
+        removeDomain: function(index) {
+          model.demo.domains.splice(index, 1);
         },
         addPerson: function() {
           model.demo.persons.push({personName: null, role: null, email: null});
@@ -99,9 +126,6 @@
         statusChanged: function() {
           model.demo.demoStatus.lastStatusTimestamp = new Date().toJSON();
         },
-        inputInvalid: function(input) {
-          return model.formError && !model.formValid && !input;
-        },
         deleteAttachment: function(attachent, index) {
           demoService.deleteAttachment($routeParams.uri, attachent).then(
             function() {
@@ -109,13 +133,15 @@
             }
           );
         },
+        versionValid: versionValid,
+        attachmentsValid: attachmentsValid,
         submit: function() {
           var promise;
 
-          if ( $scope.createForm.$invalid || model.demo.persons.length < 1 ) {
-            // $scope.createForm.$setValidity( false );
+          if ( !validate(model) || $scope.createForm.$invalid ) {
             model.formValid = false;
             model.formError = true;
+            $('html, body').animate({ scrollTop: 0 });
             return;
           }
 
@@ -140,6 +166,37 @@
           }
         }
       });
+      
+      function validate(model) {
+        return contactsValid(model.demo.persons) && versionValid(model.demo.version) && attachmentsValid(model.scriptFiles);
+      }
+      
+      function contactsValid(field) {
+        return (!isEmpty(field) && field.length > 0);
+      }
 
+      function versionValid(field) {
+        return !isEmpty(field) && startsWithNumber(field);
+      }
+      
+      function attachmentsValid(files) {
+        var result = true;
+        angular.forEach(files, function(file) {
+          if (file.size > 5242880) {
+            result = false;
+          }
+        });
+        return result;
+      }
+      
+      function isEmpty(field) {
+        var result = (field === null || field === undefined || field === '');
+        return result;
+      }
+      
+      function startsWithNumber(field) {
+        return field && field.match(/^\d/);
+      }
+      
     }
 }());

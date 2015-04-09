@@ -52,10 +52,15 @@
           <h4>MarkLogic version</h4>
           <span class="value">{{model.demo.version}}</span>
         </div>
+        <div ng-show="model.demo.url">
+          <h4>Accessible at</h4>
+          <span><a ng-href="{{model.demo.host}}">{{model.demo.url}}</a>
+          (<span class="value">{{model.demo.urlType}}</span>)</span>
+        </div>
         <div ng-show="model.demo.host">
           <h4>Hosted at</h4>
           <span><a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
-          (<span class="value">{{model.demo.hostType}}</span>)</span>
+          (<span class="value">{{model.demo.accessibility}}</span>)</span>
         </div>
         <div ng-show="model.demo.credentials">
           <h4>Credentials</h4>
@@ -86,7 +91,7 @@
 
     <div ng-if="model.demo.media.length" class="media col-md-12">
       <h4>Media</h4>
-        <div ng-repeat="media in model.demo.media" class="text-center col-sm-3">
+        <div ng-repeat="media in combined = model.demo.attachedMedia.concat(model.demo.media)" class="text-center col-sm-3">
           <div class="media-middle">
             <a ng-click="showMediaModal(media)">
               <img class="col-sm-12" ng-if="media.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" />
