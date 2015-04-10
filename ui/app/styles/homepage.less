@@ -1,15 +1,15 @@
 /* homepage styles */
 .home .vanguard, .home .donttouch {
-	color: #fff;
+    color: #fff;
 
-	h3 {
-		font-size: 20px;
+    h3 {
+        font-size: 20px;
         height: 40px;
         margin-top: 10px;
         text-align: center;
 
 
-	   span.subheader {
+       span.subheader {
             display: inline-block;
             font-style: italic;
             font-size: 16px;
@@ -44,13 +44,13 @@
 }
 
 .home .vanguard {
-	background: #4263a8;
-	border-top-left-radius: 5px;
+    background: #4263a8;
+    border-top-left-radius: 5px;
 }
 
 .home .donttouch {
-	background: #CA3639;
-	border-top-right-radius: 5px;
+    background: #CA3639;
+    border-top-right-radius: 5px;
 }
 
 .home .spot {
@@ -58,5 +58,26 @@
     border: 1px solid #ccc;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+    text-align: center;
 }
 
+/* Slider */
+.slider {
+    height: 200px;
+}
+.slide.ng-hide-add,
+.slide.ng-hide-remove {
+    -webkit-transition: all linear 0.5s;
+    -moz-transition: all linear 0.5s;
+    -o-transition: all linear 0.5s;
+    transition: all linear 0.5s;
+    display: block!important;
+}
+.slide.ng-hide-add.ng-hide-add-active,
+.slide.ng-hide-remove {
+    opacity: 0;
+}
+.slide.ng-hide-add,
+.slide.ng-hide-remove.ng-hide-remove-active {
+    opacity: 1;
+}
