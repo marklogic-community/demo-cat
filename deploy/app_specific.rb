@@ -4,10 +4,30 @@
 # This class has access to all of the stuff in deploy/lib/server_config.rb
 #
 class ServerConfig
-  # apply correct permissions
+  # protect alerting when cleaning content
+  alias_method :original_clean_content, :clean_content
+  def clean_content()
+    remove_alerting
+    original_clean_content
+    install_alerting
+  end
+  
+  # add alerting when deploying content
+  alias_method :original_deploy_content, :deploy_content
+  def deploy_content()
+    remove_alerting
+    original_deploy_content
+    install_alerting
+  end
+  
+  # add triggers when deploying modules
   alias_method :original_deploy_modules, :deploy_modules
   def deploy_modules()
+    remove_triggers
     original_deploy_modules
+    install_triggers
+    
+    # and apply correct permissions
     r = execute_query %Q{
       xquery version "1.0-ml";
 
@@ -21,8 +41,6 @@ class ServerConfig
       )
     },
     { :db_name => @properties["ml.modules-db"] }
-    
-    setup_alerting
   end
 
   # aks for ldap credentials
@@ -180,7 +198,84 @@ class ServerConfig
     logger.info r.body
   end
 
+  def add_change_tracking()
+    logger.info "Adding change tracking.."
+    r = execute_query %Q{
+      xquery version "1.0-ml";
+
+      xdmp:invoke("/data-migration/add-change-tracking.xqy")
+    },
+    { :app_name => @properties["ml.app-name"] }
+
+    r.body = parse_json r.body
+    logger.info r.body
+  end
+
+  def remove_triggers()
+    
+    logger.info "Removing Triggers..\n"
+    
+    r = execute_query(%Q{
+        xquery version "1.0-ml";
+      
+        import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+           at "/MarkLogic/triggers.xqy";
+         
+        xdmp:log("Installing Change Tracking triggers.."),
+      
+        try {
+          trgr:remove-trigger("ChangeTrackingCreateTrigger")
+        } catch ($ignore) { },
+        try {
+          trgr:remove-trigger("ChangeTrackingModifyTrigger")
+        } catch ($ignore) { }
+      },
+      :db_name => @properties["ml.triggers-db"]
+    )
+  end
+
+  def install_triggers()
+    
+    logger.info "Installing Triggers..\n"
+    
+    r = execute_query(%Q{
+        xquery version "1.0-ml";
+      
+        import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+           at "/MarkLogic/triggers.xqy";
+         
+        trgr:create-trigger("ChangeTrackingCreateTrigger", "Trigger to add change tracking details", 
+          trgr:trigger-data-event(
+            trgr:directory-scope("/demos/", "infinity"),
+            trgr:document-content("create"),
+            trgr:pre-commit()
+          ),
+          trgr:trigger-module(xdmp:database("#{@properties['ml.modules-db']}"), "/", "/triggers/add-change-tracking.xqy"),
+          fn:true(),
+          (),
+          fn:false()
+        ),
+      
+        trgr:create-trigger("ChangeTrackingModifyTrigger", "Trigger to update change tracking details", 
+          trgr:trigger-data-event(
+            trgr:directory-scope("/demos/", "infinity"),
+            trgr:document-content("modify"),
+            trgr:pre-commit()
+          ),
+          trgr:trigger-module(xdmp:database("#{@properties['ml.modules-db']}"), "/", "/triggers/add-change-tracking.xqy"),
+          fn:true(),
+          (),
+          fn:false()
+        )
+      },
+      :db_name => @properties["ml.triggers-db"]
+    )
+  end
+  
   def remove_alerting ()
+    
+    logger.info "Removing Alerting..\n"
+    
     r = execute_query %Q{
 
       (: First delete the original triggers configuration so we can set it up newly :)
@@ -213,10 +308,11 @@ class ServerConfig
     { :app_name => @properties["ml.app-name"] }
   end
 
-    # setup_alerting is used to define the alerting used for notifications
-  def setup_alerting ()
-    remove_alerting
-
+  # install_alerting is used to define the alerting used for notifications
+  def install_alerting ()
+    
+    logger.info "Installing Alerting..\n"
+    
     r = execute_query %Q{
 
       (: Create the alerting configuration :)
