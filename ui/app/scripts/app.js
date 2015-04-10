@@ -9,6 +9,7 @@
     'ui.bootstrap',
     'ngSanitize',
     'autocomplete',
+    'sliderApp',
     'ml.common',
     'ml.search',
     'ml.search.tpls',
