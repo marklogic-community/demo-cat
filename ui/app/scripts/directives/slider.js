@@ -33,6 +33,12 @@ sliderApp.controller('SliderController', function($scope) {
         title:'Executive Paycheck',
         uri:'https://wiki.marklogic.com/display/CS/Media+Demo',
         desc:'This site collects information about executive compensation from SEC filings and presents them as an information application that lets users search, browse and analyse the data and gain insight into the pay structure of the Fortune 500.'
+    },
+    {
+        src:'blue-fusion.png',
+        title:'Blue Fusion',
+        uri:'#',
+        desc:'MarkLogic Blue Fusion is an integrated software solution that can be deployed at headquarters, forward operating bases, 2-man carry transit cases, and simple laptop computers.'
     }
 
     ]; 
