@@ -1,17 +1,9 @@
 <div class="slider">
   <div class="slide" ng-repeat="image in images" ng-show="image.visible">
     <a href="{{image.uri}}"><img ng-src="/images/spotlight/{{image.src}}" /></a>
-    <div class="panel panel-warning slider-details">
-      <div class="panel-heading">
-        <h4><a ng-href="{{image.uri}}">{{image.title}}</a></h4>
-      </div>
-      <div class="matches panel-body">
-        <div class="summary">{{image.desc}}</div>
-      </div>
-    </div>
   </div>
   <div class="arrows">
-    <a class="left" href="#" ng-click="prev()">
+    <a class="left" href="#" ng-click="contiguousPrevious()">
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     </a>
     <a class="pause" href="#" ng-click="play()">
@@ -20,7 +12,7 @@
     <a class="pause" href="#" ng-click="pause()">
       <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
     </a>
-    <a class="right" href="#" ng-click="next()">
+    <a class="right" href="#" ng-click="contiguousNext()">
       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </a>
   </div>
