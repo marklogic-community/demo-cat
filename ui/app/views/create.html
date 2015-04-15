@@ -37,7 +37,7 @@
       <div class="col-sm-8">
         <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.restrictionDetails"></textarea>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="Provide details here regarding the restrictions associated with this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -46,7 +46,7 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" ng-model="model.demo.name" name="demoName" maxlength="55" required>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="Try to keep the name as short as possible. Limited to 55 characters." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -61,6 +61,9 @@
         <a class="btn btn-primary btn-xs" ng-click="addPerson()">
           Add
         </a>
+      </div>
+      <div class="info">
+        <span class="glyphicon glyphicon-info-sign" popover="Anyone from outside MarkLogic should be marked as External Contact. Anyone able to troubleshoot with access or running the demo qualifies as Technical Contact. The (Sales) person who initiated the demo should be marked as Business Owner." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group contact">
@@ -80,9 +83,6 @@
           <span class="glyphicon glyphicon-trash icon-white"></span>
         </a>
       </div>
-      <div>
-        <span class="glyphicon glyphicon-info-sign" popover="Anyone from outside MarkLogic should be marked as External Contact. Anyone able to troubleshoot with access or running the demo qualifies as Technical Contact. The (Sales) person who initiated the demo should be marked as Business Owner." popover-placement="bottom" popover-trigger="mouseenter"></span>
-      </div>
     </div>
     <div class="row form-error">
       <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.contactRole.$touched || createForm.contactName.$touched || createForm.contactEmail.$touched">
@@ -95,7 +95,7 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" ng-model="model.demo.shortdesc" maxlength="95" name="shortDesc" required>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="Used for search result display. Limited to 95 characters." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -109,7 +109,7 @@
       <div class="col-sm-8">
         <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.description"></textarea>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="Use the long description to provide an executive summary of what the demo does. Talk about the customer problem that this is demo is addressing, without assuming that your reader is already familiar with the customer. Use Memo's for extra material (accessible after creation)." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -122,9 +122,9 @@
             <span class="glyphicon glyphicon-plus"></span>
           </span>
         </div>
-        <div>
-          <span class="glyphicon glyphicon-info-sign" popover="Features refer to functionality used in this demo that is enabled with or provided by MarkLogic." popover-placement="bottom" popover-trigger="mouseenter"></span>
-        </div>
+      </div>
+      <div class="info">
+        <span class="glyphicon glyphicon-info-sign" popover="Features refer to functionality used in this demo that is enabled with or provided by MarkLogic." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
       <div class="col-sm-8 col-sm-offset-2">
         <span class="feature" ng-repeat="feature in model.demo.features" class="btn btn-primary">{{feature}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeFeature($index)"></i></span>
@@ -139,12 +139,12 @@
             <span class="glyphicon glyphicon-plus"></span>
           </span>
         </div>
-        <div>
-          <span class="glyphicon glyphicon-info-sign" popover="Technologies refer to non-MarkLogic toolkits or libraries used in this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
-        </div>
       </div>
       <div class="col-sm-8 col-sm-offset-2">
         <span class="feature" ng-repeat="technology in model.demo.technologies" class="btn btn-primary">{{technology}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeTechnology($index)"></i></span>
+      </div>
+      <div class="info">
+        <span class="glyphicon glyphicon-info-sign" popover="Technologies refer to non-MarkLogic toolkits or libraries used in this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
@@ -165,12 +165,12 @@
             <span class="glyphicon glyphicon-plus"></span>
           </span>
         </div>
-        <div>
-          <span class="glyphicon glyphicon-info-sign" popover="Domains refer to vertical markets as identified within MarkLogic" popover-placement="bottom" popover-trigger="mouseenter"></span>
-        </div>
       </div>
       <div class="col-sm-8 col-sm-offset-2">
         <span class="feature" ng-repeat="domain in model.demo.domains" class="btn btn-primary">{{domain}}<i class="remove-feature glyphicon glyphicon-trash" ng-click="removeDomain($index)"></i></span>
+      </div>
+      <div class="info">
+        <span class="glyphicon glyphicon-info-sign" popover="Domains refer to vertical markets as identified within MarkLogic" popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group">
@@ -184,7 +184,7 @@
           <span class="form-control" ng-class="{'true':'text-danger'}[scriptFile.size > 5242880]">{{scriptFile.name}} - {{scriptFile.lastModifiedDate | date:'short'}} - {{scriptFile.type}} - {{scriptFile.size | humanizeSize}}<a class="pull-right" ng-click="model.scriptFiles.splice($index,1)"><i class="glyphicon glyphicon-trash"></i></a></span>
         </div>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="You can select multiple files at once, and repeat selection to add more. Upload size is limited to 5Mb per file." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -226,7 +226,7 @@
             <span class="glyphicon glyphicon-trash icon-white"></span>
           </a>
         </div>
-        <div>
+        <div class="info">
           <span class="glyphicon glyphicon-info-sign" popover="You can add links to media files too large to attach here. For Youtube, please use the embed url." popover-placement="bottom" popover-trigger="mouseenter"></span>
         </div>
       </div>
@@ -237,6 +237,9 @@
         <a class="btn btn-primary btn-xs" ng-click="addCredentials()">
           Add
         </a>
+      </div>
+      <div class="info">
+        <span class="glyphicon glyphicon-info-sign" popover="User credentials for least-priv users specific for this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
     <div class="form-group cred">
@@ -253,9 +256,6 @@
           <span class="glyphicon glyphicon-trash icon-white"></span>
         </a>
       </div>
-      <div>
-        <span class="glyphicon glyphicon-info-sign" popover="User credentials for least-priv users specific for this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
-      </div>
     </div>
     <div class="row code-details">
       <div class="col-md-8 col-md-offset-2">
@@ -271,7 +271,7 @@
       <div class="col-sm-2">
         <input type="text" class="form-control" ng-model="model.demo.version" name="version" required>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="6, 7.0, 8.0-1.1, ..." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -292,7 +292,7 @@
           <option>external</option>
         </select>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="URL at which to access the demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -307,7 +307,7 @@
           <option>requires VPN</option>
         </select>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="The physical host name (or IP) of the machine or VM serving the demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -316,7 +316,7 @@
       <div class="col-sm-8">
         <input type="text" class="form-control" ng-model="model.demo.repo">
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="git@.., svn:.., http://.., ..." popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
@@ -335,7 +335,7 @@
       <div class="col-sm-8 col-sm-offset-2">
         <textarea class="form-control" ng-model="model.demo.demoStatus.statusDetails" rows="2" cols="100"></textarea>
       </div>
-      <div>
+      <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="Optional details about the current demo status" popover-placement="bottom" popover-trigger="mouseenter"></span>
       </div>
     </div>
