@@ -8,13 +8,15 @@ sliderApp.controller('SliderController', function($scope) {
         src:'situational-wareness-sm.png',
         title:'Situational Awareness',
         uri:'http://catalog.demo.marklogic.com/detail/demos/17784760062083407114.json',
-        desc:'This is a short description.'
+        desc:'This is a short description.',
+        visible: true
     },
     {
         src:'ediscovery-sm.png',
         title:'eDiscovery',
         uri:'http://catalog.demo.marklogic.com/detail/demos/5462875041093986835.json',
-        desc:'A Day in the life of an investigator @CITI.'
+        desc:'A Day in the life of an investigator @CITI.',
+        visible: true
     },
     {
         src:'dmlchealthcare-sm.png',
@@ -57,29 +59,89 @@ sliderApp.directive('slider', function ($timeout) {
     
         scope.currentIndex=0;
 
-        scope.next=function(){
-            scope.currentIndex<scope.images.length-1?scope.currentIndex++:scope.currentIndex=0;
-        };
-        
-        scope.prev=function(){
-            scope.currentIndex>0?scope.currentIndex--:scope.currentIndex=scope.images.length-1;
+        function toggleImages(index) {
+            if (index > scope.images.length - 1) { 
+                index=0;
+            }
+            scope.images[ index ].visible = !scope.images[ index ].visible;
+    
+            if (index === scope.images.length - 1) { 
+                scope.images[0].visible = !scope.images[0].visible;
+                } else {
+                scope.images[ index + 1 ].visible = !scope.images[ index + 1 ].visible;
+                }
+        }
+
+        /* a different scroll pattern. */
+        /*
+        function overlappingNext() {
+            toggleImages( scope.currentIndex );
+    
+            if (scope.currentIndex >= scope.images.length - 1) {
+                scope.currentIndex = 0;
+            } else {
+                scope.currentIndex++;
+            }
+    
+            toggleImages( scope.currentIndex );
+        }
+
+        function overlappingPrevious(item) {
+            toggleImages( scope.currentIndex );
+
+            if (scope.currentIndex === 0) {
+                scope.currentIndex = scope.images.length - 1;
+            } else {
+                scope.currentIndex--;
+            }       
+    
+            toggleImages( scope.currentIndex );
+        }
+        */
+        /* end a different scroll pattern*/ 
+        scope.contiguousNext=function() {
+            var imglen = (scope.images.length / 2)|1;
+    
+            toggleImages( scope.currentIndex * 2 );
+    
+            // handle odd or even number of images
+            if ( (scope.images.length % 2 === 0 && scope.currentIndex === imglen - 1) ||
+                (scope.images.length % 2 === 1 && scope.currentIndex === imglen) ) {
+                    scope.currentIndex = 0;
+            } else {
+                scope.currentIndex++;
+            }
+    
+            toggleImages( scope.currentIndex * 2 );
         };
 
+        scope.contiguousPrevious=function(item) {
+            var imglen = (scope.images.length / 2)|1;
+    
+            toggleImages( scope.currentIndex * 2 );
         
-        scope.$watch('currentIndex',function(){
-            scope.images.forEach(function(image){
-                image.visible=false;
-            });
-            scope.images[scope.currentIndex].visible=true;
-        });
+
+            if ( scope.currentIndex === 0 ) {
+                // handle odd or even number of images
+                if (scope.images.length % 2 === 1) {
+                    scope.currentIndex = imglen;
+                } else {
+                    scope.currentIndex = imglen - 1;
+                }
+            } else {
+                scope.currentIndex--;
+            }
         
+            toggleImages( scope.currentIndex * 2 );
+        };
+
         /* Start: For Automatic slideshow*/
         
         var timer;
         
         var sliderFunc=function(){
             timer=$timeout(function(){
-                scope.next();
+                scope.contiguousNext();
                 timer=$timeout(sliderFunc,5000);
             },5000);
         };
@@ -102,6 +164,7 @@ sliderApp.directive('slider', function ($timeout) {
         angular.element(document.querySelectorAll('.arrow')).one('click',function(){
             $timeout.cancel(timer);
         });
+
     },
     templateUrl:'scripts/directives/slider.html'
   };
