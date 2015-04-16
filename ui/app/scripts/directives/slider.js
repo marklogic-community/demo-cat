@@ -72,9 +72,7 @@ sliderApp.directive('slider', function ($timeout) {
                 }
         }
 
-        /* a different scroll pattern. */
-        /*
-        function overlappingNext() {
+        scope.overlappingNext=function() {
             toggleImages( scope.currentIndex );
     
             if (scope.currentIndex >= scope.images.length - 1) {
@@ -86,7 +84,7 @@ sliderApp.directive('slider', function ($timeout) {
             toggleImages( scope.currentIndex );
         }
 
-        function overlappingPrevious(item) {
+        scope.overlappingPrevious=function(item) {
             toggleImages( scope.currentIndex );
 
             if (scope.currentIndex === 0) {
@@ -97,8 +95,9 @@ sliderApp.directive('slider', function ($timeout) {
     
             toggleImages( scope.currentIndex );
         }
-        */
-        /* end a different scroll pattern*/ 
+         
+        /* a different scroll pattern. */
+        /*
         scope.contiguousNext=function() {
             var imglen = (scope.images.length / 2)|1;
     
@@ -134,14 +133,15 @@ sliderApp.directive('slider', function ($timeout) {
         
             toggleImages( scope.currentIndex * 2 );
         };
-
+        */
+        /* end a different scroll pattern*/
         /* Start: For Automatic slideshow*/
         
         var timer;
         
         var sliderFunc=function(){
             timer=$timeout(function(){
-                scope.contiguousNext();
+                scope.overlappingNext();
                 timer=$timeout(sliderFunc,5000);
             },5000);
         };
