@@ -3,7 +3,7 @@
     <a href="{{image.uri}}"><img ng-src="/images/spotlight/{{image.src}}" /></a>
   </div>
   <div class="arrows">
-    <a class="left" href="#" ng-click="contiguousPrevious()">
+    <a class="left" href="#" ng-click="overlappingPrevious()">
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     </a>
     <a class="pause" href="#" ng-click="play()">
@@ -12,7 +12,7 @@
     <a class="pause" href="#" ng-click="pause()">
       <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
     </a>
-    <a class="right" href="#" ng-click="contiguousNext()">
+    <a class="right" href="#" ng-click="overlappingNext()">
       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </a>
   </div>
