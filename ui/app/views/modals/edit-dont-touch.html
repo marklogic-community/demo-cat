@@ -6,14 +6,29 @@
     <div class="form-group">
       <div class="alert alert-danger loginerror" ng-repeat="alert in alerts" ng-cloak>{{alert}}</div>
     </div>
-    <div class="form-group">
-      <label>Title</label>
-      <input type="text" ng-model="model.title" class="form-control"></input>
+    <div class="donttouch">
+      
+      <div class="form-group">      
+        <div class="row">
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="SE name"  ng-model="model.donttouch.seName"/></div>
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="demo name"  ng-model="model.donttouch.demoName"/></div>
+          <div class="col-md-2"><input type="url" class="form-control" placeholder="url"  ng-model="model.donttouch.demoUrl"/></div>
+          <div class="col-md-2">
+            <input type="url" class="form-control" placeholder="date placeholder"  ng-model="model.donttouch.date"/>
+          </div>
+          <div class="col-md-2">
+            <input type="url" class="form-control" placeholder="duration"  ng-model="model.donttouch.duration"/>
+          </div>
+          <div class="col-md-2">
+            <a class="btn btn-success btn-xs" ng-click="addVanguardLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+            <a class="btn btn-danger btn-xs" ng-click="removeVanguardLink($index)">
+              <span class="glyphicon glyphicon-trash icon-white"></span>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label>Body</label>
-      <textarea class="form-control" ckeditor="editorOptions" ng-model="model.body"></textarea>
-    </div>
+
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary pull-right" ng-click="ok()">Save</button>
