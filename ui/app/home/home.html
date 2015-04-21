@@ -15,7 +15,7 @@
             <p><a href="mailto:Sid.Doshi@marklogic.com">Need Vanguard services? Contact Sid Doshi</a></p>
           </div>
         </div>
-        <button type="button" class="btn btn-default btn-xs pull-right">
+        <button ng-show="model.user.isAdmin()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editVanguard()">
           <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
   		</div>
@@ -45,7 +45,7 @@
               <li><strong>Duration:</strong> 2 hours</li>
             </ul>
         </div>
-        <button type="button" class="btn btn-default btn-xs pull-right">
+        <button ng-show="model.user.isWriter()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editDontTouch()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
   		</div>
@@ -56,7 +56,7 @@
       <div class="spot col-md-10">
         <h3>Spotlight</h3>
         <slider images="images" />
-        <button type="button" class="btn btn-default btn-xs pull-right">
+        <button ng-show="model.user.isAdmin()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editSpotlight()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
       </div>
