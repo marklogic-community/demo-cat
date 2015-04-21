@@ -82,7 +82,7 @@ sliderApp.directive('slider', function ($timeout) {
             }
     
             toggleImages( scope.currentIndex );
-        }
+        };
 
         scope.overlappingPrevious=function(item) {
             toggleImages( scope.currentIndex );
@@ -94,7 +94,7 @@ sliderApp.directive('slider', function ($timeout) {
             }       
     
             toggleImages( scope.currentIndex );
-        }
+        };
          
         /* a different scroll pattern. */
         /*
