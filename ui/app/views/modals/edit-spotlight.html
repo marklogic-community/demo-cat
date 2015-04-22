@@ -10,9 +10,9 @@
       
       <div class="form-group">
       
-        <div class="row">
-          <div class="col-md-5"><input type="file" class="form-control" placeholder="Choose file(s)"  ng-multiple="true" ng-file-select ng-model="model.spotlight.screenshot" name="attachments"/></div>
-          <div class="col-md-5"><input type="url" class="form-control" placeholder="url"  ng-model="model.spotlight.linkUrl"/></div>
+        <div class="row" ng-repeat="demo in model">
+          <div class="col-md-5"><input type="file" class="form-control" placeholder="Choose file(s)"  ng-multiple="true" ng-file-select ng-model="demo.screenshot" name="attachments"/></div>
+          <div class="col-md-5"><input type="url" class="form-control" placeholder="url"  ng-model="demo.uri"/></div>
           <div class="col-md-2">
             <a class="btn btn-success btn-xs" ng-click="addSpotlightLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
             <a class="btn btn-danger btn-xs" ng-click="removeSpotlightLink($index)">
