@@ -9,18 +9,25 @@
     <div class="vanguard">
       
       <div class="form-group">
-        <label class="control-label">News and Service Links</label>
+        <label class="control-label">News Links</label>
       
-        <div class="row">
-          <div class="col-md-4"><input type="text" class="form-control" placeholder="name"  ng-model="model.vanguard.linkName"/></div>
-          <div class="col-md-3"><input type="url" class="form-control" placeholder="url"  ng-model="model.vanguard.linkUrl"/></div>
-          <div class="col-md-3">
-            <select class="form-control" ng-model="model.vanguard.linkType">
-              <option value="" disabled>Choose location</option>
-              <option value="news">News</option>
-              <option value="services">Services</option>
-            </select>
+        <div class="row" ng-repeat="news in model.news">
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="model.news[$index].title" maxlength="45"/></div>
+          <div class="col-md-4"><input type="url" class="form-control" placeholder="url"  ng-model="model.news[$index].link"/></div>
+          <div class="col-md-2">
+            <a class="btn btn-success btn-xs" ng-click="addVanguardLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+            <a class="btn btn-danger btn-xs" ng-click="removeVanguardLink($index)">
+              <span class="glyphicon glyphicon-trash icon-white"></span>
+            </a>
           </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">Service Links</label>
+      
+        <div class="row" ng-repeat="service in model.services">
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="model.services[$index].title" maxlength="45"/></div>
+          <div class="col-md-4"><input type="url" class="form-control" placeholder="url"  ng-model="model.services[$index].link"/></div>
           <div class="col-md-2">
             <a class="btn btn-success btn-xs" ng-click="addVanguardLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
             <a class="btn btn-danger btn-xs" ng-click="removeVanguardLink($index)">

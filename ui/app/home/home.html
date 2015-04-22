@@ -1,61 +1,45 @@
 <div class="home" ng-controller="SliderController">
   <div class="row">
-  	<div class="col-md-offset-1 col-md-10">
-  		<div class="col-md-7 vanguard">
-  			<h3>Vanguard</h3>
+    <div class="col-md-offset-1 col-md-10">
+      <div class="col-md-7 vanguard">
+        <h3>Vanguard</h3>
         <div class="hp-content">
           <div class="pull-left news">
             <h4>News</h4>
-            <p><a href="">NEW! How to use SampleStack</a></p>
-            <p><a href="">NEW! MarkLogic 8 Reference Architecture</a></p>
+            <p ng-repeat="news in model.vanguard.news"><a ng-href="{{news.link}}">{{news.title}}</a></p>
           </div>
           <div class="pull-left services">
             <h4>Services</h4>
-            <p><a href="mailto:vanguard@marklogic.com">Tell us if you need demo/service access</a></p>
-            <p><a href="mailto:Sid.Doshi@marklogic.com">Need Vanguard services? Contact Sid Doshi</a></p>
+            <p ng-repeat="service in model.vanguard.services"><a ng-href="{{service.link}}">{{service.title}}</a></p>
           </div>
         </div>
         <button ng-show="model.user.isAdmin()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editVanguard()">
           <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
-  		</div>
-  		<div class="col-md-3 donttouch">
-  			<h3>Don't Touch<span class="subheader">
-  				Demo in progress</span></h3>
+      </div>
+      <div class="col-md-3 donttouch">
+        <h3>Don't Touch<span class="subheader">
+          Demo in progress</span></h3>
           <div class="hp-content">
-            <ul>
-              <li><strong>OBI</strong></li>
-              <li><strong>SE:</strong> Jane Sales</li>
-              <li><strong>Date:</strong> 04/23/2015</li>
-              <li><strong>Start time:</strong> 3:10PM EST</li>
-              <li><strong>Duration:</strong> 2 hours</li>
-            </ul>
-            <ul>
-              <li><strong>OBI</strong></li>
-              <li><strong>SE:</strong> Jane Sales</li>
-              <li><strong>Date:</strong> 04/23/2015</li>
-              <li><strong>Start time:</strong> 3:10PM EST</li>
-              <li><strong>Duration:</strong> 2 hours</li>
-            </ul>
-            <ul>
-              <li><strong>OBI</strong></li>
-              <li><strong>SE:</strong> Jane Sales</li>
-              <li><strong>Date:</strong> 04/23/2015</li>
-              <li><strong>Start time:</strong> 3:10PM EST</li>
-              <li><strong>Duration:</strong> 2 hours</li>
+            <ul ng-repeat="demo in model.donttouch">
+              <li><strong>{{demo.title}}</strong></li>
+              <li><strong>Presenter:</strong> {{demo.presenter}}</li>
+              <li><strong>Date:</strong> {{demo.start | date:'shortDate' }}</li>
+              <li><strong>Start time:</strong> {{demo.start | date:'shortTime' }}</li>
+              <li><strong>Duration:</strong> {{demo.duration}} minutes</li>
             </ul>
         </div>
         <button ng-show="model.user.isWriter()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editDontTouch()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
-  		</div>
-  	</div>
+      </div>
+    </div>
   </div> <!--/end Vanguard/don't touch row -->
   <div class="row">
     <div class="col-md-offset-1 col-md-10">
       <div class="spot col-md-10">
         <h3>Spotlight</h3>
-        <slider images="images" />
+        <slider images="model.spotlight" />
         <button ng-show="model.user.isAdmin()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editSpotlight()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
