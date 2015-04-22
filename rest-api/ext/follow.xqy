@@ -9,6 +9,7 @@ import module namespace utilities =  "http://marklogic.com/demo-cat/utilities" a
 
 declare namespace roxy = "http://marklogic.com/roxy";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
+declare namespace rapi = "http://marklogic.com/rest-api";
 
 
 (:
@@ -51,6 +52,7 @@ function follow:put(
  :)
 declare
 %roxy:params("")
+%rapi:transaction-mode("update")
 function follow:post(
     $context as map:map,
     $params  as map:map,
