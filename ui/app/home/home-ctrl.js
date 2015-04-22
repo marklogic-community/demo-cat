@@ -2,19 +2,38 @@
   'use strict';
   angular.module('demoCat.home', []);
   angular.module('demoCat.home')
-    .controller('HomeCtrl', ['$scope', '$modal', '$sce', 'user', function ($scope, $modal, $sce, user) {
-      var model = { 
-        user: user, 
-        vanguard: {},
-        donttouch: {},
-        spotlight: {}
+    .factory('HomeModel', [function() {
+      return {
+        user: null,
+        vanguard: null,
+        donttouch: null,
+        spotlight: null
       };
+    }])
+    .controller('HomeCtrl', ['HomeModel', '$scope', '$modal', '$sce', 'user', 'MLRest', function (model, $scope, $modal, $sce, user, mlRest) {
+      model.user = user;
       angular.extend($scope,{
         model: model,
         editVanguard: editVanguard,
         editDontTouch: editDontTouch,
         editSpotlight: editSpotlight
       });
+      
+      if (!model.vanguard) {
+        mlRest.getDocument('/vanguard.json', { format: 'json' }).then(function(response) {
+          model.vanguard = response.data.vanguard;
+        });
+      }
+      if (!model.donttouch) {
+        mlRest.getDocument('/dont-touch.json', { format: 'json' }).then(function(response) {
+          model.donttouch = response.data['dont-touch'];
+        });
+      }
+      if (!model.spotlight) {
+        mlRest.getDocument('/spotlight.json', { format: 'json' }).then(function(response) {
+          model.spotlight = response.data.spotlight;
+        });
+      }
       
       function editVanguard() {
         showModal('/views/modals/edit-vanguard.html', 'Edit Vanguard', model.vanguard);
