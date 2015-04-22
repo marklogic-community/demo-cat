@@ -1,7 +1,7 @@
 node_modules
 bower_components
 .tmp
-ui/app/styles/main.css
+ui/app/styles/*.css
 deploy/prod.properties
 deploy/dev.properties
 src/public
@@ -12,7 +12,5 @@ upload
 .DS_Store
 dist
 *.pid
-
 *.sublime-project
-
 *.sublime-workspace
