@@ -24,7 +24,7 @@ let $fullname := $alert:rule/alert:options/alert:fullname/string()
 let $emails := $alert:rule/alert:options/alert:email-address/string()
 
 (: Build and send the email :)
-let $hostname := ($conf:HOSTNAME, $alert:rule/alert:options/alert:hostname/string())[1]
+let $hostname := ($conf:HOSTNAME, $alert:rule/alert:options/alert:hostname/string())[. ne ""][1]
 let $subject := fn:concat("[DemoCat] follow notification: ", $title, " has been updated")
 let $message :=
     <div xmlns="http://www.w3.org/1999/xhtml">
