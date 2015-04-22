@@ -8,6 +8,7 @@ import module namespace utilities="http://marklogic.com/demo-cat/utilities" at "
 
 declare namespace roxy = "http://marklogic.com/roxy";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
+declare namespace rapi = "http://marklogic.com/rest-api";
 
 (:
  : To add parameters to the functions, specify them in the params annotations.
@@ -21,6 +22,7 @@ Receive the bug and adjust it with proper values.
  :)
 declare
 %roxy:params("uri=xs:string")
+%rapi:transaction-mode("update")
 function file-bug:post(
     $context as map:map,
     $params  as map:map,
