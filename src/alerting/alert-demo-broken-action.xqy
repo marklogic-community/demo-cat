@@ -3,7 +3,8 @@ xquery version "1.0-ml";
 declare namespace alert = "http://marklogic.com/xdmp/alert";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
-import module namespace utilities="http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
+import module namespace util="http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
+import module namespace conf="http://marklogic.com/roxy/config" at "/app/config/config.xqy";
 
 declare variable $alert:config-uri as xs:string external;
 declare variable $alert:doc as node() external;
@@ -14,7 +15,7 @@ if (fn:count($alert:doc/jbasic:json/jbasic:persons/jbasic:json[jbasic:role = "Te
 then
   let $demo-name := $alert:doc/jbasic:json/jbasic:name/string()
   let $status-details := $alert:doc/jbasic:json/jbasic:demoStatus/jbasic:statusDetails
-  let $ref-host := $alert:rule/alert:options/alert:hostname/string()
+  let $ref-host := ($conf:HOSTNAME, $alert:rule/alert:options/alert:hostname/string())[. ne ""][1]
   let $demo-url := fn:concat("http://", $ref-host, "/detail", fn:document-uri($alert:doc))
   let $subject := fn:concat("[DemoCat]: ", $demo-name, " is Not Working")
   let $message :=
@@ -31,7 +32,7 @@ then
       let $contact-email := $person/jbasic:email
       let $contact-name  := $person/jbasic:personName
       let $_ := xdmp:log(fn:concat("Issuing alert email to (", $contact-email, ") about broken demo: ", $demo-name))
-      return utilities:send-notification($contact-name, $contact-email, $subject, $message)
+      return util:send-notification($contact-name, $contact-email, $subject, $message)
     )
 
 else
