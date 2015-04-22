@@ -4,7 +4,8 @@ xquery version "1.0-ml";
 
 declare namespace alert = "http://marklogic.com/xdmp/alert";
 
-import module namespace utilities =  "http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
+import module namespace util =  "http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
+import module namespace conf="http://marklogic.com/roxy/config" at "/app/config/config.xqy";
 
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
@@ -23,7 +24,7 @@ let $fullname := $alert:rule/alert:options/alert:fullname/string()
 let $emails := $alert:rule/alert:options/alert:email-address/string()
 
 (: Build and send the email :)
-let $hostname := $alert:rule/alert:options/alert:hostname/string()
+let $hostname := ($conf:HOSTNAME, $alert:rule/alert:options/alert:hostname/string())[. ne ""][1]
 let $subject := fn:concat("[DemoCat] follow notification: ", $title, " has been updated")
 let $message :=
     <div xmlns="http://www.w3.org/1999/xhtml">
@@ -33,4 +34,4 @@ let $message :=
 
 return
   for $email in $emails
-  return utilities:send-notification($fullname, $email, $subject, $message)
+  return util:send-notification($fullname, $email, $subject, $message)
