@@ -9,6 +9,7 @@
     'ui.bootstrap',
     'ngSanitize',
     'autocomplete',
+    'sliderApp',
     'ml.common',
     'ml.search',
     'ml.search.tpls',
@@ -27,7 +28,12 @@
     $routeProvider
       .when('/', {
         templateUrl: '/home/home.html',
-        controller:'HomeCtrl'
+        controller:'HomeCtrl',
+        resolve: {
+          user: function(AuthenticationService) {
+            return AuthenticationService.getUser();
+          }
+        }
       })
       .when('/search', {
         templateUrl: '/search/search.html',

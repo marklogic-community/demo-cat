@@ -1,0 +1,46 @@
+<form class="form edit-memo" role="form">
+  <div class="modal-header">
+      <h3 class="modal-title">{{title}}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="alert alert-danger loginerror" ng-repeat="alert in alerts" ng-cloak>{{alert}}</div>
+    </div>
+    <div class="vanguard">
+      
+      <div class="form-group">
+        <label class="control-label">News Links</label>
+      
+        <div class="row" ng-repeat="news in model.news">
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="model.news[$index].title" maxlength="45"/></div>
+          <div class="col-md-4"><input type="url" class="form-control" placeholder="url"  ng-model="model.news[$index].link"/></div>
+          <div class="col-md-2">
+            <a class="btn btn-success btn-xs" ng-click="addVanguardLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+            <a class="btn btn-danger btn-xs" ng-click="removeVanguardLink($index)">
+              <span class="glyphicon glyphicon-trash icon-white"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">Service Links</label>
+      
+        <div class="row" ng-repeat="service in model.services">
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="model.services[$index].title" maxlength="45"/></div>
+          <div class="col-md-4"><input type="url" class="form-control" placeholder="url"  ng-model="model.services[$index].link"/></div>
+          <div class="col-md-2">
+            <a class="btn btn-success btn-xs" ng-click="addVanguardLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+            <a class="btn btn-danger btn-xs" ng-click="removeVanguardLink($index)">
+              <span class="glyphicon glyphicon-trash icon-white"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary pull-right" ng-click="ok()">Save</button>
+    <button class="btn btn-default pull-right" ng-click="cancel()">Cancel</button>
+  </div>
+</form>
