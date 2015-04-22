@@ -15,7 +15,7 @@ if (fn:count($alert:doc/jbasic:json/jbasic:persons/jbasic:json[jbasic:role = "Te
 then
   let $demo-name := $alert:doc/jbasic:json/jbasic:name/string()
   let $status-details := $alert:doc/jbasic:json/jbasic:demoStatus/jbasic:statusDetails
-  let $ref-host := ($conf:HOSTNAME, $alert:rule/alert:options/alert:hostname/string())[1]
+  let $ref-host := ($conf:HOSTNAME, $alert:rule/alert:options/alert:hostname/string())[. ne ""][1]
   let $demo-url := fn:concat("http://", $ref-host, "/detail", fn:document-uri($alert:doc))
   let $subject := fn:concat("[DemoCat]: ", $demo-name, " is Not Working")
   let $message :=
