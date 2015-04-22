@@ -1,0 +1,37 @@
+<form class="form edit-memo" role="form">
+  <div class="modal-header">
+      <h3 class="modal-title">{{title}}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="alert alert-danger loginerror" ng-repeat="alert in alerts" ng-cloak>{{alert}}</div>
+    </div>
+    <div class="donttouch">
+      
+      <div class="form-group">
+        <div class="row" ng-repeat="event in model">
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="Presenter"  ng-model="model[$index].presenter"/></div>
+          <div class="col-md-3"><input type="text" class="form-control" placeholder="Event"  ng-model="model[$index].title"/></div>
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="Demo"  ng-model="model[$index].demo"/></div>
+          <div class="col-md-2">
+            <input type="date" class="form-control" placeholder="Start date/time"  ng-model="model[$index].start"/>
+          </div>
+          <div class="col-md-2">
+            <input type="number" class="form-control" placeholder="Duration"  ng-model="model[$index].duration"/>
+          </div>
+          <div class="col-md-1">
+            <a class="btn btn-success btn-xs" ng-click="addVanguardLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+            <a class="btn btn-danger btn-xs" ng-click="removeVanguardLink($index)">
+              <span class="glyphicon glyphicon-trash icon-white"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary pull-right" ng-click="ok()">Save</button>
+    <button class="btn btn-default pull-right" ng-click="cancel()">Cancel</button>
+  </div>
+</form>
