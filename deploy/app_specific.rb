@@ -15,9 +15,9 @@ class ServerConfig
   # add alerting when deploying content
   alias_method :original_deploy_content, :deploy_content
   def deploy_content()
-    remove_alerting
+    #remove_alerting
     original_deploy_content
-    install_alerting
+    #install_alerting
   end
   
   # add triggers when deploying modules
