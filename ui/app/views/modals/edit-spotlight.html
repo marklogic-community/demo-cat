@@ -10,13 +10,13 @@
       
       <div class="form-group">
         <label class="control-label">Spotlight</label> 
-        <a class="btn btn-success btn-xs" ng-click="addSpotlightLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+        <a class="btn btn-success btn-xs" ng-click="model.addSpotlightLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
 
-        <div class="row" ng-repeat="demo in model">
-          <div class="col-md-4"><input type="file" class="form-control" placeholder="Choose file(s)"  ng-multiple="true" ng-file-select ng-model="demo.screenshot" name="attachments"/></div>
-          <div class="col-md-7"><input type="url" class="form-control" placeholder="url"  ng-model="demo.uri"/></div>
+        <div class="row" ng-repeat="demo in model.spotlight">
+          <div class="col-md-5"><input type="text" class="form-control" placeholder="Demo"  ng-model="model.spotlight[$index].demo" typeahead="choice.name for choice in model.demos | filter:$viewValue"/></div>
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="Attachment" ng-model="model.spotlight[$index].screenshot"/></div>
           <div class="col-md-1 icon">
-            <a class="btn btn-danger btn-xs" ng-click="removeSpotlightLink($index)">
+            <a class="btn btn-danger btn-xs" ng-click="model.removeSpotlightLink($index)">
               <span class="glyphicon glyphicon-trash icon-white"></span>
             </a>
           </div>
