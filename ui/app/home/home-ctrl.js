@@ -18,12 +18,16 @@
         editDontTouch: editDontTouch,
         editSpotlight: editSpotlight
       });
-      
-      if (!model.vanguard) {
-        mlRest.getDocument('/vanguard.json', { format: 'json' }).then(function(response) {
-          model.vanguard = response.data.vanguard;
-        });
-      }
+
+      var vanguardBaseline = {
+          'news':[],
+          'services':[]
+        };
+      mlRest.getDocument('/vanguard.json', { format: 'json' }).then(function(response) {
+        model.vanguard = angular.extend(vanguardBaseline,response.data.vanguard);
+      }, function() {
+        model.vanguard = vanguardBaseline;
+      });
       if (!model.donttouch) {
         mlRest.getDocument('/dont-touch.json', { format: 'json' }).then(function(response) {
           model.donttouch = response.data['dont-touch'];
@@ -34,19 +38,45 @@
           model.spotlight = response.data.spotlight;
         });
       }
-      
-      function editVanguard() {
-        showModal('/views/modals/edit-vanguard.html', 'Edit Vanguard', model.vanguard);
+
+      function addVanguardNewsLink() {
+        model.vanguard.news.push({title: null, link: null});
       }
-      
+
+      function removeVanguardNewsLink(index) {
+        model.vanguard.news.splice(index, 1);
+      }
+
+      function addVanguardServicesLink() {
+        model.vanguard.services.push({title: null, link: null});
+      }
+
+      function removeVanguardServicesLink(index) {
+        model.vanguard.services.splice(index, 1);
+      }
+
+      function editVanguard() {
+        showModal('/views/modals/edit-vanguard.html', 'Edit Vanguard', {
+          vanguard: model.vanguard,
+          addVanguardNewsLink: addVanguardNewsLink,
+          removeVanguardNewsLink: removeVanguardNewsLink,
+          addVanguardServicesLink: addVanguardServicesLink,
+          removeVanguardServicesLink: removeVanguardServicesLink
+        }).then(function(){
+          mlRest.updateDocument(
+            { vanguard: model.vanguard },
+            { uri: '/vanguard.json', format: 'json' });
+        });
+      }
+
       function editDontTouch() {
         showModal('/views/modals/edit-dont-touch.html', 'Edit Don\'t Touch', model.donttouch);
       }
-      
+
       function editSpotlight() {
         showModal('/views/modals/edit-spotlight.html', 'Edit Spotlight', model.spotlight);
       }
-      
+
       function showModal(template, title, model, validate) {
         return $modal.open({
           templateUrl: template+'',

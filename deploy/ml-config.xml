@@ -219,39 +219,39 @@
           <range-value-positions>false</range-value-positions>
         </range-element-index>
 -->
-        
+
         <!-- ML7 / JSONXML -->
         <range-element-index>
           <scalar-type>string</scalar-type>
           <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
-          <localname>name version personName</localname>
+          <localname>name version personName uri</localname>
           <collation>http://marklogic.com/collation/codepoint</collation>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
-        
+
         <range-element-index>
           <scalar-type>dateTime</scalar-type>
           <namespace-uri>http://marklogic.com/xdmp/json/basic</namespace-uri>
           <localname>lastModifiedAt</localname>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
-        
+
         <!-- ML8 / JSON -->
         <range-element-index>
           <scalar-type>string</scalar-type>
           <namespace-uri/>
-          <localname>name version personName</localname>
+          <localname>name version personName uri</localname>
           <collation>http://marklogic.com/collation/codepoint</collation>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
-        
+
         <range-element-index>
           <scalar-type>dateTime</scalar-type>
           <namespace-uri/>
           <localname>lastModifiedAt</localname>
           <range-value-positions>false</range-value-positions>
         </range-element-index>
-        
+
       </range-element-indexes>
       <range-element-attribute-indexes>
 <!--
@@ -327,7 +327,7 @@
           <range-value-positions>false</range-value-positions>
           <invalid-values>ignore</invalid-values>
         </range-path-index>
-        
+
         <!-- ML8 / JSON -->
         <range-path-index>
           <scalar-type>string</scalar-type>
