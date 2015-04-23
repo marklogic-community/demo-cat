@@ -27,17 +27,12 @@
   </grammar>
 
   <!-- ML7 / JSONXML -->
-  <constraint name="ml7_version">
+  
+  <constraint name="ml7_domain">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
-      <facet-option>limit=10</facet-option>
-      <facet-option>frequency-order</facet-option>
-    </range>
-  </constraint>
-  <constraint name="ml7_personName">
-    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="http://marklogic.com/xdmp/json/basic" name="personName"/>
-      <facet-option>limit=10</facet-option>
+      <path-index
+        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:domains/jbasic:item</path-index>
+      <facet-option>limit=15</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
@@ -57,11 +52,17 @@
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
-  <constraint name="ml7_domain">
+  <constraint name="ml7_personName">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <path-index
-        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:domains/jbasic:item</path-index>
-      <facet-option>limit=15</facet-option>
+      <element ns="http://marklogic.com/xdmp/json/basic" name="personName"/>
+      <facet-option>limit=10</facet-option>
+      <facet-option>frequency-order</facet-option>
+    </range>
+  </constraint>
+  <constraint name="ml7_version">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
+      <facet-option>limit=10</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
@@ -91,17 +92,10 @@
   </tuples>
 
   <!-- ML8 / JSON -->
-  <constraint name="version">
+  <constraint name="domain">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="" name="version"/>
-      <facet-option>limit=10</facet-option>
-      <facet-option>frequency-order</facet-option>
-    </range>
-  </constraint>
-  <constraint name="personName">
-    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="" name="personName"/>
-      <facet-option>limit=10</facet-option>
+      <path-index>domains</path-index>
+      <facet-option>limit=15</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
@@ -119,10 +113,17 @@
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
-  <constraint name="domain">
+  <constraint name="personName">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <path-index>domains</path-index>
-      <facet-option>limit=15</facet-option>
+      <element ns="" name="personName"/>
+      <facet-option>limit=10</facet-option>
+      <facet-option>frequency-order</facet-option>
+    </range>
+  </constraint>
+  <constraint name="version">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <element ns="" name="version"/>
+      <facet-option>limit=10</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
