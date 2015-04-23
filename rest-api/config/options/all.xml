@@ -81,6 +81,15 @@
     </range>
   </values>
 
+  <tuples name="ml7_name-uri">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <element ns="http://marklogic.com/xdmp/json/basic" name="name" />
+    </range>
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <uri />
+    </range>
+  </tuples>
+
   <!-- ML8 / JSON -->
   <constraint name="version">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
@@ -136,24 +145,16 @@
       <facet-option>frequency-order</facet-option>
     </range>
   </values>
-  <!-- ML7 / JSONXML -->
-  <tuples name="ml7_email-username">
-    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
-      <element ns="http://marklogic.com/xdmp/json/basic" name="name" />
-    </range>
-    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
-      <element ns="http://marklogic.com/xdmp/json/basic" name="uri" />
-    </range>
-  </tuples>
-  <!-- ML8 / JSON -->
+  
   <tuples name="name-uri">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
       <element ns="" name="name" />
     </range>
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
-      <element ns="" name="uri" />
+      <uri />
     </range>
   </tuples>
+  
   <sort-order type="xs:dateTime"
       direction="descending">
     <element ns="" name="lastModifiedAt"/>

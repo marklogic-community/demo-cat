@@ -1,171 +1,162 @@
-var sliderApp=angular.module('sliderApp',[]);
+angular.module('sliderApp', [])
+  .directive('slider', function($timeout) {
+    'use strict';
 
-sliderApp.controller('SliderController', ['$scope', function($scope) {
-  'use strict';
+    return {
+      restrict: 'AE',
+      replace: true,
+      scope: {
+        images: '='
+      },
+      link: function(scope, elem, attrs) {
 
-  // $scope.images=[
-  // {
-  //     src:'situational-wareness-sm.png',
-  //     title:'Situational Awareness',
-  //     uri:'http://catalog.demo.marklogic.com/detail/demos/17784760062083407114.json',
-  //     desc:'This is a short description.',
-  //     visible: true
-  // },
-  // {
-  //     src:'ediscovery-sm.png',
-  //     title:'eDiscovery',
-  //     uri:'http://catalog.demo.marklogic.com/detail/demos/5462875041093986835.json',
-  //     desc:'A Day in the life of an investigator @CITI.',
-  //     visible: true
-  // },
-  // {
-  //     src:'dmlchealthcare-sm.png',
-  //     title:'DMLC Healthcare',
-  //     uri:'http://www.cnn.com',
-  //     desc:'This is a short description.'
-  // },
-  // {
-  //     src:'obi-sm.png',
-  //     title:'OBI',
-  //     uri:'https://wiki.marklogic.com/display/PUBLICSOLN/Backup+Object+Based+Intelligence',
-  //     desc:'The MarkLogic OBP solution answers this challenge by providing tradecraft tools and a data model capable of storing, enhancing and disseminating high value analysis products. '
-  // },
-  // {
-  //     src:'exec-paycheck.png',
-  //     title:'Executive Paycheck',
-  //     uri:'https://wiki.marklogic.com/display/CS/Media+Demo',
-  //     desc:'This site collects information about executive compensation from SEC filings and presents them as an information application that lets users search, browse and analyse the data and gain insight into the pay structure of the Fortune 500.'
-  // },
-  // {
-  //     src:'blue-fusion.png',
-  //     title:'Blue Fusion',
-  //     uri:'#',
-  //     desc:'MarkLogic Blue Fusion is an integrated software solution that can be deployed at headquarters, forward operating bases, 2-man carry transit cases, and simple laptop computers.'
-  // }
-  //
-  // ];
-}]);
- 
-sliderApp.directive('slider', function($timeout) {
-  'use strict';
+        // initialization
+        scope.currentIndex = 0;
+        scope.isRunning = true;
+        scope.showOverlap = true;
+        scope.delay = 5000;
 
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: {
-      images: '='
-    },
-    link: function(scope, elem, attrs) {
+        function toggleImages(index) {
+          if (index > scope.images.length - 1) {
+            index = 0;
+          }
+          scope.images[index].visible = !scope.images[index].visible;
 
-      scope.currentIndex = 0;
-
-      function toggleImages(index) {
-        if (index > scope.images.length - 1) {
-          index = 0;
-        }
-        scope.images[index].visible = !scope.images[index].visible;
-
-        if (index === scope.images.length - 1) {
-          scope.images[0].visible = !scope.images[0].visible;
-        } else {
-          scope.images[index + 1].visible = !scope.images[index + 1].visible;
-        }
-      }
-
-      scope.overlappingNext = function() {
-        toggleImages(scope.currentIndex);
-
-        if (scope.currentIndex >= scope.images.length - 1) {
-          scope.currentIndex = 0;
-        } else {
-          scope.currentIndex++;
+          if (index === scope.images.length - 1) {
+            scope.images[0].visible = !scope.images[0].visible;
+          } else {
+            scope.images[index + 1].visible = !scope.images[index + 1].visible;
+          }
         }
 
-        toggleImages(scope.currentIndex);
-      };
+        /* slow slide to the left 1 by 1. */
+        var overlappingNext = function() {
+          // hide current images
+          toggleImages(scope.currentIndex);
 
-      scope.overlappingPrevious = function(item) {
-        toggleImages(scope.currentIndex);
+          if (scope.currentIndex >= scope.images.length - 1) {
+            scope.currentIndex = 0;
+          } else {
+            scope.currentIndex++;
+          }
 
-        if (scope.currentIndex === 0) {
-          scope.currentIndex = scope.images.length - 1;
-        } else {
-          scope.currentIndex--;
-        }
+          // show new images
+          toggleImages(scope.currentIndex);
+        };
 
-        toggleImages(scope.currentIndex);
-      };
+        var overlappingPrevious = function(item) {
+          // hide current images
+          toggleImages(scope.currentIndex);
 
-      /* a different scroll pattern. */
-      /*
-        scope.contiguousNext=function() {
-            var imglen = (scope.images.length / 2)|1;
-    
-            toggleImages( scope.currentIndex * 2 );
-    
+          if (scope.currentIndex === 0) {
+            scope.currentIndex = scope.images.length - 1;
+          } else {
+            scope.currentIndex--;
+          }
+
+          // show new images
+          toggleImages(scope.currentIndex);
+        };
+        /* end slow slide to the left 1 by 1. */
+
+        /* faster slide to the left 2 by 2. */
+        var contiguousNext = function() {
+          var imglen = (scope.images.length / 2) | 1;
+
+          // hide current images
+          toggleImages(scope.currentIndex * 2);
+
+          // handle odd or even number of images
+          if ((scope.images.length % 2 === 0 && scope.currentIndex === imglen - 1) ||
+            (scope.images.length % 2 === 1 && scope.currentIndex === imglen)) {
+            scope.currentIndex = 0;
+          } else {
+            scope.currentIndex++;
+          }
+
+          // show new images
+          toggleImages(scope.currentIndex * 2);
+        };
+
+        var contiguousPrevious = function(item) {
+          var imglen = (scope.images.length / 2) | 1;
+
+          // hide current images
+          toggleImages(scope.currentIndex * 2);
+
+
+          if (scope.currentIndex === 0) {
             // handle odd or even number of images
-            if ( (scope.images.length % 2 === 0 && scope.currentIndex === imglen - 1) ||
-                (scope.images.length % 2 === 1 && scope.currentIndex === imglen) ) {
-                    scope.currentIndex = 0;
+            if (scope.images.length % 2 === 1) {
+              scope.currentIndex = imglen;
             } else {
-                scope.currentIndex++;
+              scope.currentIndex = imglen - 1;
             }
-    
-            toggleImages( scope.currentIndex * 2 );
+          } else {
+            scope.currentIndex--;
+          }
+
+          // show new images
+          toggleImages(scope.currentIndex * 2);
+        };
+        /* end faster slide to the left 2 by 2. */
+        
+        /* Start: For Automatic slideshow*/
+        var timer;
+
+        var startTimer = function() {
+          timer = $timeout(function() {
+            if (scope.showOverlap) {
+              overlappingNext();
+            } else {
+              contiguousNext();
+            }
+            timer = $timeout(startTimer, scope.delay);
+          }, scope.delay);
         };
 
-        scope.contiguousPrevious=function(item) {
-            var imglen = (scope.images.length / 2)|1;
-    
-            toggleImages( scope.currentIndex * 2 );
-        
+        scope.$on('$destroy', function() {
+          $timeout.cancel(timer);
+        });
 
-            if ( scope.currentIndex === 0 ) {
-                // handle odd or even number of images
-                if (scope.images.length % 2 === 1) {
-                    scope.currentIndex = imglen;
-                } else {
-                    scope.currentIndex = imglen - 1;
-                }
-            } else {
-                scope.currentIndex--;
-            }
-        
-            toggleImages( scope.currentIndex * 2 );
+        scope.pause = function() {
+          scope.isRunning = false;
+          $timeout.cancel(timer);
         };
-        */
-      /* end a different scroll pattern*/
-      /* Start: For Automatic slideshow*/
 
-      var timer;
+        scope.play = function() {
+          scope.isRunning = true;
+          startTimer();
+        };
+        /* End : For Automatic slideshow*/
+        
+        // pause auto slide at user interaction
+        scope.overlappingNext = function() {
+          scope.pause();
+          overlappingNext();
+        };
+        
+        scope.overlappingPrevious = function(item) {
+          scope.pause();
+          overlappingPrevious(item);
+        };
+        
+        scope.contiguousNext = function() {
+          scope.pause();
+          contiguousNext();
+        };
+        
+        scope.contiguousPrevious = function(item) {
+          scope.pause();
+          contiguousPrevious(item);
+        };
+        
+        // init
+        if (scope.isRunning) {
+          startTimer();
+        }
 
-      var sliderFunc = function() {
-        timer = $timeout(function() {
-          scope.overlappingNext();
-          timer = $timeout(sliderFunc, 5000);
-        }, 5000);
-      };
-
-      sliderFunc();
-
-      scope.$on('$destroy', function() {
-        $timeout.cancel(timer);
-      });
-
-      scope.pause = function() {
-        $timeout.cancel(timer);
-      };
-
-      scope.play = function() {
-        sliderFunc();
-      };
-
-      /* End : For Automatic slideshow*/
-      angular.element(document.querySelectorAll('.arrow')).one('click', function() {
-        $timeout.cancel(timer);
-      });
-
-    },
-    templateUrl: 'scripts/directives/slider.html'
-  };
-});
+      },
+      templateUrl: 'scripts/directives/slider.html'
+    };
+  });

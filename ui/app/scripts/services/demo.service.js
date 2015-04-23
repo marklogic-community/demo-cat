@@ -9,7 +9,8 @@
     var service = {
       create: createDemo,
       deleteAttachment: deleteAttachment,
-      save: saveDemo
+      save: saveDemo,
+      suggest: suggestDemo
     };
 
     var params = {
@@ -32,7 +33,7 @@
     }
 
     function suggestDemo(demoSearchText) {
-      var updateParams = angular.extend({uri: docUri}, params);
+      //var updateParams = angular.extend({uri: docUri}, params);
       return $http.post('v1/values/name-uri', {
         query: {
           'queries': [{
@@ -48,7 +49,7 @@
         }
       }, { params: {options: 'all'}}).then(function(response){
         var demos = [];
-        angular.forEach(response.data['values-response'].tuple, function(){
+        angular.forEach(response.data['values-response'].tuple, function(value){
           var values = value['distinct-value'];
           demos.push({
             name: values[0]._value,
