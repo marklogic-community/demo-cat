@@ -9,6 +9,9 @@
     <div class="donttouch">
       
       <div class="form-group">
+        <label class="control-label">Don't Touch; Demo in Progress</label> 
+        <a class="btn btn-success btn-xs" ng-click="addDontTouchLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+
         <div class="row" ng-repeat="event in model">
           <div class="col-md-2"><input type="text" class="form-control" placeholder="Presenter"  ng-model="model[$index].presenter"/></div>
           <div class="col-md-3"><input type="text" class="form-control" placeholder="Event"  ng-model="model[$index].title"/></div>
@@ -19,8 +22,7 @@
           <div class="col-md-2">
             <input type="number" class="form-control" placeholder="Duration"  ng-model="model[$index].duration"/>
           </div>
-          <div class="col-md-1">
-            <a class="btn btn-success btn-xs" ng-click="addVanguardLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+          <div class="col-md-1 icon">
             <a class="btn btn-danger btn-xs" ng-click="removeVanguardLink($index)">
               <span class="glyphicon glyphicon-trash icon-white"></span>
             </a>
