@@ -25,8 +25,11 @@
               </span>
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2 duration">
             <input type="number" class="form-control" placeholder="Duration" ng-model="model.donttouch[$index].duration" required/>
+            <div class="info">
+              <span class="glyphicon glyphicon-info-sign" popover="Duration is in minutes." popover-placement="bottom" popover-trigger="mouseenter"></span>
+            </div>
           </div>
           <div class="col-md-1 icon">
             <a href class="btn btn-danger btn-xs" ng-click="model.removeDontTouchLink($index)">
