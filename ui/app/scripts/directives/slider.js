@@ -6,7 +6,9 @@ angular.module('sliderApp', [])
       restrict: 'AE',
       replace: true,
       scope: {
-        images: '='
+        images: '=',
+        uriPrefix: '@',
+        imagePrefix: '@'
       },
       link: function(scope, elem, attrs) {
 

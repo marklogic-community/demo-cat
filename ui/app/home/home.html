@@ -21,12 +21,12 @@
         <h3>Don't Touch<span class="subheader">
           Demo in progress</span></h3>
           <div class="hp-content">
-            <ul ng-repeat="demo in model.donttouch">
-              <li><strong>{{demo.title}}</strong></li>
-              <li><strong>Presenter:</strong> {{demo.presenter}}</li>
-              <li><strong>Date:</strong> {{demo.start | date:'shortDate' }}</li>
-              <li><strong>Start time:</strong> {{demo.start | date:'shortTime' }}</li>
-              <li><strong>Duration:</strong> {{demo.duration}} minutes</li>
+            <ul ng-repeat="event in model.donttouch">
+              <li><a ng-href="/detail{{event.uri}}"><strong>{{event.title}}</strong></a></li>
+              <li><strong>Presenter:</strong> {{event.presenter}}</li>
+              <li><strong>Date:</strong> {{event.start | date:'shortDate' }}</li>
+              <li><strong>Start time:</strong> {{event.start | date:'shortTime' }}</li>
+              <li><strong>Duration:</strong> {{event.duration}} minutes</li>
             </ul>
         </div>
         <button ng-show="model.user.isWriter()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editDontTouch()">
@@ -39,7 +39,7 @@
     <div class="col-md-offset-1 col-md-10">
       <div class="spot col-md-10">
         <h3>Spotlight</h3>
-        <slider images="model.spotlight" />
+        <slider images="model.spotlight" uri-prefix="/detail" image-prefix="/attachment"/>
         <button ng-show="model.user.isAdmin()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editSpotlight()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>

@@ -6,8 +6,8 @@
     .module('demoCat')
     .factory('AuthenticationService', AuthService);
 
-  AuthService.$inject = ['$http', '$q', '$rootScope', 'authService'];
-  function AuthService($http, $q, $rootScope, authService) {
+  AuthService.$inject = ['$http', '$q', '$rootScope', 'authService', 'MLRest'];
+  function AuthService($http, $q, $rootScope, authService, MLRest) {
 
     var user;
     var userRequest;
@@ -16,7 +16,8 @@
       getUser: getUser,
       user: function() { return user; },
       login: login,
-      logout: logout
+      logout: logout,
+      list: listUsers
     };
 
     getUser();
@@ -103,5 +104,16 @@
         return data;
       });
     }
+    
+    function listUsers() {
+      return MLRest.values('fullname', { options: 'user', format: 'json' }).then(function(resp) {
+        if (resp.data['values-response']['distinct-value']) {
+          return resp.data['values-response']['distinct-value'].map(function(value) {
+            return value._value;
+          });
+        }
+      });
+    }
+    
   }
 })();
