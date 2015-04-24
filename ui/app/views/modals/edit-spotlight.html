@@ -1,4 +1,4 @@
-<form class="form edit-memo" role="form">
+<form class="form edit-memo" role="form" name="modal">
   <div class="modal-header">
       <h3 class="modal-title">{{title}}</h3>
   </div>
@@ -13,8 +13,9 @@
         <a class="btn btn-success btn-xs" ng-click="model.addSpotlightLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
 
         <div class="row" ng-repeat="demo in model.spotlight">
-          <div class="col-md-5"><input type="text" class="form-control" placeholder="Demo"  ng-model="model.spotlight[$index].demo" typeahead="choice.name for choice in model.demos | filter:$viewValue"/></div>
-          <div class="col-md-6"><input type="text" class="form-control" placeholder="Attachment" ng-model="model.spotlight[$index].screenshot"/></div>
+          <div class="col-md-3"><input type="text" class="form-control" placeholder="Slogan"  ng-model="model.spotlight[$index].title"/></div>
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="Demo" ng-model="model.spotlight[$index].demo" typeahead="choice.name for choice in model.demos | filter:$viewValue" ng-change="model.demoChanged($index)" required/></div>
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="Attachment" ng-model="model.spotlight[$index].attachment" typeahead="choice.attachmentName for choice in model.attachments | filter:$viewValue" required/></div>
           <div class="col-md-1 icon">
             <a class="btn btn-danger btn-xs" ng-click="model.removeSpotlightLink($index)">
               <span class="glyphicon glyphicon-trash icon-white"></span>
