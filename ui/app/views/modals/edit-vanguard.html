@@ -1,4 +1,4 @@
-<form class="form edit-memo" role="form">
+<form class="form edit-memo" role="form" name="modal">
   <div class="modal-header">
       <h3 class="modal-title">{{title}}</h3>
   </div>
@@ -13,8 +13,8 @@
         <a class="btn btn-success btn-xs" ng-click="model.addVanguardNewsLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
 
         <div class="row" ng-repeat="news in model.vanguard.news track by $index">
-          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="news.title" maxlength="45"/></div>
-          <div class="col-md-5"><input type="text" class="form-control" placeholder="url"  ng-model="news.link"/></div>
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="news.title" maxlength="45" required/></div>
+          <div class="col-md-5"><input type="url" class="form-control" placeholder="url"  ng-model="news.link" required/></div>
           <div class="col-md-1 icon">
             <a class="btn btn-danger btn-xs" ng-click="model.removeVanguardNewsLink($index)">
               <span class="glyphicon glyphicon-trash icon-white"></span>
@@ -27,8 +27,8 @@
         <a class="btn btn-success btn-xs" ng-click="model.addVanguardServicesLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
 
         <div class="row" ng-repeat="service in model.vanguard.services track by $index">
-          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="service.title" maxlength="45"/></div>
-          <div class="col-md-5"><input type="text" class="form-control" placeholder="url"  ng-model="service.link"/></div>
+          <div class="col-md-6"><input type="text" class="form-control" placeholder="title"  ng-model="service.title" maxlength="45" required/></div>
+          <div class="col-md-5"><input type="text" class="form-control" placeholder="url"  ng-model="service.link" required/></div>
           <div class="col-md-1 icon">
             <a class="btn btn-danger btn-xs" ng-click="model.removeVanguardServicesLink($index)">
               <span class="glyphicon glyphicon-trash icon-white"></span>

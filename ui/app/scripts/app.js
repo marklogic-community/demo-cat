@@ -6,7 +6,7 @@
     'ngRoute',
     'ngCkeditor',
     'demoCat.search', 'demoCat.common', 'demoCat.home',
-    'ui.bootstrap',
+    'ui.bootstrap', 'ui.bootstrap.datetimepicker',
     'ngSanitize',
     'autocomplete',
     'sliderApp',
@@ -15,7 +15,8 @@
     'ml.search.tpls',
     'angularFileUpload',
     'ml.utils',
-    'http-auth-interceptor'])
+    'http-auth-interceptor'
+  ])
     .config(AppConfig)
     .run(AppRun);
 
@@ -32,6 +33,12 @@
         resolve: {
           user: function(AuthenticationService) {
             return AuthenticationService.getUser();
+          },
+          users: function(AuthenticationService) {
+            return AuthenticationService.list();
+          },
+          demos: function(demoService) {
+            return demoService.list();
           }
         }
       })
@@ -76,11 +83,9 @@
           edit: function() {
             return true;
           },
-          demo: function($route, MLRest) {
+          demo: function($route, demoService) {
             var uri = $route.current.params.uri;
-            return MLRest.getDocument(uri, { format: 'json' }).then(function(response) {
-              return response.data;
-            });
+            return demoService.get(uri);
           },
           domains: function(domainsService) {
             return domainsService.list();
@@ -97,11 +102,9 @@
         templateUrl: '/views/demo.html',
         controller: 'DemoCtrl',
         resolve: {
-          demo: function($route, MLRest) {
+          demo: function($route, demoService) {
             var uri = $route.current.params.uri;
-            return MLRest.getDocument(uri, { format: 'json' }).then(function(response) {
-              return response.data;
-            });
+            return demoService.get(uri);
           },
           user: function(AuthenticationService) {
             return AuthenticationService.getUser();
