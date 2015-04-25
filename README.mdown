@@ -2,8 +2,8 @@
 
     $ npm install
     $ bower install
-    $ ml local bootstrap
-    $ ml local deploy modules
+    $ ./ml local bootstrap
+    $ ./ml local deploy modules
     $ gulp server
 
 If the app-port specified in build.properties is already occupied and you want to change it for your local environment, do the follow:
