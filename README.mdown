@@ -2,8 +2,8 @@
 
     $ npm install
     $ bower install
-    $ ml local bootstrap
-    $ ml local deploy modules
+    $ ./ml local bootstrap
+    $ ./ml local deploy modules
     $ gulp server
 
 If the app-port specified in build.properties is already occupied and you want to change it for your local environment, do the follow:
@@ -134,7 +134,7 @@ local-server=localhost
 
 1. Open a command prompt in the root folder of Roxy.
   *If your server is not configured as local-server in build.properties then substitute your environment here ( local | dev | prod )*
-2. `$ ml local bootstrap`
+2. `$ ./ml local bootstrap`
 3. Depending on what, if anything, you changed you may need to restart MarkLogic in order to proceed. If you see output telling you to restart...
   <pre><code>$ ml local restart</code></pre>
 
@@ -152,4 +152,4 @@ local-server=localhost
 
 ## Getting Help
 For more information run:
-  `$ ml -h`
+  `$ ./ml -h`

@@ -21,7 +21,7 @@
 * ./ml prod clean content
 * ./ml prod deploy modules
 * ./ml prod deploy content
-* ./ml prod mlcp import -input_file_path export_migrated -input_file_type archive -transform_namespace "http://marklogic.com/transform/to-json" -transform_module /transform/to-json.xqy
+* ./ml prod mlcp import -input_file_path export -input_file_type archive -transform_namespace "http://marklogic.com/transform/to-json" -transform_module /transform/to-json.xqy
 * check data with QC
 * ./ml prod migrate_data -v
 * check data with QC

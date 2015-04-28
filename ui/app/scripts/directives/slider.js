@@ -6,7 +6,7 @@ angular.module('sliderApp', [])
       restrict: 'AE',
       replace: true,
       scope: {
-        images: '=',
+        orgImages: '=images',
         uriPrefix: '@',
         imagePrefix: '@'
       },
@@ -15,104 +15,45 @@ angular.module('sliderApp', [])
         // initialization
         scope.currentIndex = 0;
         scope.isRunning = true;
-        scope.showOverlap = true;
+        scope.showOverlap = false;
         scope.delay = 5000;
+        
+        scope.images = [];
 
-        function toggleImages(index) {
-          if (index > scope.images.length - 1) {
-            index = 0;
-          }
+        function toggleImage(index) {
           scope.images[index].visible = !scope.images[index].visible;
-
-          if (index === scope.images.length - 1) {
-            scope.images[0].visible = !scope.images[0].visible;
-          } else {
-            scope.images[index + 1].visible = !scope.images[index + 1].visible;
-          }
         }
 
-        /* slow slide to the left 1 by 1. */
-        var overlappingNext = function() {
+        var next = function() {
           // hide current images
-          toggleImages(scope.currentIndex);
+          toggleImage(scope.currentIndex);
+          toggleImage(scope.currentIndex + 1);
 
-          if (scope.currentIndex >= scope.images.length - 1) {
-            scope.currentIndex = 0;
-          } else {
-            scope.currentIndex++;
-          }
+          scope.currentIndex = (scope.currentIndex + (scope.showOverlap ? 1 : 2)) % scope.orgImages.length;
 
           // show new images
-          toggleImages(scope.currentIndex);
+          toggleImage(scope.currentIndex);
+          toggleImage(scope.currentIndex + 1);
         };
 
-        var overlappingPrevious = function(item) {
+        var previous = function(item) {
           // hide current images
-          toggleImages(scope.currentIndex);
+          toggleImage(scope.currentIndex);
+          toggleImage(scope.currentIndex + 1);
 
-          if (scope.currentIndex === 0) {
-            scope.currentIndex = scope.images.length - 1;
-          } else {
-            scope.currentIndex--;
-          }
+          scope.currentIndex = (scope.currentIndex + scope.orgImages.length - (scope.showOverlap ? 1 : 2)) % scope.orgImages.length;
 
           // show new images
-          toggleImages(scope.currentIndex);
+          toggleImage(scope.currentIndex);
+          toggleImage(scope.currentIndex + 1);
         };
-        /* end slow slide to the left 1 by 1. */
-
-        /* faster slide to the left 2 by 2. */
-        var contiguousNext = function() {
-          var imglen = (scope.images.length / 2) | 1;
-
-          // hide current images
-          toggleImages(scope.currentIndex * 2);
-
-          // handle odd or even number of images
-          if ((scope.images.length % 2 === 0 && scope.currentIndex === imglen - 1) ||
-            (scope.images.length % 2 === 1 && scope.currentIndex === imglen)) {
-            scope.currentIndex = 0;
-          } else {
-            scope.currentIndex++;
-          }
-
-          // show new images
-          toggleImages(scope.currentIndex * 2);
-        };
-
-        var contiguousPrevious = function(item) {
-          var imglen = (scope.images.length / 2) | 1;
-
-          // hide current images
-          toggleImages(scope.currentIndex * 2);
-
-
-          if (scope.currentIndex === 0) {
-            // handle odd or even number of images
-            if (scope.images.length % 2 === 1) {
-              scope.currentIndex = imglen;
-            } else {
-              scope.currentIndex = imglen - 1;
-            }
-          } else {
-            scope.currentIndex--;
-          }
-
-          // show new images
-          toggleImages(scope.currentIndex * 2);
-        };
-        /* end faster slide to the left 2 by 2. */
         
         /* Start: For Automatic slideshow*/
         var timer;
 
         var startTimer = function() {
           timer = $timeout(function() {
-            if (scope.showOverlap) {
-              overlappingNext();
-            } else {
-              contiguousNext();
-            }
+            next();
             timer = $timeout(startTimer, scope.delay);
           }, scope.delay);
         };
@@ -133,30 +74,31 @@ angular.module('sliderApp', [])
         /* End : For Automatic slideshow*/
         
         // pause auto slide at user interaction
-        scope.overlappingNext = function() {
+        scope.next = function() {
           scope.pause();
-          overlappingNext();
+          next();
         };
         
-        scope.overlappingPrevious = function(item) {
+        scope.previous = function(item) {
           scope.pause();
-          overlappingPrevious(item);
-        };
-        
-        scope.contiguousNext = function() {
-          scope.pause();
-          contiguousNext();
-        };
-        
-        scope.contiguousPrevious = function(item) {
-          scope.pause();
-          contiguousPrevious(item);
+          previous(item);
         };
         
         // init
-        if (scope.isRunning) {
-          startTimer();
-        }
+        scope.$watch('$parent.'+attrs.images, function(images) {
+          if (images) {
+            scope.images = angular.copy(images);
+            scope.images[images.length] = images[0];
+            scope.images.map(function(image) {
+              image.visible = false;
+            });
+            scope.images[scope.currentIndex].visible = true;
+            scope.images[scope.currentIndex + 1].visible = true;
+            if (scope.isRunning) {
+              startTimer();
+            }
+          }
+        });
 
       },
       templateUrl: 'scripts/directives/slider.html'
