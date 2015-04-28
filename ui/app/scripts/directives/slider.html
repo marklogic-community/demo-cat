@@ -3,7 +3,7 @@
     <a ng-href="{{uriPrefix}}{{image.uri}}"><img ng-src="{{imagePrefix}}{{image.src}}"/></a>
   </div>
   <div class="arrows">
-    <a class="left arrow" href ng-click="showOverlap ? overlappingPrevious() : contiguousPrevious()">
+    <a class="left arrow" href ng-click="previous()">
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     </a>
     <a ng-hide="isRunning" class="pause" href ng-click="play()">
@@ -12,7 +12,7 @@
     <a ng-show="isRunning" class="pause" href ng-click="pause()">
       <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
     </a>
-    <a class="right arrow" href ng-click="showOverlap ? overlappingNext() : contiguousNext()">
+    <a class="right arrow" href ng-click="next()">
       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </a>
   </div>

@@ -1,7 +1,7 @@
 <div class="home">
-  <div class="row">
-    <div class="col-md-offset-1 col-md-10">
-      <div class="col-md-7 vanguard">
+  <div class="col-md-offset-2 col-md-8">
+    <div class="row">
+      <div class="col-md-8 vanguard">
         <h3>Vanguard</h3>
         <div class="hp-content">
           <div class="pull-left news">
@@ -17,7 +17,7 @@
           <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
       </div>
-      <div class="col-md-3 donttouch">
+      <div class="col-md-4 donttouch">
         <h3>Don't Touch<span class="subheader">
           Demo in progress</span></h3>
           <div class="hp-content">
@@ -33,17 +33,15 @@
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
       </div>
-    </div>
-  </div> <!--/end Vanguard/don't touch row -->
-  <div class="row">
-    <div class="col-md-offset-1 col-md-10">
-      <div class="spot col-md-10">
+    </div> <!--/end Vanguard/don't touch row -->
+    <div class="row">
+      <div class="spot col-md-12">
         <h3>Spotlight</h3>
-        <slider images="model.spotlight" uri-prefix="/detail" image-prefix="/attachment"/>
+        <slider images="model.spotlight" uri-prefix="/detail" image-prefix="/demo/attachment?uri="/>
         <button ng-show="model.user.isAdmin()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editSpotlight()">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
         </button>
       </div>
-    </div>
-  </div> <!--/end spotlight row  -->
+    </div> <!--/end spotlight row  -->
+  </div>
 </div>
