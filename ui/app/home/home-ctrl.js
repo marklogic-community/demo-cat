@@ -12,8 +12,8 @@
         };
       }
     ])
-    .controller('HomeCtrl', ['HomeModel', '$scope', '$modal', '$sce', 'user', 'users', 'demos', 'MLRest', 'demoService',
-      function(model, $scope, $modal, $sce, user, users, demos, mlRest, demoService) {
+    .controller('HomeCtrl', ['HomeModel', '$scope', '$modal', '$sce', 'user', 'users', 'demos', 'MLRest', 'demoService', '$filter',
+      function(model, $scope, $modal, $sce, user, users, demos, mlRest, demoService, $filter) {
         model.user = user;
         angular.extend($scope, {
           model: model,
@@ -136,27 +136,35 @@
 
         function editSpotlight() {
           var spotlight = angular.copy(model.spotlight);
+          var demoName = null;
           var attachments = [];
           showModal('/views/modals/edit-spotlight.html', 'Edit Spotlight', {
             spotlight: spotlight,
             demos: demos,
-            attachments: attachments,
+            attachments: function(name, value) {
+              if (demoName === name) {
+                return $filter('filter')(attachments, value);
+              } else {
+                demoName = name;
+                var demo = demos.filter(function(demo) {
+                  return demo.name === name;
+                });
+                if (demo.length > 0) {
+                  return demoService.get(demo[0].uri).then(function(demo) {
+                    attachments = demo.attachments;
+                    return $filter('filter')(demo.attachments, value);
+                  });
+                } else {
+                  attachments = [];
+                  return attachments;
+                }
+              }
+            },
             addSpotlightLink: function() {
               spotlight.push({});
             },
             removeSpotlightLink: function(index) {
               spotlight.splice(index, 1);
-            },
-            demoChanged: function(index) {
-              var name = spotlight[index].demo;
-              var demo = demos.filter(function(demo) {
-                return demo.name === name;
-              });
-              if (demo.length > 0) {
-                demoService.get(demo[0].uri).then(function(demo) {
-                  attachments = demo.attachments;
-                });
-              }
             }
           }).then(function() {
             angular.forEach(spotlight, function(spot, index) {
@@ -173,7 +181,7 @@
                 spot.src = attachment[0].uri;
               }
               if (!spot.title) {
-                spot.title = event.demo;
+                spot.title = spot.demo;
               }
             });
             model.spotlight = spotlight;

@@ -37,6 +37,7 @@
         comments: [],
         bugs: []
       },
+      attachedMedia: [],
       // additional comment model used for new
       additionalComment: commentModel,
       additionalBug: bugModel,
@@ -67,7 +68,7 @@
       var videoExtensions = ['webm','ogg','mp4'];
       var applicationExtensions = ['pdf'];
       var mediaExtensions = _.flatten([imageExtensions,videoExtensions,applicationExtensions]);
-      model.demo = angular.extend({attachedMedia:[]},demo);
+      model.demo = angular.extend({media:[]},demo);
       angular.forEach(model.demo.attachments, function(attachment) {
         var extension = attachment.uri.replace(/^.*\.([^\.]+)$/, '$1');
         if (mediaExtensions.indexOf(extension) > -1) {
@@ -79,7 +80,7 @@
           } else {
             mediaType = 'application';
           }
-          model.demo.attachedMedia.push({
+          model.attachedMedia.push({
             mediaName: attachment.attachmentName,
             mediaUrl: '/demo/attachment?uri='+attachment.uri,
             mediaType: mediaType,
