@@ -1,0 +1,39 @@
+<style>
+  .ml-search .input-group {
+    width: 100%;
+  }
+
+  .ml-search .search-submit {
+    width: 40px !important;
+  }
+
+  .ml-search .search-input-icon {
+    z-index: 3;
+    top: 0px;
+  }
+
+  .ml-search .search-input-clear {
+    right: 35px;
+    cursor: pointer;
+    cursor: hand;
+  }
+
+  .ml-search .search-loading {
+    right: -35px;
+  }
+</style>
+<form ng-submit="search({ qtext: qtext })" class="ml-search form-inline" role="search">
+  <div class="input-group">
+    <input ng-model="qtext" type="text" class="form-control" placeholder="Search..." autocomplete="off"
+        typeahead="suggestion for suggestion in suggest({ val: $viewValue })" typeahead-suggest-on-select="true" typeahead-loading="loadingSuggestions"/>
+    <a ng-show="qtext" ng-click="qtext = ''; clear()" class="search-input-icon search-input-clear form-control-feedback">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+    <span ng-show="loadingSuggestions" class="search-input-icon search-loading form-control-feedback">
+      <i class="fa fa-refresh fa-spin"></i>
+    </span>
+    <div ng-click="search({ qtext: qtext })" class="input-group-addon search-submit">
+      <i class="fa fa-search"></i>
+    </div>
+  </div>
+</form>
