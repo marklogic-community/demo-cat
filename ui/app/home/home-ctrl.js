@@ -38,7 +38,7 @@
             format: 'json'
           }).then(function(response) {
             var now = new Date();
-            var donttouch = response.data['dont-touch'];
+            var donttouch = response.data['dont-touch'] || [];
             angular.forEach(donttouch, function(event, index) {
               event.start = new Date(event.start);
             });
@@ -49,13 +49,19 @@
               }
             });
             model.donttouch = donttouch;
+          },
+          function() {
+            model.donttouch = [];
           });
         }
         if (!model.spotlight) {
           mlRest.getDocument('/spotlight.json', {
             format: 'json'
           }).then(function(response) {
-            model.spotlight = response.data.spotlight;
+            model.spotlight = response.data.spotlight || [];
+          },
+          function() {
+            model.spotlight = [];
           });
         }
 

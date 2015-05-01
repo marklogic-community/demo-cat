@@ -86,7 +86,7 @@ angular.module('sliderApp', [])
         
         // init
         scope.$watch('$parent.'+attrs.images, function(images) {
-          if (images) {
+          if (images && images.length > 0) {
             scope.images = angular.copy(images);
             scope.images[images.length] = images[0];
             scope.images.map(function(image) {
