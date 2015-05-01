@@ -1,4 +1,4 @@
-<div class="row detail">
+<div class="row detail" ng-init="initLimit = 3; maxLimit = 9999; limits = {}">
   <!-- Left col -->
   <div class="col-md-3">
     <div class="panel panel-primary site-details">
@@ -16,21 +16,33 @@
           <span ng-show="model.demo.demoStatus.status">{{model.demo.demoStatus.status}} ({{model.demo.demoStatus.lastStatusTimestamp  | date:'short' }})</span>
           <span ng-show="!model.demo.demoStatus.status">Unknown</span>
         </div>
-        <div ng-show="model.demo.features">
+        <div ng-if="model.demo.features.length">
           <h4>Features</h4>
-          <span ng-repeat="feature in model.demo.features">{{feature}}</span>
+          <div ng-if="model.demo.features.length > initLimit" class="pull-right">
+            <button class="btn btn-default btn-xs" ng-show="limits['features'] !== maxLimit" ng-click="limits['features'] = maxLimit">more</button>
+            <button class="btn btn-default btn-xs" ng-show="limits['features'] && limits['features'] !== initLimit" ng-click="limits['features'] = initLimit">less</button>
+          </div>
+          <span ng-repeat="feature in model.demo.features | limitTo:limits['features'] ? limits['features'] : initLimit">{{feature}}</span>
         </div>
-        <div ng-show="model.demo.technologies">
+        <div ng-if="model.demo.technologies.length">
           <h4>Technologies Used</h4>
-          <span ng-repeat="technology in model.demo.technologies">{{technology}}</span>
+          <div ng-if="model.demo.technologies.length > initLimit" class="pull-right">
+            <button class="btn btn-default btn-xs" ng-show="limits['technologies'] !== maxLimit" ng-click="limits['technologies'] = maxLimit">more</button>
+            <button class="btn btn-default btn-xs" ng-show="limits['technologies'] && limits['technologies'] !== initLimit" ng-click="limits['technologies'] = initLimit">less</button>
+          </div>
+          <span ng-repeat="technology in model.demo.technologies | limitTo:limits['technologies'] ? limits['technologies'] : initLimit">{{technology}}</span>
         </div>
-        <div ng-show="model.demo.browsers">
+        <div ng-if="model.demo.browsers.length">
           <h4>Browsers</h4>
           <span ng-repeat="browser in model.demo.browsers">{{browser}}</span>
         </div>
-        <div ng-show="model.demo.attachments && model.demo.attachments.length">
+        <div ng-if="model.demo.attachments.length">
           <h4>Attachments</h4>
-          <span ng-repeat="attachment in model.demo.attachments track by $index"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&download=true&filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a> </span>
+          <div ng-if="model.demo.attachments.length > initLimit" class="pull-right">
+            <button class="btn btn-default btn-xs" ng-show="limits['attachments'] !== maxLimit" ng-click="limits['attachments'] = maxLimit">more</button>
+            <button class="btn btn-default btn-xs" ng-show="limits['attachments'] && limits['attachments'] !== initLimit" ng-click="limits['attachments'] = initLimit">less</button>
+          </div>
+          <span ng-repeat="attachment in model.demo.attachments | limitTo:limits['attachments'] ? limits['attachments'] : initLimit track by $index"><a target="_blank" ng-href="/demo/attachment?uri={{attachment.uri}}&download=true&filename={{attachment.attachmentName}}">{{attachment.attachmentName}}</a> </span>
         </div>
       </div>
     </div>
@@ -39,36 +51,36 @@
         <h3 class="panel-title">Code Details</h3>
       </div>
       <div class="panel-body">
-        <div ng-show="model.demo.repo">
+        <div ng-if="model.demo.repo">
           <h4>Code repo</h4>
           <span class="value">{{model.demo.repo}}</span>
         </div>
-        <div ng-show="model.demo.persons">
+        <div ng-if="model.demo.persons.length">
           <h4>Points of Contact</h4>
-          <span ng-repeat="person in model.demo.persons" class="value">{{person.role}}: {{person.personName}} (<a ng-href="mailto:{{person.email}}">{{person.email}}</a>)
+          <span ng-repeat="person in model.demo.persons" class="value">{{person.role}}: {{person.personName}} (<a ng-href='mailto:{{person.email}}?subject=[Demo-Cat] Question about "{{model.demo.name}}"'>{{person.email}}</a>)
           </span>
         </div>
-        <div ng-show="model.demo.version">
+        <div ng-if="model.demo.version">
           <h4>MarkLogic version</h4>
           <span class="value">{{model.demo.version}}</span>
         </div>
-        <div ng-show="model.demo.url">
+        <div ng-if="model.demo.url">
           <h4>Accessible at</h4>
-          <span><a ng-href="{{model.demo.host}}">{{model.demo.url}}</a>
+          <span><a ng-href="{{model.demo.url}}" target="_blank">{{model.demo.url}}</a>
           (<span class="value">{{model.demo.urlType}}</span>)</span>
         </div>
-        <div ng-show="model.demo.host">
+        <div ng-if="model.demo.host">
           <h4>Hosted at</h4>
-          <span><a ng-href="{{model.demo.host}}">{{model.demo.host}}</a>
+          <span><a ng-href="http://{{model.demo.host}}:8001" target="_blank">{{model.demo.host}}</a>
           (<span class="value">{{model.demo.accessibility}}</span>)</span>
         </div>
-        <div ng-show="model.demo.credentials">
+        <div ng-if="model.demo.credentials.length">
           <h4>Credentials</h4>
           <ul>
             <li ng-repeat="creds in model.demo.credentials">{{creds.username}} / {{creds.password}}</li>
           </ul>
         </div>
-        <div ng-show="model.demo.domains">
+        <div ng-if="model.demo.domains.length">
           <h4>Domains</h4>
           <span ng-repeat="domain in model.demo.domains">{{domain}}</span>
         </div>
@@ -116,6 +128,7 @@
       <h4>Comments</h4>
       <add-comment add-model="model.additionalComment.msg" save="addComment(model.additionalComment)"></add-comment>
       <article class="comment" ng-repeat="comment in model.demo.comments | orderBy:'-dateTime'" data-id="{{comment.id}}">
+        <a class="remove-comment glyphicon glyphicon-trash pull-right" ng-show="model.user.isAdmin() || comment.username === model.user.name" ng-click="deleteItem('comment', model.demo.comments, comment.id)"></a>
         <h4>Comment by {{comment.username}}<span class="dateTime"> on {{comment.dateTime  | date:'short' }}</span></h4>
         <p>{{comment.msg}}</p>
       </article>
@@ -157,31 +170,35 @@
             <a class="btn btn-primary btn-xs" ng-click="addBug(model.additionalBug)">  Add</a>
           </div>
         </form>
-        <div class="bug" ng-repeat="bug in model.demo.bugs | filter: { status:  'open' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
-          <div>{{bug.msg}}</div>
+        <div class="bug" ng-repeat="bug in model.demo.bugs | orderBy:'-dateTime'" data-id="{{bug.id}}" ng-if="bug.status === 'open'">
+          <a class="remove-comment glyphicon glyphicon-trash pull-right" ng-show="model.user.isAdmin() || bug.username === model.user.name" ng-click="deleteItem('file-bug', model.demo.bugs, bug.id)"></a>
+          <div>#{{bug.nr}}</div>
           <ul class="bug-meta">
             <li class="bug-status">
               <label>Status:</label>
               <span class="value">{{bug.status}}</span>
             </li>
-            <li class="bug-type">
+            <li class="bug-type" ng-if="bug.type">
               <label>Type:</label>
               <span class="value">{{bug.type}}</span>
             </li>
-            <li class="bug-status">
+            <li class="bug-status" ng-if="bug.assignee">
               <label>Assigned to:</label>
               <span class="value">{{bug.assignee}}</span>
             </li>
             <li class="bug-dateTime">
               <label>Created by</label> {{bug.username}} on {{bug.dateTime | date:'short' }}</li>
-            <li class="bug-browser">
+            <li class="bug-browser" ng-if="bug.browser">
               <label>Browser:</label> {{bug.browser}}</li>
+            <li class="bug-status">
+            </li>
           </ul>
+          <div class="bug-description">{{bug.msg}}</div>
         </div>
       </div>
       </div>
     </div>
-    <div class="panel panel-success code-details">
+    <div class="panel panel-success code-details" ng-init="closedBugs = model.demo.bugs | filter: { status: 'closed' }: true" ng-if="closedBugs.length">
       <div class="panel-heading">
         <h3 class="panel-title">Closed Bugs & RFEs</h3>
       </div>
@@ -189,8 +206,9 @@
         <div class="closed-bugs">
         <a href ng-show="!showClosedBugs" ng-click="showClosedBugs = true" class="btn btn-primary btn-sm">Expand</a>
         <a href ng-show="showClosedBugs" ng-click="showClosedBugs = false" class="btn btn-primary btn-sm">Collapse</a>
-        <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo. bugs | filter: { status: 'closed' }: true | orderBy:'-dateTime'" data-id="{{bug.id}}">
-          <div>{{bug.msg}}</div>
+        <div class="bug col-md-12" ng-show="showClosedBugs" ng-repeat="bug in model.demo.bugs | orderBy:'-dateTime'" data-id="{{bug.id}}" ng-if="bug.status === 'closed'">
+          <div>#{{bug.nr}}</div>
+          <a class="remove-comment glyphicon glyphicon-trash pull-right" ng-show="model.user.isAdmin() || bug.username === model.user.name" ng-click="deleteItem('file-bug', model.demo.bugs, bug.id)"></a>
           <ul class="bug-meta">
             <li class="bug-status">
               <label>Status:</label>
@@ -207,6 +225,7 @@
             <li class="bug-browser">
               <label>Browser:</label> {{bug.browser}}</li>
           </ul>
+          <div class="bug-description">{{bug.msg}}</div>
         </div>
       </div>
       </div>

@@ -4,11 +4,15 @@ module namespace comment = "http://marklogic.com/rest-api/resource/comment";
 
 import module namespace json="http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 import module namespace json-helper="http://marklogic.com/demo-cat/json-helper" at "/lib/json-helper.xqy";
-import module namespace utilities="http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
+
+import module namespace demo = "http://marklogic.com/demo-cat/demo-model"
+  at "/lib/demo-model.xqy";
 
 declare namespace roxy = "http://marklogic.com/roxy";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 declare namespace rapi = "http://marklogic.com/rest-api";
+
+declare option xdmp:mapping "false";
 
 (:
  : To add parameters to the functions, specify them in the params annotations.
@@ -31,48 +35,38 @@ function comment:post(
 ) as document-node()?
 {
   map:put($context, "output-types", "application/json"),
-  (: get 'input-types' to use in content negotiation :)
-  let $input-types := map:get($context,"input-types")
-  let $uri := xdmp:url-decode(map:get($params,"uri"))
-  let $negotiate :=
-      if ($input-types = ("application/json"))
-      then () (: process, insert/update :)
-      else error((),"ACK",
-        "Invalid type, accepts application/json only")
-  let $json-xml := json:transform-from-json(fn:string($input))
-  (: populate default meta information :)
-  let $populated-xml as element() := json-helper:populate-meta-fields($json-xml)
-  (: insert comment :)
-  let $insert-noop := json-helper:add-to-array($uri,'comments',$populated-xml)
-  (: BEGIN send notification :)
-  (: get demo info :)
-  let $demo := fn:doc($uri)/jbasic:json
-  (: get demo name :)
-  let $demo-name as xs:string? := $demo/jbasic:name
-  (: get business owner name :)
-  let $biz-owner-name as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Business Owner"]/jbasic:name
-  (: get business owner email :)
-  let $biz-owner-email as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Business Owner"]/jbasic:email
-  (: get referring host :)
-  let $host := utilities:get-referring-host()
-  (: build message :)
-  let $message :=
-    <div xmlns="http://www.w3.org/1999/xhtml">
-      <h2>New Comment for "<a href="http://{$host}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
-      <p>Created by {$populated-xml/jbasic:username/node()}</p>
-      <div>{$populated-xml/jbasic:msg/node()}</div>
-    </div>
+  
+  (: get input :)
+  let $uri := map:get($params,"uri")
+  let $msg := json:transform-from-json($input)/jbasic:msg/text()
+  let $new-comment := demo:create-comment($msg)
+  
+  (: update demo :)
+  let $demo := demo:read($uri)
+  let $comments := $demo/jbasic:comments
 
+  let $new-comments :=
+    element { fn:QName("http://marklogic.com/xdmp/json/basic", "comments")} {
+      $comments/@*,
+      $comments/*,
+      $new-comment
+    }
+  let $new-demo := demo:replace($demo, $comments, $new-comments)
+  let $_ := demo:save($uri, $new-demo)
+
+  (: send notification :)
+  let $_ := demo:notify-comment($uri, $new-comment)
+
+  (: send reply :)
   return (
-    utilities:send-notification($biz-owner-name, $biz-owner-email, '[DemoCat] New Comment for "'||$demo-name||'"', $message),
     xdmp:set-response-code(200, "OK"),
-    document { json:transform-to-json($populated-xml) }
+    document { json:transform-to-json($new-comment) }
   )
 };
 
 (:
 Change a comment property value.
- :)
+ TODO: FIXME!!
 declare
 %roxy:params("uri=xs:string","id=xs:string", "property=xs:string")
 function comment:put(
@@ -82,10 +76,10 @@ function comment:put(
 ) as document-node()?
 {
   map:put($context, "output-types", "application/json"),
-  let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
+  let $uri as xs:string := map:get($params,"uri")
   (: Don't urldecode the comments's ID.  The ID can have a + in it, which turns into a space. :)
   let $id as xs:string := map:get($params,"id")
-  let $property as xs:string := xdmp:url-decode(map:get($params,"property"))
+  let $property as xs:string := map:get($params,"property")
   let $value as xs:string := map:get(xdmp:from-json(fn:string($input)),"value")
   (: build property qn :)
   let $property-qn := fn:QName($json-helper:JSON_NS,$property)
@@ -99,6 +93,7 @@ function comment:put(
     document {'{"status":"success"}'}
   )
 };
+:)
 
 (:
 deletes a comment when requested by someone who is the creator
@@ -111,13 +106,25 @@ function comment:delete(
 ) as document-node()?
 {
   map:put($context, "output-types", "application/json"),
-  let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
-  let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
-  (: remove bug :)
-  let $delete-noop := json-helper:remove-from-array($uri,'comments',$id)
+  
+  (: get input :)
+  let $uri as xs:string := map:get($params,"uri")
+  let $id as xs:string := map:get($params,"id")
+
+  (: remove comment :)
+  let $demo := demo:read($uri)
+  let $comments := $demo/jbasic:comments
+  let $new-comments :=
+    element { fn:QName("http://marklogic.com/xdmp/json/basic", "comments")} {
+      $comments/@*,
+      $comments/*[jbasic:id ne $id]
+    }
+  let $new-demo := demo:replace($demo, $comments, $new-comments)
+  let $_ := demo:save($uri, $new-demo)
+  
+  (: send reply :)
   return (
     xdmp:set-response-code(200, "OK"),
     document {'{"status":"success"}'}
-
   )
 };
