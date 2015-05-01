@@ -1,32 +1,23 @@
 (: A data transform to update the json model to support > 1 set of credentials :)
 xquery version "1.0-ml";
 
-import module namespace json = "http://marklogic.com/xdmp/json"
-  at "/MarkLogic/json/json.xqy";
+import module namespace demo = "http://marklogic.com/demo-cat/demo-model"
+  at "/lib/demo-model.xqy";
 
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
 declare option xdmp:mapping "false";
 
-for $doc in xdmp:directory("/demos/", "infinity")
-let $o :=
-  (: ML7 JSONXML :)
-  if ($doc/jbasic:json) then
-    $doc/jbasic:json
-  (: ML8 JSON :)
-  else
-    json:transform-from-json($doc)
+for $uri in cts:uri-match("/demos/*")
+let $demo := demo:read($uri)
 
-where fn:exists($o/jbasic:username | $o/jbasic:password)
+where fn:exists($demo/jbasic:username | $demo/jbasic:password)
 return
 
-let $username := $o/jbasic:username
-let $password := $o/jbasic:password
-let $new-o :=
-  element { fn:node-name($o) }
-  {
-    $o/@*,
-    $o/(* except (jbasic:username, jbasic:password)),
+let $username := $demo/jbasic:username
+let $password := $demo/jbasic:password
+let $new-demo :=
+  demo:replace($demo, $demo/(jbasic:username, jbasic:password), (
     element { fn:QName("http://marklogic.com/xdmp/json/basic", "credentials") } {
       attribute type { "array" },
       element { fn:QName("http://marklogic.com/xdmp/json/basic", "json") } {
@@ -35,17 +26,7 @@ let $new-o :=
         $password
       }
     }
-  }
+  ))
 
-let $new-o :=
-  (: ML7 JSONXML :)
-  if ($doc/jbasic:json) then
-    $new-o
-  (: ML8 JSON :)
-  else
-    xdmp:to-json(json:transform-to-json($new-o))/node()
-
-let $_ :=
-  xdmp:node-replace($doc/node(), $new-o)
-
-return fn:concat("Updated credentials for ", xdmp:node-uri($o))
+let $_ := demo:save($uri, $new-demo)
+return fn:concat("Updated credentials for ", $uri)

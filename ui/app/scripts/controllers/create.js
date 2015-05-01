@@ -65,6 +65,12 @@
         model.lastStatusTimestampPretty = new Date(model.demo.demoStatus.lastStatusTimestamp).toJSON();
       }
 
+      angular.forEach(model.demo.bugs, function(bug, index) {
+        if (! bug.nr) {
+          bug.nr = index + 1;
+        }
+      });
+
       angular.extend($scope, {
         model: model,
         editorOptions: {

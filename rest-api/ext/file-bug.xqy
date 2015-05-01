@@ -4,11 +4,15 @@ module namespace file-bug = "http://marklogic.com/rest-api/resource/file-bug";
 
 import module namespace json="http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 import module namespace json-helper="http://marklogic.com/demo-cat/json-helper" at "/lib/json-helper.xqy";
-import module namespace utilities="http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
+
+import module namespace demo = "http://marklogic.com/demo-cat/demo-model"
+  at "/lib/demo-model.xqy";
 
 declare namespace roxy = "http://marklogic.com/roxy";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 declare namespace rapi = "http://marklogic.com/rest-api";
+
+declare option xdmp:mapping "false";
 
 (:
  : To add parameters to the functions, specify them in the params annotations.
@@ -30,49 +34,44 @@ function file-bug:post(
 ) as document-node()?
 {
   map:put($context, "output-types", "application/json"),
-  (: get 'input-types' to use in content negotiation :)
-  let $input-types := map:get($context,"input-types")
-  let $uri := xdmp:url-decode(map:get($params,"uri"))
-  let $negotiate :=
-      if ($input-types = ("application/json"))
-      then () (: process, insert/update :)
-      else error((),"ACK",
-        "Invalid type, accepts application/json only")
-  let $json-xml := json:transform-from-json(fn:string($input))
-  (: populate default meta information :)
-  let $populated-xml as element() := json-helper:populate-meta-fields($json-xml)
-  (: insert bug :)
-  let $insert-noop := json-helper:add-to-array($uri,'bugs',$populated-xml)
-  (: BEGIN send notification :)
-  (: get demo info :)
-  let $demo := fn:doc($uri)/jbasic:json
-  (: get demo name :)
-  let $demo-name as xs:string? := $demo/jbasic:name
-  (: get technical contact name :)
-  let $tech-contact-name as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Technical Contact"]/jbasic:name
-  (: get technical contact email :)
-  let $tech-contact-email as xs:string? := $demo/jbasic:persons/jbasic:json[jbasic:role = "Technical Contact"]/jbasic:email
-  (: get bug type - defect or enhancement :)
-  let $bug-type as xs:string? := $json-xml/jbasic:type
-  (: get referring host :)
-  let $host := utilities:get-referring-host()
-  (: build message :)
-  let $message :=
-    <div xmlns="http://www.w3.org/1999/xhtml">
-      <h2>New {$bug-type} bug for "<a href="http://{$host}/detail?uri={xdmp:url-encode($uri)}">{$demo-name}</a>"</h2>
-      <p>Opened by {$populated-xml/jbasic:username/node()}</p>
-      <div>{$populated-xml/jbasic:msg/node()}</div>
-    </div>
+  
+  (: get input :)
+  let $uri := map:get($params,"uri")
+  let $nr := json:transform-from-json($input)/jbasic:nr/text()
+  let $msg := json:transform-from-json($input)/jbasic:msg/text()
+  let $browser := json:transform-from-json($input)/jbasic:browser/text()
+  let $status := json:transform-from-json($input)/jbasic:status/text()
+  let $type := json:transform-from-json($input)/jbasic:type/text()
+  let $assignee := json:transform-from-json($input)/jbasic:assignee/text()
+
+  let $new-bug := demo:create-bug($nr, $msg, $browser, $status, $type, $assignee)
+  
+  (: update demo :)
+  let $demo := demo:read($uri)
+  let $bugs := $demo/jbasic:bugs
+
+  let $new-bugs :=
+    element { fn:QName("http://marklogic.com/xdmp/json/basic", "bugs")} {
+      $bugs/@*,
+      $bugs/*,
+      $new-bug
+    }
+  let $new-demo := demo:replace($demo, $bugs, $new-bugs)
+  let $_ := demo:save($uri, $new-demo)
+
+  (: send notification :)
+  let $_ := demo:notify-bug($uri, $new-bug)
+
+  (: send reply :)
   return (
-    utilities:send-notification($tech-contact-name, $tech-contact-email, '[DemoCat] New Bug for "'||$demo-name||'"', $message),
     xdmp:set-response-code(200, "OK"),
-    document { json:transform-to-json($populated-xml) }
+    document { json:transform-to-json($new-bug) }
   )
 };
 
 (:
 Change a bug property value.
- :)
+ TODO: FIXME!!
 declare
 %roxy:params("uri=xs:string","id=xs:string", "property=xs:string")
 function file-bug:put(
@@ -108,6 +107,7 @@ function file-bug:put(
     document {'{"status":"success"}'}
   )
 };
+:)
 
 (:
 deletes a bug when requested by someone who is the creator
@@ -120,13 +120,25 @@ function file-bug:delete(
 ) as document-node()?
 {
   map:put($context, "output-types", "application/json"),
-  let $uri as xs:string := xdmp:url-decode(map:get($params,"uri"))
-  let $id as xs:string := xdmp:url-decode(map:get($params,"id"))
+  
+  (: get input :)
+  let $uri as xs:string := map:get($params,"uri")
+  let $id as xs:string := map:get($params,"id")
+
   (: remove bug :)
-  let $delete-noop := json-helper:remove-from-array($uri,'bugs',$id)
+  let $demo := demo:read($uri)
+  let $bugs := $demo/jbasic:bugs
+  let $new-bugs :=
+    element { fn:QName("http://marklogic.com/xdmp/json/basic", "bugs")} {
+      $bugs/@*,
+      $bugs/*[jbasic:id ne $id]
+    }
+  let $new-demo := demo:replace($demo, $bugs, $new-bugs)
+  let $_ := demo:save($uri, $new-demo)
+  
+  (: send reply :)
   return (
     xdmp:set-response-code(200, "OK"),
     document {'{"status":"success"}'}
-
   )
 };

@@ -7,6 +7,8 @@ import module namespace json="http://marklogic.com/xdmp/json"
 
 declare namespace roxy = "http://marklogic.com/roxy";
 
+declare option xdmp:mapping "false";
+
 declare variable $ROLE_READER := "demo-cat-reader-role";
 declare variable $ROLE_WRITER := "demo-cat-writer-role";
 declare variable $ROLE_ADMIN  := "demo-cat-admin-role";

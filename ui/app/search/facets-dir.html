@@ -1,13 +1,17 @@
-<div class="facet-list">
+<div class="facet-list" ng-init="initLimit = 5; maxLimit = 9999; limits = {}">
   <div class="facet" ng-if="facet.facetValues.length" ng-repeat="(index, facet) in facets | object2Array">
     <h3>{{ facet.__key }}</h3>
+    <div ng-if="facet.facetValues.length > initLimit" class="pull-right">
+      <button class="btn btn-default btn-xs" ng-show="limits[facet.__key] !== maxLimit" ng-click="limits[facet.__key] = maxLimit">more</button>
+      <button class="btn btn-default btn-xs" ng-show="limits[facet.__key] && limits[facet.__key] !== initLimit" ng-click="limits[facet.__key] = initLimit">less</button>
+    </div>
     <div ng-repeat="value in facet.facetValues | filter:{selected: true}">
       <div class="btn btn-danger btn-xs facet-selected">
         <span title="{{ value.name }}" ng-click="toggle({facet: facet.__key, value: value.name})">{{ value.name | truncate:20 }}</span>
         <span class="glyphicon glyphicon-trash icon-white" ng-click="toggle({facet: facet.__key, value: value.name})"></span>
       </div>
     </div>
-    <div ng-repeat="value in facet.facetValues | filter:{selected: '!'+true}">
+    <div ng-repeat="value in facet.facetValues | filter:{selected: '!'+true} | limitTo:limits[facet.__key] || initLimit">
       <a ng-click="toggle({facet: facet.__key, value: value.name})" title="{{ value.name }}">
         {{ value.name | truncate:20 }} ({{ value.count }})
       </a>
