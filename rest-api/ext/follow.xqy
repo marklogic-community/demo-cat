@@ -7,10 +7,14 @@ import module namespace json = "http://marklogic.com/xdmp/json" at "/MarkLogic/j
 import module namespace json-helper = "http://marklogic.com/demo-cat/json-helper" at "/lib/json-helper.xqy";
 import module namespace utilities =  "http://marklogic.com/demo-cat/utilities" at "/lib/utilities.xqy";
 
+import module namespace user = "http://marklogic.com/demo-cat/user-model"
+  at "/lib/user-model.xqy";
+
 declare namespace roxy = "http://marklogic.com/roxy";
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 declare namespace rapi = "http://marklogic.com/rest-api";
 
+declare option xdmp:mapping "false";
 
 (:
  : To add parameters to the functions, specify them in the params annotations.
@@ -19,37 +23,6 @@ declare namespace rapi = "http://marklogic.com/rest-api";
  : This means that the get function will take two parameters, a string and an int.
  :)
 
-(:
- :)
-declare
-%roxy:params("")
-function follow:get(
-  $context as map:map,
-  $params  as map:map
-) as document-node()*
-{
-  map:put($context, "output-types", "application/json"),
-  xdmp:set-response-code(501, "OK"),
-  document { "Not implemented" }
-};
-
-(:
- :)
-declare
-%roxy:params("")
-function follow:put(
-    $context as map:map,
-    $params  as map:map,
-    $input   as document-node()*
-) as document-node()?
-{
-  map:put($context, "output-types", "application/json"),
-  xdmp:set-response-code(501, "OK"),
-  document { "Not implemented" }
-};
-
-(:
- :)
 declare
 %roxy:params("")
 %rapi:transaction-mode("update")
@@ -60,36 +33,22 @@ function follow:post(
 ) as document-node()*
 {
   map:put($context, "output-types", "application/json"),
-  let $encoded-uri := map:get($params,"uri")
-  let $uri := xdmp:url-decode($encoded-uri)
+  let $uri := map:get($params,"uri")
   let $username := xdmp:get-current-user()
-  let $profile-uri := fn:concat("/users/",$username,".json")
-  let $profile := fn:doc($profile-uri)/jbasic:json
-  let $emails := $profile/jbasic:user/jbasic:emails/jbasic:item/string()
-  let $fullname := $profile/jbasic:user/jbasic:fullname/string()
-  let $host := utilities:get-referring-host()
-
 
   (: First add the rule.  We'll need the id :)
   let $rule := alert:make-rule(
-      "rule-send-email",
-      "The rule tests for an update to a demo",
-      xdmp:get-request-user(),
-      cts:document-query($uri),
-      "send-demo-email",
-      element alert:options {
-        element alert:hostname {
-          $host
-        },
-        element alert:fullname {
-            $fullname
-          },
-        for $email in $emails
-         return
-           element alert:email-address{
-             $email
-           }
-       })
+    fn:concat("Rule send-email for ", $username, ", demo ", $uri),
+    "The rule tests for an update to a demo",
+    xdmp:get-request-user(),
+    cts:document-query($uri),
+    "send-demo-email",
+    element alert:options {
+      element alert:username {
+        $username
+      }
+    }
+  )
   let $rule-insert := alert:rule-insert("http://marklogic.com/demo-cat/notifications", $rule)
   let $alert-id := $rule/@id
 
@@ -99,7 +58,7 @@ function follow:post(
       attribute type { "object"},
       element jbasic:followUri {
         attribute type { "string"},
-        $encoded-uri
+        $uri
       },
       element jbasic:followAlertId {
         attribute type { "string"},
@@ -108,16 +67,17 @@ function follow:post(
     }
 
   (: Now insert the following info into the user's profile :)
-  let $insert-noop :=
-    if($profile/jbasic:user/jbasic:follows) then
-      xdmp:node-insert-child($profile/jbasic:user/jbasic:follows, $follow-object)
-    else
-      let $insert-node :=
-        element jbasic:follows {
-          attribute type { "array"},
-          $follow-object
-        }
-      return xdmp:node-insert-child($profile/jbasic:user, $insert-node)
+  let $profile := user:get($username)
+  let $follows := $profile/jbasic:user/jbasic:follows
+  let $new-follows :=
+    element jbasic:follows {
+      attribute type { "array"},
+      $follows/(@* except @type),
+      $follows/*,
+      $follow-object
+    }
+  let $new-profile := user:replace($profile, $follows, $new-follows)
+  let $_ := user:put($username, $new-profile)
 
   return (
     xdmp:set-response-code(200, "OK"),
@@ -135,15 +95,24 @@ function follow:delete(
 ) as document-node()?
 {
   map:put($context, "output-types", "application/json"),
-  let $uri := xdmp:url-decode(map:get($params,"uri"))
+  let $uri := map:get($params,"uri")
   let $username := xdmp:get-current-user()
-  let $profile-uri := fn:concat("/users/",$username,".json")
-  let $profile := fn:doc($profile-uri)/jbasic:json
+  let $profile := user:get($username)
 
-  let $gone-node := $profile/jbasic:user/jbasic:follows/jbasic:json[jbasic:followUri = $uri]
+  (: remove alert :)
+  let $gone-node := $profile//jbasic:user/jbasic:follows/jbasic:json[jbasic:followUri = $uri]
   let $alert-to-remove := $gone-node/jbasic:followAlertId/data()
   let $removed := alert:rule-remove("http://marklogic.com/demo-cat/notifications",$alert-to-remove)
-  let $delete := xdmp:node-delete($gone-node)
+
+  (: update user profile :)
+  let $follows := $profile/jbasic:user/jbasic:follows
+  let $new-follows :=
+    element jbasic:follows {
+      $follows/@*,
+      $follows/(* except $gone-node)
+    }
+  let $new-profile := user:replace($profile, $follows, $new-follows)
+  let $_ := user:put($username, $new-profile)
 
   return (
     xdmp:set-response-code(200, "OK"),

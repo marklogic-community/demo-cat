@@ -632,6 +632,9 @@
       <description>A role for amping function of the @ml.app-name application</description>
       <privileges>
         <privilege>
+          <privilege-name>any-collection</privilege-name>
+        </privilege>
+        <privilege>
           <privilege-name>xdmp:email</privilege-name>
         </privilege>
       </privileges>
@@ -696,6 +699,20 @@
       <namespace>http://marklogic.com/demo-cat/utilities</namespace>
       <local-name>send-notification</local-name>
       <doc-uri>/lib/utilities.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-amp-role</role-name>
+    </amp>
+    <amp>
+      <namespace>http://marklogic.com/demo-cat/demo-model</namespace>
+      <local-name>save</local-name>
+      <doc-uri>/lib/demo-model.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-amp-role</role-name>
+    </amp>
+    <amp>
+      <namespace>http://marklogic.com/demo-cat/user-model</namespace>
+      <local-name>save</local-name>
+      <doc-uri>/lib/user-model.xqy</doc-uri>
       <db-name>@ml.app-modules-db</db-name>
       <role-name>@ml.app-name-amp-role</role-name>
     </amp>

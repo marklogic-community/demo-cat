@@ -2,6 +2,7 @@ xquery version "1.0-ml";
 
 module namespace utilities = "http://marklogic.com/demo-cat/utilities";
 
+declare option xdmp:mapping "false";
 
 declare function utilities:send-notification(
   $recipient-name as xs:string,
@@ -16,8 +17,8 @@ declare function utilities:send-notification(
       <rf:subject>{$subject}</rf:subject>
       <rf:from>
         <em:Address>
-          <em:name>Demo Cat</em:name>
-          <em:adrs>no-reply@ydemo-cat.marklogic.com</em:adrs>
+          <em:name>Demo-Cat</em:name>
+          <em:adrs>no-reply@catalog.demo.marklogic.com</em:adrs>
         </em:Address>
       </rf:from>
       <rf:to>
@@ -45,14 +46,8 @@ declare function utilities:get-url-host(
   $url as xs:string
 ) as xs:string?
 {
-  let $tokens :=
-    if ($url ne '')
-    then
-      fn:tokenize($url, '/')
-    else
-      ''
-
-  return(
+  let $tokens := fn:tokenize($url, '/')
+  return
     (:
        Host is after second '/'.  Example:
          http://myhost/path
@@ -62,12 +57,10 @@ declare function utilities:get-url-host(
        token[3] = myhost
        token[4] = path
     :)
-    if (fn:count($tokens) gt 2)
-    then
+    if (fn:count($tokens) gt 2) then
       $tokens[3]
     else
-      ''
-  )
+      ()
 };
 
 (:
@@ -80,16 +73,10 @@ declare function utilities:get-referring-host(
 ) as xs:string?
 {
   (: Get host from request header <referer> (when available) :)
-  let $host :=
-    let $ref-host := utilities:get-url-host(xdmp:get-request-header('referer', ''))
-    return
-      if ($ref-host ne '')
-      then
-        $ref-host
-      else
-        xdmp:get-request-header('host')
-
-  return($host)
+  (
+    utilities:get-url-host(xdmp:get-request-header('referer', '')),
+    xdmp:get-request-header('host')
+  )[. ne ''][1]
 };
 
 declare function utilities:highlight($doc, $query) {

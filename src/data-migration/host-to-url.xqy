@@ -1,48 +1,29 @@
 xquery version "1.0-ml";
 
-import module namespace json = "http://marklogic.com/xdmp/json"
-  at "/MarkLogic/json/json.xqy";
+import module namespace demo = "http://marklogic.com/demo-cat/demo-model"
+  at "/lib/demo-model.xqy";
 
 declare namespace jbasic = "http://marklogic.com/xdmp/json/basic";
 
 declare option xdmp:mapping "false";
 
-for $doc in xdmp:directory("/demos/", "infinity")
-let $o :=
-  (: ML7 JSONXML :)
-  if ($doc/jbasic:json) then
-    $doc/jbasic:json
-  (: ML8 JSON :)
-  else
-    json:transform-from-json($doc)
+for $uri in cts:uri-match("/demos/*")
+let $demo := demo:read($uri)
 
-where fn:exists($o/jbasic:host) and fn:empty($o/jbasic:url)
+where fn:exists($demo/jbasic:host) and fn:empty($demo/jbasic:url)
 return
 
-let $new-o :=
-  element { fn:node-name($o) }
-  {
-    $o/@*,
-    $o/(* except (jbasic:host, jbasic:hostType)),
+let $new-demo :=
+  demo:replace($demo, $demo/(jbasic:host, jbasic:hostType), (
     element { fn:QName("http://marklogic.com/xdmp/json/basic", "url") } {
       attribute type { "string" },
-      $o/jbasic:host/text()
+      $demo/jbasic:host/text()
     },
     element { fn:QName("http://marklogic.com/xdmp/json/basic", "urlType") } {
       attribute type { "string" },
-      $o/jbasic:hostType/text()
+      $demo/jbasic:hostType/text()
     }
-  }
+  ))
 
-let $new-o :=
-  (: ML7 JSONXML :)
-  if ($doc/jbasic:json) then
-    $new-o
-  (: ML8 JSON :)
-  else
-    xdmp:to-json(json:transform-to-json($new-o))/node()
-
-let $_ :=
-  xdmp:node-replace($doc/node(), $new-o)
-
-return fn:concat("Updated host for ", xdmp:node-uri($doc))
+let $_ := demo:save($uri, $new-demo)
+return fn:concat("Updated host for ", $uri)

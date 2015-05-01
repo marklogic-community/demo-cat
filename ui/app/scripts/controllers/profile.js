@@ -29,8 +29,9 @@
         submit: function() {
           mlRest.updateDocument({
             user: {
-              'fullname': $scope.model.user.fullname,
-              'emails': $scope.model.user.emails
+              fullname: $scope.model.user.fullname,
+              emails: $scope.model.user.emails,
+              follows: $scope.model.user.follows
             }
           }, {
             format: 'json',

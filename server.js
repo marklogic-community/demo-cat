@@ -539,6 +539,14 @@ exports.buildExpress = function(options) {
     }
   });
 
+  app.delete('/v1/resources/*', isWriter, function(req, res){
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
   // Redirect all other traffic to Angular
   app.use(express.static(__dirname + '/ui/app', { maxAge: 30000 }));
   app.use('/*', function(req, res){
