@@ -68,5 +68,5 @@ declare function user:save($uri as xs:string, $profile as element(jbasic:json)) 
     else
       $profile
   return
-    xdmp:document-insert($uri, $profile, xdmp:default-permissions(), (xdmp:default-collections(), 'users'))
+    xdmp:document-insert($uri, $profile, (xdmp:default-permissions(), xdmp:document-get-permissions($uri)), (xdmp:default-collections(), 'users', xdmp:document-get-collections($uri)))
 };
