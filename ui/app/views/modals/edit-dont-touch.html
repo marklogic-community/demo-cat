@@ -1,0 +1,48 @@
+<form class="form edit-memo" role="form" name="modal">
+  <div class="modal-header">
+      <h3 class="modal-title">{{title}}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="alert alert-danger loginerror" ng-repeat="alert in alerts" ng-cloak>{{alert}}</div>
+    </div>
+    <div class="donttouch">
+      
+      <div class="form-group">
+        <label class="control-label">Don't Touch; Demo in Progress</label> 
+        <a href class="btn btn-success btn-xs" ng-click="model.addDontTouchLink()"><span class="glyphicon glyphicon-plus icon-white"></span></a>
+
+        <div class="row" ng-repeat="event in model.donttouch">
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="Presenter"  ng-model="model.donttouch[$index].presenter" typeahead="choice for choice in model.users | filter:$viewValue" required/></div>
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="Demo"  ng-model="model.donttouch[$index].demo" typeahead="choice.name for choice in model.demos | filter:$viewValue" required/></div>
+          <div class="col-md-2"><input type="text" class="form-control" placeholder="Event"  ng-model="model.donttouch[$index].title"/></div>
+          <div class="col-md-3">
+            <!--input type="datetime-local" class="form-control" placeholder="Start date/time"  ng-model="model.donttouch[$index].start" required/-->
+            <div class="input-group">
+              <input type="text" class="form-control" datetime-picker="short" ng-model="model.donttouch[$index].start" is-open="model.isOpen[$index]"  />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="model.toggleCalendar($event, $index)"><i class="fa fa-calendar"></i></button>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2 duration">
+            <input type="number" class="form-control" placeholder="Duration" ng-model="model.donttouch[$index].duration" required/>
+            <div class="info">
+              <span class="glyphicon glyphicon-info-sign" popover="Duration is in minutes." popover-placement="bottom" popover-trigger="mouseenter"></span>
+            </div>
+          </div>
+          <div class="col-md-1 icon">
+            <a href class="btn btn-danger btn-xs" ng-click="model.removeDontTouchLink($index)">
+              <span class="glyphicon glyphicon-trash icon-white"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary pull-right" ng-click="ok()">Save</button>
+    <button class="btn btn-default pull-right" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

@@ -1,0 +1,19 @@
+<div class="slider">
+  <div class="slide" ng-repeat="image in images" ng-show="image.visible">
+    <a ng-href="{{uriPrefix}}{{image.uri}}"><img ng-src="{{imagePrefix}}{{image.src}}"/></a>
+  </div>
+  <div class="arrows">
+    <a class="left arrow" href ng-click="previous()">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    </a>
+    <a ng-hide="isRunning" class="pause" href ng-click="play()">
+      <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+    </a>
+    <a ng-show="isRunning" class="pause" href ng-click="pause()">
+      <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+    </a>
+    <a class="right arrow" href ng-click="next()">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </a>
+  </div>
+</div>

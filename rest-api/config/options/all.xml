@@ -25,19 +25,14 @@
     <joiner strength="50" apply="constraint" compare="GE" tokenize="word">GE</joiner>
     <joiner strength="50" apply="constraint" compare="NE" tokenize="word">NE</joiner>
   </grammar>
-  
+
   <!-- ML7 / JSONXML -->
-  <constraint name="ml7_version">
+  
+  <constraint name="ml7_domain">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
-      <facet-option>limit=10</facet-option>
-      <facet-option>frequency-order</facet-option>
-    </range>
-  </constraint>
-  <constraint name="ml7_personName">
-    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="http://marklogic.com/xdmp/json/basic" name="personName"/>
-      <facet-option>limit=10</facet-option>
+      <path-index
+        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:domains/jbasic:item</path-index>
+      <facet-option>limit=15</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
@@ -57,15 +52,21 @@
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
-  <constraint name="ml7_domain">
+  <constraint name="ml7_personName">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <path-index
-        xmlns:jbasic="http://marklogic.com/xdmp/json/basic">jbasic:domains/jbasic:item</path-index>
-      <facet-option>limit=15</facet-option>
+      <element ns="http://marklogic.com/xdmp/json/basic" name="personName"/>
+      <facet-option>limit=10</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
-  
+  <constraint name="ml7_version">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <element ns="http://marklogic.com/xdmp/json/basic" name="version"/>
+      <facet-option>limit=10</facet-option>
+      <facet-option>frequency-order</facet-option>
+    </range>
+  </constraint>
+
   <values name="ml7_features">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
       <path-index
@@ -80,19 +81,21 @@
       <facet-option>frequency-order</facet-option>
     </range>
   </values>
-  
-  <!-- ML8 / JSON -->
-  <constraint name="version">
-    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="" name="version"/>
-      <facet-option>limit=10</facet-option>
-      <facet-option>frequency-order</facet-option>
+
+  <tuples name="ml7_name-uri">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <element ns="http://marklogic.com/xdmp/json/basic" name="name" />
     </range>
-  </constraint>
-  <constraint name="personName">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <uri />
+    </range>
+  </tuples>
+
+  <!-- ML8 / JSON -->
+  <constraint name="domain">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <element ns="" name="personName"/>
-      <facet-option>limit=10</facet-option>
+      <path-index>domains</path-index>
+      <facet-option>limit=15</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
@@ -110,14 +113,21 @@
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
-  <constraint name="domain">
+  <constraint name="personName">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
-      <path-index>domains</path-index>
-      <facet-option>limit=15</facet-option>
+      <element ns="" name="personName"/>
+      <facet-option>limit=10</facet-option>
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
-  
+  <constraint name="version">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <element ns="" name="version"/>
+      <facet-option>limit=10</facet-option>
+      <facet-option>frequency-order</facet-option>
+    </range>
+  </constraint>
+
   <values name="domains">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
       <path-index>domains</path-index>
@@ -137,6 +147,14 @@
     </range>
   </values>
   
+  <tuples name="name-uri">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <element ns="" name="name" />
+    </range>
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint">
+      <uri />
+    </range>
+  </tuples>
   
   <sort-order type="xs:dateTime"
       direction="descending">
@@ -146,12 +164,12 @@
       direction="descending">
     <element ns="http://marklogic.com/xdmp/json/basic" name="lastModifiedAt"/>
   </sort-order>
-  <sort-order type="xs:string" 
+  <sort-order type="xs:string"
       collation="http://marklogic.com/collation/codepoint"
       direction="ascending">
     <element ns="" name="name"/>
   </sort-order>
-  <sort-order type="xs:string" 
+  <sort-order type="xs:string"
       collation="http://marklogic.com/collation/codepoint"
       direction="ascending">
     <element ns="http://marklogic.com/xdmp/json/basic" name="name"/>
@@ -166,7 +184,7 @@
     <per-match-tokens>20</per-match-tokens>
   </transform-results>
   <return-query>1</return-query>
-  
+
   <operator name="results">
     <state name="compact">
       <!-- extract-metadata nor extract-doc-content work nicely with JSON, using raw snippet to get content -->
@@ -175,7 +193,7 @@
   </operator>
   <!-- extract-metadata nor extract-doc-content work nicely with JSON, using raw snippet to get content -->
   <transform-results apply="raw"/>
-  
+
   <extract-metadata>
     <qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="name"/>
     <constraint-value ref="version"/>
@@ -186,7 +204,7 @@
     <qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="description"/>
     <qname elem-ns="http://marklogic.com/xdmp/json/basic" elem-name="shortdesc"/>
   </extract-metadata>
-  
+
   <annotation>Delta options here</annotation>
   <additional-query>
     <cts:directory-query xmlns:cts="http://marklogic.com/cts">
