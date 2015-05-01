@@ -68,7 +68,7 @@ function follow:post(
 
   (: Now insert the following info into the user's profile :)
   let $profile := user:get($username)
-  let $follows := $profile/jbasic:json/jbasic:user/jbasic:follows
+  let $follows := $profile/jbasic:user/jbasic:follows
   let $new-follows :=
     element jbasic:follows {
       attribute type { "array"},
@@ -100,12 +100,12 @@ function follow:delete(
   let $profile := user:get($username)
 
   (: remove alert :)
-  let $gone-node := $profile/jbasic:json/jbasic:user/jbasic:follows/jbasic:json[jbasic:followUri = $uri]
+  let $gone-node := $profile//jbasic:user/jbasic:follows/jbasic:json[jbasic:followUri = $uri]
   let $alert-to-remove := $gone-node/jbasic:followAlertId/data()
   let $removed := alert:rule-remove("http://marklogic.com/demo-cat/notifications",$alert-to-remove)
 
   (: update user profile :)
-  let $follows := $profile/jbasic:json/jbasic:user/jbasic:follows
+  let $follows := $profile/jbasic:user/jbasic:follows
   let $new-follows :=
     element jbasic:follows {
       $follows/@*,
