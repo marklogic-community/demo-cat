@@ -3,7 +3,7 @@
 
   angular.module('demoCat.search')
     .factory('SearchModel', ['MLSearchFactory', function(searchFactory) {
-      var mlSearch = searchFactory.newContext();
+      var mlSearch = searchFactory.newContext({ pageLength: 12 });
       return {
         page: 1,
         qtext: '',

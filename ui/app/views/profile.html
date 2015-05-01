@@ -41,6 +41,18 @@
         </div>
       </div>
     </div>
+    <div class="form-group">
+      <div class="row">
+        <label class="col-sm-2 control-label">Following</label>
+        <div class="row">
+          <ul class="col-sm-6">
+            <li ng-repeat="follow in model.user.follows track by $index">
+              <a ng-href="/detail{{follow.followUri}}">{{follow.followUri}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-sm-offset-2 col-sm-6 pull-right">
         <a class="btn btn-default" href="/">Cancel</a>
