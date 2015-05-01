@@ -6,11 +6,11 @@
         <div class="hp-content">
           <div class="pull-left news">
             <h4>News</h4>
-            <p ng-repeat="news in model.vanguard.news"><a ng-href="{{news.link}}">{{news.title}}</a></p>
+            <p ng-repeat="news in model.vanguard.news"><a ng-href="{{news.link}}" target="_blank">{{news.title}}</a></p>
           </div>
           <div class="pull-left services">
             <h4>Services</h4>
-            <p ng-repeat="service in model.vanguard.services"><a ng-href="{{service.link}}">{{service.title}}</a></p>
+            <p ng-repeat="service in model.vanguard.services"><a ng-href="{{service.link}}" target="_blank">{{service.title}}</a></p>
           </div>
         </div>
         <button ng-show="model.user.isAdmin()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editVanguard()">
