@@ -384,12 +384,7 @@ class ServerConfig
           "demo-broken-rule",
           "Rule that evaluates a demo to determine if it is broken",
           0, (: equivalent to xdmp:user(xdmp:get-current-user()) :)
-          cts:and-query(
-              (
-                cts:element-value-query(xs:QName("jbasic:role"), "Technical Contact"),
-                cts:element-value-query(xs:QName("jbasic:status"), "Not Working")
-              )
-          ),
+          cts:element-value-query(xs:QName("jbasic:status"), "Not Working"),
           "demo-broken-action",
           <alert:options>
             <alert:hostname>#{@properties["ml.referring-host"]}</alert:hostname>

@@ -7,6 +7,8 @@ import module namespace json6 = "http://marklogic.com/xdmp/json" at "/MarkLogic/
 
 declare namespace roxy = "http://marklogic.com/roxy";
 
+declare option xdmp:mapping "false";
+
 (: 
  : To add parameters to the functions, specify them in the params annotations. 
  : Example
