@@ -4,12 +4,14 @@
   angular.module('demoCat')
     .service('demoService', DemoService);
 
-  function DemoService($http, $upload) {
+  function DemoService($http, $upload, MLRest) {
 
     var service = {
+      get: getDemo,
       create: createDemo,
       deleteAttachment: deleteAttachment,
-      save: saveDemo
+      save: saveDemo,
+      list: listDemos
     };
 
     var params = {
@@ -21,6 +23,12 @@
 
     return service;
 
+    function getDemo(docUri) {
+      return MLRest.getDocument(docUri, { format: 'json' }).then(function(response) {
+        return response.data;
+      });
+    }
+    
     function createDemo(demo, file) {
       var createParams = angular.extend({directory: '/demos/', extension: '.json'}, params);
       return upload(demo, file, '/demo/create?' + $.param(createParams));
@@ -31,6 +39,20 @@
       return upload(demo, file, '/demo/update?' + $.param(updateParams));
     }
 
+    function listDemos() {
+      return MLRest.values('name-uri', { options: 'all', format: 'json' }).then(function(resp) {
+        if (resp.data['values-response'].tuple) {
+          return resp.data['values-response'].tuple.map(function(value) {
+            var values = value['distinct-value'];
+            return {
+              name: values[0]._value,
+              uri: values[1]._value
+            };
+          });
+        }
+      });
+    }
+    
     function upload(demo, file, url) {
       return $upload.upload({
           url: url,
