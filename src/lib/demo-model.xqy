@@ -234,5 +234,5 @@ declare function demo:save($uri as xs:string, $demo as element(jbasic:json)) {
     else
       $demo
   return
-    xdmp:document-insert($uri, $demo, xdmp:default-permissions(), (xdmp:default-collections(), 'demos'))
+    xdmp:document-insert($uri, $demo, (xdmp:default-permissions(), xdmp:document-get-permissions($uri)), (xdmp:default-collections(), 'demos', xdmp:document-get-collections($uri)))
 };
