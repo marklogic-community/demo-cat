@@ -88,6 +88,11 @@
           });
         }
       });
+      angular.forEach(model.demo.bugs, function(bug, index) {
+        if (! bug.nr) {
+          bug.nr = index + 1;
+        }
+      });
     }
 
     angular.extend($scope, {
@@ -142,30 +147,51 @@
           ).finally(finalFunction);
         },
 
-      deleteItem: function(type, item) {
-        // delete item from server
-        mlRest.callExtension(type,
-          {
-            method: 'DELETE',
-            params: {
-              'rs:uri': uri,
-              'rs:id': item.id
-            },
-            headers: {
-              'Content-Type': 'application/json'
-            }
+      deleteItem: function(type, array, id) {
+        var item = null;
+        var index = 0;
+        angular.forEach(array, function(a, i) {
+          if (a.id === id) {
+            item = a;
+            index = i;
           }
-        )
-          .then(function() {item = null;});
+        });
+        if (item) {
+          // delete item from server
+          mlRest.callExtension(type,
+            {
+              method: 'DELETE',
+              params: {
+                'rs:uri': uri,
+                'rs:id': item.id
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          )
+          .then(
+            function() {
+              array.splice(index, 1);
+            }
+          );
+        }
       },
 
       addBug: function(bug) {
         // add bugs array if it doesn't exist
         // this is for demos created before adding bugs
         if (typeof $scope.model.demo.bugs === 'undefined') {
-          $scope.insertField('', {'bugs':[]},'last-child');
+          //$scope.insertField('', {'bugs':[]},'last-child');
           $scope.model.demo.bugs = [];
         }
+        var max = $scope.model.demo.bugs.length;
+        angular.forEach($scope.model.demo.bugs, function(bug) {
+          if (bug.nr > max) {
+            max = bug.nr;
+          }
+        });
+        bug.nr = max + 1;
         // send bug to server
         // reset the bug form after the bug is sent
         mlRest.callExtension('file-bug',
@@ -316,32 +342,8 @@
         // Only allow the user to follow if they have set an email in their profile
         if(model.user.emails && model.user.emails.length > 0){
           mlRest.callExtension('follow',
-              {
-                method: 'POST',
-                data: '',
-                params: {
-                  'rs:uri': uri
-                },
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              }
-            ).then(
-                function(result) {
-                  // TODO: Check result
-                  model.user.follows.push(result.data);
-                  model.followError = false;
-                });
-        }
-        else {
-          model.followError = true;
-        }
-
-      },
-      unfollow: function() {
-        mlRest.callExtension('follow',
             {
-              method: 'DELETE',
+              method: 'POST',
               data: '',
               params: {
                 'rs:uri': uri
@@ -351,12 +353,38 @@
               }
             }
           ).then(
-              function(result) {
-                var toDelete = model.user.follows.map(function(e) { return e.followUri; }).indexOf(model.uri);
-                if(toDelete > -1) {
-                  model.user.follows.splice(toDelete, 1);
-                }
-              });
+            function(result) {
+              // TODO: Check result
+              model.user.follows.push(result.data);
+              model.followError = false;
+            }
+          );
+        }
+        else {
+          model.followError = true;
+        }
+
+      },
+      unfollow: function() {
+        mlRest.callExtension('follow',
+          {
+            method: 'DELETE',
+            data: '',
+            params: {
+              'rs:uri': uri
+            },
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        ).then(
+          function(result) {
+            var toDelete = model.user.follows.map(function(e) { return e.followUri; }).indexOf(model.uri);
+            if(toDelete > -1) {
+              model.user.follows.splice(toDelete, 1);
+            }
+          }
+        );
       },
       showMediaModal: function (media) {
         showModal('/views/modals/show-media.html', 'Media Viewer', media);
