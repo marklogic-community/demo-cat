@@ -5,7 +5,7 @@
       <!-- form to log in -->
       <form ng-submit="login(username, password)">
         <div class="form-group">
-          <div class="alert alert-danger loginerror" ng-show="loginError" ng-cloak>Username and/or Password Incorrect</div>
+          <div class="alert alert-danger loginerror" ng-show="loginError" ng-cloak>Username and/or Password Incorrect. Use your MarkLogic domain credentials to login.</div>
         </div>
         <div class="form-group">
           <input type="text" placeholder="Username" class="form-control input-sm" ng-model="username">
