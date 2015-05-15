@@ -6,11 +6,12 @@
     .module('demoCat')
     .factory('AuthenticationService', AuthService);
 
-  AuthService.$inject = ['$http', '$q', '$rootScope', 'authService', 'MLRest'];
-  function AuthService($http, $q, $rootScope, authService, MLRest) {
+  AuthService.$inject = ['$cacheFactory', '$http', '$q', '$rootScope', 'authService', 'MLRest'];
+  function AuthService($cacheFactory, $http, $q, $rootScope, authService, MLRest) {
 
     var user;
-    var userRequest;
+    var lastUserCheckTime;
+    var cache = $cacheFactory.get('$http');
 
     var service = {
       getUser: getUser,
@@ -69,20 +70,19 @@
     }
 
     function getUser() {
-      if (user) {
-        var d = $q.defer();
-        d.resolve(user);
-        return d.promise;
+      var now = (new Date()).getTime();
+      // if it has been more than 500ms clear the user status cache
+      if (!lastUserCheckTime || (now - lastUserCheckTime) > 500) {
+        cache.remove('/user/status');
       }
-      else {
-        if (!userRequest) {
-          userRequest = $http.get('/user/status').then(function(data) {
-            userRequest = null;
+      return $http.get('/user/status', {cache: true}).then(
+          function(data) {
             return setUser(data.data);
-          });
-        }
-        return userRequest;
-      }
+          },
+          function() {
+            return $q.resolve(null);
+          }
+        );
     }
 
     function login(username, password) {
@@ -104,7 +104,7 @@
         return data;
       });
     }
-    
+
     function listUsers() {
       return MLRest.values('fullname', { options: 'user', format: 'json' }).then(function(resp) {
         if (resp.data['values-response']['distinct-value']) {
@@ -114,6 +114,6 @@
         }
       });
     }
-    
+
   }
 })();
