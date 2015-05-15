@@ -108,7 +108,7 @@ exports.buildExpress = function(options) {
       port: options.mlPort,
       //path: '/v1/documents?uri=/users/' + req.query.username + '.json',
       path: '/v1/resources/profile',
-      headers: req.headers,
+      //headers: req.headers,
       auth: username + ':' + password
     }, function(response) {
       if (response.statusCode === 401) {
@@ -120,7 +120,7 @@ exports.buildExpress = function(options) {
           password: password
         };
         response.on('data', function(chunk) {
-          console.log('chunk: ' + chunk);
+          //console.log('chunk: ' + chunk);
           var json = JSON.parse(chunk);
           req.session.user.profile = {};
 
@@ -140,28 +140,37 @@ exports.buildExpress = function(options) {
       }
     });
 
+    login.on('socket', function (socket) {
+      socket.setTimeout(1000);  
+      socket.on('timeout', function() {
+        console.log('timeout..');
+        login.abort();
+      });
+    });
+
     login.on('error', function(e) {
-      console.log('login failed: ' + e.statusCode);
+      console.log('login failed: ' + e);
+      login.abort();
+      res.status(500).send('Login failed');
     });
   }
 
   app.get('/user/status', function(req, res) {
     if (req.session.user === undefined) {
-      res.status(401);
-      res.send('Unauthenticated');
+      res.status(401).send('Unauthenticated');
     } else {
       getUserStatus(req, res, req.session.user.name, req.session.user.password);
     }
   });
 
-  app.get('/user/login', function(req, res) {
+  app.post('/user/login', function(req, res) {
     // or maybe we can try to read the profile and distinguish between 401 and 404
     // 404 - valid credentials, but no profile yet
     // 401 - bad credentials
-    getUserStatus(req, res, req.query.username, req.query.password);
+    getUserStatus(req, res, req.body.username, req.body.password);
   });
 
-  app.get('/user/logout', function(req, res) {
+  app.post('/user/logout', function(req, res) {
     delete req.session.user;
     res.send();
   });
@@ -320,156 +329,172 @@ exports.buildExpress = function(options) {
   }
 
   app.get('/demo/attachment', function(req, res) {
-    var params = {
-      hostname: options.mlHost,
-      port: options.mlPort,
-      method: 'GET',
-      path: '/v1/documents?uri=' + req.query.uri + '&format=binary&transform=stream',
-      headers: req.headers,
-      auth: getAuth(options, req.session)
-    };
-    var mlReq = http.request(params, function(response) {
-      if (response.statusCode >= 400) {
-        res.status(response.statusCode).send('Error!');
-      } else {
-        res.headers = response.headers;
-        if (req.query.download) {
-          var filename;
-          if (req.query.filename) {
-            filename = req.query.filename;
-          } else {
-            filename = req.query.uri.replace(/^.*\/([^\/]+)$/,'$1');
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      var params = {
+        hostname: options.mlHost,
+        port: options.mlPort,
+        method: 'GET',
+        path: '/v1/documents?uri=' + req.query.uri + '&format=binary&transform=stream',
+        headers: req.headers,
+        auth: getAuth(options, req.session)
+      };
+      var mlReq = http.request(params, function(response) {
+        if (response.statusCode >= 400) {
+          res.status(response.statusCode).send('Error!');
+        } else {
+          res.headers = response.headers;
+          if (req.query.download) {
+            var filename;
+            if (req.query.filename) {
+              filename = req.query.filename;
+            } else {
+              filename = req.query.uri.replace(/^.*\/([^\/]+)$/,'$1');
+            }
+            res.header('Content-Disposition', 'attachment;filename=' + filename );
           }
-          res.header('Content-Disposition', 'attachment;filename=' + filename );
+          response.on('data', function(chunk){
+            res.write(chunk);
+          });
+          response.on('end', function(){
+            res.end();
+          });
         }
-        response.on('data', function(chunk){
-          res.write(chunk);
-        });
-        response.on('end', function(){
-          res.end();
-        });
-      }
-    });
+      });
 
-    mlReq.on('error', function(e) {
-      res.status(500).send(e.message);
-      console.log('Problem with request: ' + e.message);
-    });
-    mlReq.end();
+      mlReq.on('error', function(e) {
+        res.status(500).send(e.message);
+        console.log('Problem with request: ' + e.message);
+      });
+      mlReq.end();
+    }
   });
 
   app.delete('/demo/attachment', function(req, res) {
-    console.log('starting to delete attachment');
-    var rejectFunction = function(step) {
-      return function(rejectionMessage) {
-        res.status(500).send(step + ': ' + rejectionMessage);
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      console.log('starting to delete attachment');
+      var rejectFunction = function(step) {
+        return function(rejectionMessage) {
+          res.status(500).send(step + ': ' + rejectionMessage);
+        };
       };
-    };
-    getDemo(req, req.query.demoUri).then(function(demo) {
-      var attachments = _.filter(demo.attachments, function(attachment){ return attachment.uri !== req.query.uri; });
-      demo.attachments = attachments;
-      updateDocument(req, demo, {uri: req.query.demoUri, format: 'json'}).then(function(){
+      getDemo(req, req.query.demoUri).then(function(demo) {
+        var attachments = _.filter(demo.attachments, function(attachment){ return attachment.uri !== req.query.uri; });
+        demo.attachments = attachments;
+        updateDocument(req, demo, {uri: req.query.demoUri, format: 'json'}).then(function(){
+          var params = {
+            hostname: options.mlHost,
+            port: options.mlPort,
+            method: 'DELETE',
+            path: '/v1/documents?uri=' + req.query.uri,
+            headers: req.headers,
+            auth: getAuth(options, req.session)
+          };
+          delete params.headers['content-length'];
+          var mlReq = http.request(params, function(response) {
+            console.log('delete attachment file');
+            if (response.statusCode >= 400) {
+              res.status(response.statusCode).send('Error!');
+              console.log('deletion of file failed!');
+            } else {
+              res.headers = response.headers;
+              response.on('data', function(chunk){
+                res.write(chunk);
+              });
+              response.on('end', function(){
+                res.end();
+              });
+            }
+          });
+          mlReq.on('error', function(e) {
+            res.status(500).send(e.message);
+            console.log('Problem with request: ' + e.message);
+          });
+          mlReq.end();
+        },
+        rejectFunction('updateDemo'));
+      },
+      rejectFunction('getDemo'));
+    }
+  });
+
+  app.post('/demo/create', isWriter, function(req, res) {
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      var demo = _.extend({},req.body.data ? JSON.parse(req.body.data) : req.body);
+      var attachments = [];
+      submitAttachments(req).then( function(resolved) {
+        resolved.forEach(function(fileMeta) {
+          if (fileMeta && fileMeta.uri) {
+            attachments.push(fileMeta);
+          }
+        });
+        demo.attachments = _.flatten([demo.attachments,attachments]);
+        submitDocument(
+          req,
+          JSON.stringify(demo, replacer),
+          req.query
+        ).then(
+          function(mlRes) {
+            res.send(JSON.stringify(mlRes));
+          },
+          function(mlRes) {
+            res.status(mlRes.status || 500).send();
+          }
+        );
+      });
+    }
+  });
+
+  app.post('/demo/update', isWriter, function(req, res) {
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      var demo = _.extend({},req.body.data ? JSON.parse(req.body.data) : req.body);
+      var attachments = [];
+      submitAttachments(req).then(function(resolved) {
+        resolved.forEach(function(fileMeta) {
+          if (fileMeta && fileMeta.uri) {
+            attachments.push(fileMeta);
+          }
+        });
+        demo.attachments = _.flatten([demo.attachments,attachments]);
+        var queryString = req.originalUrl.split('?')[1];
         var params = {
           hostname: options.mlHost,
           port: options.mlPort,
-          method: 'DELETE',
-          path: '/v1/documents?uri=' + req.query.uri,
+          method: 'PUT',
+          path: '/v1/documents?' + queryString,
           headers: req.headers,
           auth: getAuth(options, req.session)
         };
         delete params.headers['content-length'];
+        params.headers['content-type'] = 'application/json;charset=UTF-8';
+        //delete params.headers['content-type'];
         var mlReq = http.request(params, function(response) {
-          console.log('delete attachment file');
+          res.status(response.statusCode);
           if (response.statusCode >= 400) {
-            res.status(response.statusCode).send('Error!');
-            console.log('deletion of file failed!');
+            console.log('update of demo failed!');
+            res.send('Error!');
           } else {
-            res.headers = response.headers;
-            response.on('data', function(chunk){
-              res.write(chunk);
-            });
-            response.on('end', function(){
-              res.end();
-            });
+            console.log('update demo at: ' + req.query.uri);
+            res.send(JSON.stringify({uri: req.query.uri}));
           }
         });
+
+        if (demo !== undefined) {
+          mlReq.write(JSON.stringify(demo, replacer));
+        }
+        mlReq.end();
         mlReq.on('error', function(e) {
-          res.status(500).send(e.message);
           console.log('Problem with request: ' + e.message);
         });
-        mlReq.end();
-      },
-      rejectFunction('updateDemo'));
-    },
-    rejectFunction('getDemo'));
-  });
-
-  app.post('/demo/create', isWriter, function(req, res) {
-    var demo = _.extend({},req.body.data ? JSON.parse(req.body.data) : req.body);
-    var attachments = [];
-    submitAttachments(req).then( function(resolved) {
-      resolved.forEach(function(fileMeta) {
-        if (fileMeta && fileMeta.uri) {
-          attachments.push(fileMeta);
-        }
       });
-      demo.attachments = _.flatten([demo.attachments,attachments]);
-      submitDocument(
-        req,
-        JSON.stringify(demo, replacer),
-        req.query
-      ).then(
-        function(mlRes) {
-          res.send(JSON.stringify(mlRes));
-        },
-        function(mlRes) {
-          res.status(mlRes.status || 500).send();
-        }
-      );
-    });
-  });
-
-  app.post('/demo/update', isWriter, function(req, res) {
-    var demo = _.extend({},req.body.data ? JSON.parse(req.body.data) : req.body);
-    var attachments = [];
-    submitAttachments(req).then(function(resolved) {
-      resolved.forEach(function(fileMeta) {
-        if (fileMeta && fileMeta.uri) {
-          attachments.push(fileMeta);
-        }
-      });
-      demo.attachments = _.flatten([demo.attachments,attachments]);
-      var queryString = req.originalUrl.split('?')[1];
-      var params = {
-        hostname: options.mlHost,
-        port: options.mlPort,
-        method: 'PUT',
-        path: '/v1/documents?' + queryString,
-        headers: req.headers,
-        auth: getAuth(options, req.session)
-      };
-      delete params.headers['content-length'];
-      params.headers['content-type'] = 'application/json;charset=UTF-8';
-      //delete params.headers['content-type'];
-      var mlReq = http.request(params, function(response) {
-        res.status(response.statusCode);
-        if (response.statusCode >= 400) {
-          console.log('update of demo failed!');
-          res.send('Error!');
-        } else {
-          console.log('update demo at: ' + req.query.uri);
-          res.send(JSON.stringify({uri: req.query.uri}));
-        }
-      });
-
-      if (demo !== undefined) {
-        mlReq.write(JSON.stringify(demo, replacer));
-      }
-      mlReq.end();
-      mlReq.on('error', function(e) {
-        console.log('Problem with request: ' + e.message);
-      });
-    });
+    }
   });
 
   app.get('/v1*', function(req, res){
@@ -499,7 +524,10 @@ exports.buildExpress = function(options) {
   });
 
   app.get('/edit/demos/*', function(req, res, next) {
-    if (!determineIfHasType(req.session.user, 'writer')) {
+    if (req.session.user === undefined) {
+      console.log('redirecting to /login?url=' + encodeURIComponent(req.originalUrl));
+      res.redirect('/login?url=' + encodeURIComponent(req.originalUrl));
+    } else if (!determineIfHasType(req.session.user, 'writer')) {
       res.status(404).send('Not Found');
     }
     else {
