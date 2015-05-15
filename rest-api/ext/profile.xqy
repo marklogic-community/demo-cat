@@ -19,9 +19,10 @@ declare variable $ROLE_ADMIN  := "demo-cat-admin-role";
   and the user's webroles are determined based on the user's system roles for this app
 
  :)
-declare function profile:get(
+declare function profile:post(
   $context as map:map,
-  $params  as map:map
+  $params  as map:map,
+  $input   as document-node()*
 ) as document-node()*
 {
   map:put($context, "output-types", "application/json"),
