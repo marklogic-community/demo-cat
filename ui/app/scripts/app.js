@@ -125,16 +125,17 @@
         controller: 'LoginCtrl',
         resolve: {
           moveAlong: function(AuthenticationService, $route, $location) {
-            var user = AuthenticationService.user();
-            if (user && user.authenticated) {
-              var uri = $route.current.params.url;
-              if (uri) {
-                $location.url(uri);
+            AuthenticationService.getUser().then(function(user){
+              if (user && user.authenticated) {
+                var uri = $route.current.params.url;
+                if (uri) {
+                  $location.url(uri);
+                }
+                else {
+                  $location.url('/');
+                }
               }
-              else {
-                $location.url('/');
-              }
-            }
+            });
           }
         }
       })
@@ -145,7 +146,7 @@
 
   function AppRun($rootScope, $location) {
     $rootScope.$on('event:auth-loginRequired', function() {
-      if ($location.path() !== '/login') {
+      if ($location.path().indexOf('/login') !== 0) {
         $location.url('/login?url=' + $location.path());
       }
     });

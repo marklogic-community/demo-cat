@@ -29,7 +29,7 @@ exports.buildExpress = function(options) {
   app.use(expressSession({
     secret: '1234567890QWERTY',
     saveUninitialized: true,
-    resave: true
+    resave: false
   }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
