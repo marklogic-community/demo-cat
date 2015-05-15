@@ -86,11 +86,10 @@
     }
 
     function login(username, password) {
-      return $http.get('/user/login', {
-        params: {
-          username: username,
-          password: password
-        },
+      return $http.post('/user/login', {
+        username: username,
+        password: password
+      }, {
         ignoreAuthModule: true
       }).success(function(data) {
         return setUser(data);
@@ -98,7 +97,7 @@
     }
 
     function logout() {
-      return $http.get('/user/logout').then(function(data) {
+      return $http.post('/user/logout').then(function(data) {
         $rootScope.$broadcast('event:auth-loginRequired', null);
         user = null;
         return data;

@@ -182,7 +182,8 @@
       }
 
       function versionValid(field) {
-        return !isEmpty(field) && startsWithNumber(field);
+        //return !isEmpty(field) && startsWithNumber(field);
+        return isEmpty(field) || startsWithNumber(field);
       }
       
       function attachmentsValid(files) {
