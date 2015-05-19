@@ -4,9 +4,9 @@
   angular.module('demoCat')
     .controller('DemoCtrl', DemoCtrl);
 
-  DemoCtrl.$inject = ['$scope', 'MLRest', '$routeParams', 'demo', 'user', '$modal', '$sce', 'demoService', '$sanitize'];
+  DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$modal', '$sce', 'demoService', '$sanitize'];
 
-  function DemoCtrl($scope, mlRest, $routeParams, demo, user, $modal, $sce, demoService, $sanitize) {
+  function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $modal, $sce, demoService, $sanitize) {
     var uri = $routeParams.uri;
     var commentModel = {
       // set by model binding
@@ -97,6 +97,15 @@
 
     angular.extend($scope, {
       model: model,
+
+      deleteDemo: function() {
+        showModal('/views/modals/confirmation.html', 'Confirm', {text:'Are you sure you wish to delete this demo?'})
+        .then(function(){
+          demoService['delete'](model.uri).then(function(){
+            $location.url('/');
+          });
+        });
+      },
 
       showBugForm: false,
 
