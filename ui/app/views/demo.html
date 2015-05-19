@@ -94,6 +94,7 @@
         <i class="fa fa-envelope"></i> Follow this demo</a>
       <a class="btn btn-danger btn-xs btn-follow"  data-toggle="tooltip" title="Stop receiving emails when this demo is updated" ng-show="isFollowing()" ng-click="unfollow()">
         <i class="fa fa-envelope"></i> Unfollow this demo</a>
+        <a ng-show="model.user.isAdmin()" class="btn btn-danger btn-xs btn-editDemo" ng-click="deleteDemo()" ><span class="glyphicon glyphicon-trash"></span> Delete</a>
     </h2>
     <div class="col-md-8">
       <alert type="danger" ng-show="model.followError"> You must have an email set in your account to follow a demo. <a href="/profile">Set one up now.</a></alert>

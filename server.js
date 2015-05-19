@@ -139,11 +139,11 @@ exports.buildExpress = function(options) {
         });
       }
     });
-    
+
     login.end();
-    
+
     login.on('socket', function (socket) {
-      socket.setTimeout(1000);  
+      socket.setTimeout(1000);
       socket.on('timeout', function() {
         console.log('timeout..');
         login.abort();
@@ -495,6 +495,36 @@ exports.buildExpress = function(options) {
         mlReq.on('error', function(e) {
           console.log('Problem with request: ' + e.message);
         });
+      });
+    }
+  });
+
+  app.delete('/demo/delete', isWriter, function(req, res) {
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      var queryString = req.originalUrl.split('?')[1];
+      var params = {
+        hostname: options.mlHost,
+        port: options.mlPort,
+        method: 'DELETE',
+        path: '/v1/documents?' + queryString,
+        headers: req.headers,
+        auth: getAuth(options, req.session)
+      };
+      var mlReq = http.request(params, function(response) {
+        res.status(response.statusCode);
+        if (response.statusCode >= 400) {
+          console.log('delete of demo failed!');
+          res.send('Error!');
+        } else {
+          console.log('deleted demo at: ' + req.query.uri);
+          res.send(JSON.stringify({uri: req.query.uri}));
+        }
+      });
+      mlReq.end();
+      mlReq.on('error', function(e) {
+        console.log('Problem with request: ' + e.message);
       });
     }
   });

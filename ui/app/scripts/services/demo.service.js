@@ -9,6 +9,7 @@
     var service = {
       get: getDemo,
       create: createDemo,
+      delete: deleteDemo,
       deleteAttachment: deleteAttachment,
       save: saveDemo,
       list: listDemos
@@ -28,7 +29,11 @@
         return response.data;
       });
     }
-    
+
+    function deleteDemo(docUri) {
+      return $http['delete']('/demo/delete',{params: {uri: docUri}});
+    }
+
     function createDemo(demo, file) {
       var createParams = angular.extend({directory: '/demos/', extension: '.json'}, params);
       return upload(demo, file, '/demo/create?' + $.param(createParams));
@@ -52,7 +57,7 @@
         }
       });
     }
-    
+
     function upload(demo, file, url) {
       return $upload.upload({
           url: url,
