@@ -103,12 +103,12 @@ exports.buildExpress = function(options) {
   }
 
   function getUserStatus(req, res, username, password) {
-    var login = http.get({
+    var login = http.request({
+      method: 'POST',
       hostname: options.mlHost,
       port: options.mlPort,
       //path: '/v1/documents?uri=/users/' + req.query.username + '.json',
       path: '/v1/resources/profile',
-      //headers: req.headers,
       auth: username + ':' + password
     }, function(response) {
       if (response.statusCode === 401) {
@@ -139,7 +139,9 @@ exports.buildExpress = function(options) {
         });
       }
     });
-
+    
+    login.end();
+    
     login.on('socket', function (socket) {
       socket.setTimeout(1000);  
       socket.on('timeout', function() {
