@@ -745,7 +745,7 @@
       <external-security-name>marklogic-ldap</external-security-name>
       <description>Authentication against MarkLogic LDAP</description>
       <authentication>ldap</authentication>
-      <cache-timeout>300</cache-timeout>
+      <cache-timeout>999999999</cache-timeout>
       <authorization>ldap</authorization>
       <ldap-server-uri>***REMOVED***</ldap-server-uri>
       <ldap-base>***REMOVED***</ldap-base>
