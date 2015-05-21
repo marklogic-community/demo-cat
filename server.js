@@ -48,8 +48,25 @@ exports.buildExpress = function(options) {
     }
     return value;
   }
+  
+  function clearLdapCache(req) {
+    var mlReq = http.request({
+      hostname: options.mlHost,
+      port: options.mlPort,
+      method: 'DELETE',
+      path: '/v1/resources/ldap-cache',
+      auth: getAuth(options, req.session)
+    });
+
+    mlReq.on('error', function(e) {
+      console.log('Problem with request: ' + e.message);
+    });
+    
+    mlReq.end();
+  }
 
   function proxy(req, res) {
+    clearLdapCache(req);
     var queryString = req.originalUrl.split('?')[1];
     console.log(req.method + ' ' + req.path + ' proxied to ' + options.mlHost + ':' + options.mlPort + req.path + (queryString ? '?' + queryString : ''));
     var mlReq = http.request({
@@ -103,6 +120,7 @@ exports.buildExpress = function(options) {
   }
 
   function getUserStatus(req, res, username, password) {
+    clearLdapCache(req);
     var login = http.request({
       method: 'POST',
       hostname: options.mlHost,
@@ -178,6 +196,7 @@ exports.buildExpress = function(options) {
   });
 
   function submitDocument(req, doc, queryParams, fileMeta) {
+    clearLdapCache(req);
     fileMeta = fileMeta || {};
     var mimeType = fileMeta.mimeType || 'application/json;charset=UTF-8';
     var d = q.defer();
@@ -223,6 +242,7 @@ exports.buildExpress = function(options) {
   }
 
   function updateDocument(req, doc, queryParams) {
+    clearLdapCache(req);
     var d = q.defer();
     var queryParts = [];
     for (var key in queryParams) {
@@ -263,6 +283,7 @@ exports.buildExpress = function(options) {
   }
 
   function getDemo(req, uri) {
+    clearLdapCache(req);
     console.log('getting demo ' + uri);
     var d = q.defer();
     var params = {
@@ -296,6 +317,7 @@ exports.buildExpress = function(options) {
   }
 
   function submitAttachments(req) {
+    clearLdapCache(req);
     var promises = [];
     var files = Array.isArray(req.files.file) ? req.files.file : [req.files.file];
     files.forEach(function(file) {
@@ -310,15 +332,11 @@ exports.buildExpress = function(options) {
             submitDocument(
               req,
               data,
-              {
-                directory: '/demo-attachments/',
-                extension: extension
-              },
-              {
-                attachmentName: (file.originalname || file.name),
+              { directory: '/demo-attachments/',
+                extension: extension },
+              { attachmentName: (file.originalname || file.name),
                 mimeType: file.mimetype,
-                size: file.size
-              }
+                size: file.size }
             )
           );
           fs.unlink(file.path);
@@ -334,6 +352,7 @@ exports.buildExpress = function(options) {
     if (req.session.user === undefined) {
       res.status(401).send('Unauthorized');
     } else {
+      clearLdapCache(req);
       var params = {
         hostname: options.mlHost,
         port: options.mlPort,
@@ -459,6 +478,7 @@ exports.buildExpress = function(options) {
       var demo = _.extend({},req.body.data ? JSON.parse(req.body.data) : req.body);
       var attachments = [];
       submitAttachments(req).then(function(resolved) {
+        clearLdapCache(req);
         resolved.forEach(function(fileMeta) {
           if (fileMeta && fileMeta.uri) {
             attachments.push(fileMeta);
@@ -503,6 +523,7 @@ exports.buildExpress = function(options) {
     if (req.session.user === undefined) {
       res.status(401).send('Unauthorized');
     } else {
+      clearLdapCache(req);
       var queryString = req.originalUrl.split('?')[1];
       var params = {
         hostname: options.mlHost,
