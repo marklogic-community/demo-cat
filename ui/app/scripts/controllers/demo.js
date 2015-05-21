@@ -2,12 +2,10 @@
   'use strict';
 
   angular.module('demoCat')
+    .factory('DemoModel', DemoModel)
     .controller('DemoCtrl', DemoCtrl);
 
-  DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$modal', '$sce', 'demoService', '$sanitize'];
-
-  function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $modal, $sce, demoService, $sanitize) {
-    var uri = $routeParams.uri;
+  function DemoModel() {
     var commentModel = {
       // set by model binding
       msg: '',
@@ -32,7 +30,6 @@
 
     var model = {
       // your model stuff here
-      uri: $routeParams.uri,
       demo: {
         comments: [],
         bugs: []
@@ -60,9 +57,18 @@
         /* jshint camelcase: false */
         toolbar_full: '',
         followError: false
-      },
-      user: user
+      }
     };
+    return model;
+  }
+  
+  DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$modal', '$sce', 'demoService', '$sanitize', 'DemoModel'];
+
+  function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $modal, $sce, demoService, $sanitize, model) {
+    var uri = $routeParams.uri;
+    model.uri = $routeParams.uri;
+    model.user = user;
+    
     if (demo) {
       var imageExtensions = ['jpeg','jpg','gif','png'];
       var videoExtensions = ['webm','ogg','mp4'];
@@ -93,6 +99,12 @@
           bug.nr = index + 1;
         }
       });
+    } else {
+      model.demo = {
+        comments: [],
+        bugs: []
+      };
+      model.attachedMedia = [];
     }
 
     angular.extend($scope, {
