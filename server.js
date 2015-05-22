@@ -50,6 +50,7 @@ exports.buildExpress = function(options) {
   }
   
   function clearLdapCache(req) {
+    /* GJo: not working as expected. Instead we will use unlimited cache timeout..
     var mlReq = http.request({
       hostname: options.mlHost,
       port: options.mlPort,
@@ -63,6 +64,7 @@ exports.buildExpress = function(options) {
     });
     
     mlReq.end();
+    */
   }
 
   function proxy(req, res) {

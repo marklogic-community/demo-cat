@@ -750,8 +750,9 @@
       <ldap-server-uri>***REMOVED***</ldap-server-uri>
       <ldap-base>***REMOVED***</ldap-base>
       <ldap-attribute>sAMAccountName</ldap-attribute>
-      <ldap-default-user>@ml.ldap-user</ldap-default-user>
+      <ldap-default-user>CN=@ml.ldap-user,***REMOVED***</ldap-default-user>
       <ldap-password>@ml.ldap-password</ldap-password>
+      <ldap-bind-method>simple</ldap-bind-method>
     </external-security>
   </external-securities>
 </configuration>
