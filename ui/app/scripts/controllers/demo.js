@@ -62,9 +62,9 @@
     return model;
   }
   
-  DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$modal', '$sce', 'demoService', '$sanitize', 'DemoModel'];
+  DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$sce', 'ModalService', 'demoService', '$sanitize', 'DemoModel'];
 
-  function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $modal, $sce, demoService, $sanitize, model) {
+  function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $sce, modal, demoService, $sanitize, model) {
     var uri = $routeParams.uri;
     model.uri = $routeParams.uri;
     model.user = user;
@@ -111,7 +111,8 @@
       model: model,
 
       deleteDemo: function() {
-        showModal('/views/modals/confirmation.html', 'Confirm', {text:'Are you sure you wish to delete this demo?'})
+        modal
+        .show('/views/modals/confirmation.html', 'Confirm', {text:'Are you sure you wish to delete this demo?'})
         .then(function(){
           demoService['delete'](model.uri).then(function(){
             $location.url('/');
@@ -325,7 +326,8 @@
 
       addMemo: function() {
         var memo = { title: null, body: null };
-        showModal('/views/modals/edit-memo.html', 'New memo', memo, validateMemo)
+        modal
+        .show('/views/modals/edit-memo.html', 'New memo', memo, validateMemo)
         .then(function(memo) {
           if (!model.demo.memos) {
             model.demo.memos = [];
@@ -336,9 +338,11 @@
         });
       },
       showMemo: function(memo) {
-        showModal('/views/modals/show-memo.html', 'View memo', memo)
+        modal
+        .show('/views/modals/show-memo.html', 'View memo', memo)
         .then(function(memo){
-          showModal('/views/modals/edit-memo.html', 'Edit memo', memo, validateMemo)
+          modal
+          .show('/views/modals/edit-memo.html', 'Edit memo', memo, validateMemo)
           .then(function(memo){
             memo.body = $sanitize(memo.body);
             saveMemos();
@@ -408,7 +412,8 @@
         );
       },
       showMediaModal: function (media) {
-        showModal('/views/modals/show-media.html', 'Media Viewer', media);
+        modal
+        .show('/views/modals/show-media.html', 'Media Viewer', media);
       },
       trustUrl: $sce.trustAsResourceUrl
     });
@@ -428,44 +433,5 @@
       demoService.save(model.demo, null, uri);
     }
 
-    function showModal(template, title, model, validate) {
-      return $modal.open({
-        templateUrl: template+'',
-        controller: function ($scope, $modalInstance, title, model, validate, user) {
-          $scope.title = title;
-          $scope.model = model;
-          $scope.user = user;
-          $scope.alerts = [];
-          $scope.ok = function () {
-            if (validate) {
-              $scope.alerts = validate($scope.model);
-            }
-            if ($scope.alerts.length === 0) {
-              $modalInstance.close($scope.model);
-            }
-          };
-          $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-          };
-          $scope.encodeURIComponent = encodeURIComponent;
-          $scope.trustUrl = $sce.trustAsResourceUrl;
-        },
-        size: 'lg',
-        resolve: {
-          title: function () {
-            return title;
-          },
-          model: function () {
-            return model;
-          },
-          validate: function () {
-            return validate;
-          },
-          user: function () {
-            return user;
-          }
-        }
-      }).result;
-    }
   }
 }());

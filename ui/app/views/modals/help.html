@@ -1,0 +1,70 @@
+<form class="form edit-memo" role="form" name="modal">
+  <div class="modal-header">
+      <h3 class="modal-title">{{title}}</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      You can reach out to <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Help">Vanguard@marklogic.com</a> with any question regarding Demo-Cat. A number of frequently asked questions are listed below: 
+    </p>
+    <dl class="help">
+      <dt>
+        Q: What credentials do I use to login?  Do my old Demo-Cat credentials work?
+      </dt>
+      <dd>
+        A: Old Demo-Cat credentials will no longer work. The new Demo-Cat authenticates against the MarkLogic LDAP, meaning everyone should be able to login with their MarkLogic Domain credentials.
+      </dd>
+      <dt>
+        Q: What do I do if my credentials don’t work?
+      </dt>
+      <dd>
+        A: Contact <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Cannot access">Vanguard@marklogic.com</a>
+      </dd>
+      <dt>
+        Q: What are the different roles and permissions?
+      </dt>
+      <dd>
+        A: We distinguish reader, writer, and admin role. Admin is for Vanguard only. Anyone related to Sales engineering should have writer access. Anyone else reader access. Contact Vanguard if you think you should have more permissions.
+      </dd>
+      <dt>
+        Q: Is there a “Help” section?
+      </dt>
+      <dd>
+        A: Yes. A lot of inline help in the shape of descriptive error messages and popover messages is available throughout the application. You also have this Q&A section available through the Help button on the top of the screen.
+      </dd>
+      <dt>
+        Q: How do I request server space to build a demo?
+      </dt>
+      <dd>
+        A: Demos with limited amounts of data can be deployed on one of the Vanguard demo servers. You can contact Vanguard about this. Or request a dedicated demo server, with a limited life-span, from IT. 
+      </dd>
+      <dt>
+        Q: How do I add an existing demo to DC?
+      </dt>
+      <dd>
+        A: You need writer or admin role. If you have you should see a Create button in the header bar of Demo-Cat. Click it, fill in as many fields as possible, and click Save at the bottom. You can add memos after creation.
+      </dd>
+      <dt>
+        Q: How do I search for existing demos?
+      </dt>
+      <dd>
+        A: Use the search bar in the header of Demo-Cat.
+      </dd>
+      <dt>
+        Q: What does “Follow this demo” do?
+      </dt>
+      <dd>
+        A: It will apply alerting to changes to that particular demo. You will be notified through email. Make sure you have edited your personal profile through the Account link on the top-right of Demo-Cat, and have added a valid email address. Make sure to click the + button next to the email address field to append it to the list of emails. You can have multiple. Also make sure to click Submit to persist your profile changes.
+      </dd>
+      <dt>
+        Q: When I add a bug or RFE, where does it go?
+      </dt>
+      <dd>
+        A: All data is recorded inside the Demo-Cat database. That includes demo details, but also bugs, RFEs, comments, memos, links to media, and any attachment that was uploaded.
+      </dd>
+    </dl>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-danger pull-right" ng-click="ok()">Close</button>
+  </div>
+</form>
