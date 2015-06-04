@@ -10,19 +10,25 @@
   </div>
   <div class="collapse navbar-collapse" id="demo-cat-navbar-collapse-1">
     <ul class="nav navbar-nav">
-      <li ng-show="user.isWriter()"><form><a class="btn btn-danger btn-sm btn-create" ng-href="/create">Create</a></form></li>
     </ul>
+
     <div class="navbar-form navbar-left">
       <ml-remote-input template="/views/header/ml-input-fa.html"></ml-remote-input>
     </div>
-    <div class="welcome pull-right" ng-show="user.authenticated">
-      <div class="navbar-collapse collapse">
-        <span class="glyphicon glyphicon-user"></span> {{ user.fullname || user.name }} | <span class="profile-link"><a href="/profile">Account</a></span>
+    
+    <ul class="nav navbar-nav navbar-right">
+      <li ng-show="user.isWriter()"><form><a class="btn btn-danger btn-sm btn-create" ng-href="/create">Create</a></form></li>
+      <li><button class="btn btn-danger btn-sm btn-create" ng-click="showHelp()">Help</button></li>
+      
+      <li class="welcome" ng-show="user.authenticated">
+        <div class="navbar-collapse collapse">
+          <span class="glyphicon glyphicon-user"></span> {{ user.fullname || user.name }} | <span class="profile-link"><a href="/profile">Account</a></span>
 
-        <button class="btn btn-default btn-xs" type="button" ng-click="logout()">Logout</button>
+          <button class="btn btn-default btn-xs" type="button" ng-click="logout()">Logout</button>
 
-      </div><!--/.navbar-collapse -->
-    </div>
+        </div><!--/.navbar-collapse -->
+      </li>
+    </ul>
   </div><!-- /.navbar-collapse -->
   <!-- display the logged in user -->
 
