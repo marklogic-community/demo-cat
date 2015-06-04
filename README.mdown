@@ -69,6 +69,57 @@ Next to start them, use the following commands (from any directory):
 
 These services will also print usage without param, but they support info, restart, start, status, and stop. The info param is very useful to check the settings.
 
+# Configuring HTTPS
+
+Easiest way to do this is to configure SSL in httpd. Make sure mod_ssl and openssl are installed:
+
+- sudo yum install mod_ssl openssl
+
+Then use openssl to generate a key, a CSR (Cert Sign Request), and self-cert the CSR:
+
+- sudo openssl genrsa -out ca.key 2048 
+- sudo openssl req -new -key ca.key -out ca.csr
+- sudo openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
+
+You will need to enter Country, Company, and server name for the CSR. You can also use the CSR to get a Certificate signed by a third party (IT will likely be able to help with that).
+
+Copy the output files in the right location:
+
+- sudo cp ca.crt /etc/pki/tls/certs
+- sudo cp ca.key /etc/pki/tls/private/ca.key
+- sudo cp ca.csr /etc/pki/tls/private/ca.csr
+
+Next is configuring httpd. Make sure the ssl.conf points to the correct ca.crt
+
+- sudo vi +/SSLCertificateFile /etc/httpd/conf.d/ssl.conf
+
+You probably also want to unwrap ssl.conf from the <VirtualHost>
+
+- sudo vi +/VirtualHost /etc/httpd/conf/httpd.conf
+
+Make sure you have both of these enabled:
+
+NameVirtualHost *:80
+NameVirtualHost *:443
+
+And then insert the following at the end:
+
+<VirtualHost *:80>
+  ServerName catalog-new.demo.marklogic.com
+  Redirect permanent / https://catalog-new.demo.marklogic.com/
+</VirtualHost>
+<VirtualHost *:443>
+  SSLEngine on
+  ServerName catalog-new.demo.marklogic.com
+  RewriteEngine On
+  RewriteCond %{HTTPS} on
+  RewriteRule ^(.*)$ http://localhost:4000$1 [P]
+</VirtualHost>
+
+You can verify httpd config with:
+
+- sudo /usr/sbin/httpd -S
+
 # Roxy
 Roxy (RObust XQuerY Framework) is a lightweight framework for quickly developing well-structured, easily maintained XQuery applications. Roxy was heavily inspired by Ruby On Rails and CakePHP.
 
