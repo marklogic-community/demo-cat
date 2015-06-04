@@ -40,7 +40,7 @@ function follow:post(
   let $rule := alert:make-rule(
     fn:concat("Rule send-email for ", $username, ", demo ", $uri),
     "The rule tests for an update to a demo",
-    xdmp:get-request-user(),
+    xdmp:user($username),
     cts:document-query($uri),
     "send-demo-email",
     element alert:options {
