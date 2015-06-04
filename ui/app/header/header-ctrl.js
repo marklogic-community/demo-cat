@@ -2,12 +2,13 @@
   'use strict';
 
   angular.module('demoCat')
-    .controller('HeaderCtrl', HeaderCtrl);
+    .controller('HeaderCtrl', ['$scope', '$http', '$location', 'AuthenticationService', 'ModalService', HeaderCtrl]);
 
-  function HeaderCtrl($scope, $http, $location, AuthenticationService) {
+  function HeaderCtrl($scope, $http, $location, AuthenticationService, modal) {
 
     angular.extend($scope, {
-      logout: logout
+      logout: logout,
+      showHelp: showHelp
     });
 
     $scope.$watch(AuthenticationService.user, function(newValue) {
@@ -16,7 +17,11 @@
 
     function logout() {
       AuthenticationService.logout();
-     }
+    }
+    
+    function showHelp() {
+      modal.show('/views/modals/help.html', 'Help');
+    }
   }
 
 }());
