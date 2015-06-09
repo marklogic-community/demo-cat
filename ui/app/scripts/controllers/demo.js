@@ -61,14 +61,15 @@
     };
     return model;
   }
-  
+
   DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$sce', 'ModalService', 'demoService', '$sanitize', 'DemoModel'];
 
   function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $sce, modal, demoService, $sanitize, model) {
     var uri = $routeParams.uri;
     model.uri = $routeParams.uri;
     model.user = user;
-    
+    model.attachedMedia = [];
+
     if (demo) {
       var imageExtensions = ['jpeg','jpg','gif','png'];
       var videoExtensions = ['webm','ogg','mp4'];
@@ -106,6 +107,8 @@
       };
       model.attachedMedia = [];
     }
+
+    model.media = model.attachedMedia.concat(model.demo.media);
 
     angular.extend($scope, {
       model: model,
