@@ -102,9 +102,9 @@
     <div class="shortdesc col-md-12" ng-bind-html="model.demo.shortdesc"></div>
     <div class="desc col-md-12" ng-bind-html="model.demo.description"></div>
 
-    <div ng-if="model.demo.media.length || model.attachedMedia.length" class="media col-md-12">
+    <div ng-if="model.media.length" class="media col-md-12">
       <h4>Media</h4>
-        <div ng-repeat="media in combined = model.attachedMedia.concat(model.demo.media)" class="text-center col-sm-3">
+        <div ng-repeat="media in model.media" class="text-center col-sm-3">
           <div class="media-middle">
             <a ng-click="showMediaModal(media)">
               <img class="col-sm-12" ng-if="media.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(media.mediaUrl)}}" />

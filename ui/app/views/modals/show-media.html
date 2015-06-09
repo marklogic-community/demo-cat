@@ -2,7 +2,7 @@
   <div class="modal-header">
       <h3 class="modal-title">{{title}}: {{model.mediaName}}</h3>
   </div>
-  <div class="modal-body">
+  <div ng-cloak class="modal-body">
      <img height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="model.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(model.mediaUrl)}}" />
      <video height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="model.mediaType === 'video'" controls  ng-src="{{trustUrl(model.mediaUrl)}}">
      </video>
