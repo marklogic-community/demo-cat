@@ -48,7 +48,7 @@ exports.buildExpress = function(options) {
     }
     return value;
   }
-  
+
   function clearLdapCache(req) {
     /* GJo: not working as expected. Instead we will use unlimited cache timeout..
     var mlReq = http.request({
@@ -62,7 +62,7 @@ exports.buildExpress = function(options) {
     mlReq.on('error', function(e) {
       console.log('Problem with request: ' + e.message);
     });
-    
+
     mlReq.end();
     */
   }
@@ -368,6 +368,7 @@ exports.buildExpress = function(options) {
           res.status(response.statusCode).send('Error!');
         } else {
           res.headers = response.headers;
+          res.header('content-type', response.headers['content-type']);
           if (req.query.download) {
             var filename;
             if (req.query.filename) {
