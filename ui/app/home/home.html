@@ -26,6 +26,7 @@
               <li><strong>Presenter:</strong> {{event.presenter}}</li>
               <li><strong>Date:</strong> {{event.start | date:'shortDate' }}</li>
               <li><strong>Start time:</strong> {{event.start | date:'shortTime' }}</li>
+              <li><strong>Timezone:</strong> {{event.timezone | timezone }}</li>
               <li><strong>Duration:</strong> {{event.duration}} minutes</li>
             </ul>
         </div>

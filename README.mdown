@@ -77,19 +77,19 @@ Easiest way to do this is to configure SSL in httpd. Make sure mod_ssl and opens
 
 Then use openssl to generate a key, a CSR (Cert Sign Request), and self-cert the CSR:
 
-- sudo openssl genrsa -out ca.key 2048 
-- sudo openssl req -new -key ca.key -out ca.csr
-- sudo openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
+- sudo openssl genrsa -out catalog.key 2048 
+- sudo openssl req -new -key catalog.key -out catalog.csr
+- sudo openssl x509 -req -days 365 -in catalog.csr -signkey catalog.key -out catalog.crt
 
 You will need to enter Country, Company, and server name for the CSR. You can also use the CSR to get a Certificate signed by a third party (IT will likely be able to help with that).
 
 Copy the output files in the right location:
 
-- sudo cp ca.crt /etc/pki/tls/certs
-- sudo cp ca.key /etc/pki/tls/private/ca.key
-- sudo cp ca.csr /etc/pki/tls/private/ca.csr
+- sudo cp catalog.crt /etc/pki/tls/certs/
+- sudo cp catalog.key /etc/pki/tls/private/
+- sudo cp catalog.csr /etc/pki/tls/private/
 
-Next is configuring httpd. Make sure the ssl.conf points to the correct ca.crt
+Next is configuring httpd. Make sure the ssl.conf points to the correct catalog.key (SSLCertificateKeyFile) and catalog.crt (SSLCertificateFile)
 
 - sudo vi +/SSLCertificateFile /etc/httpd/conf.d/ssl.conf
 
@@ -119,6 +119,8 @@ And then insert the following at the end:
 You can verify httpd config with:
 
 - sudo /usr/sbin/httpd -S
+
+For official signing, you need to forward the catalog.csr to IT. They will send two pem files in return: one for the Cert Authority (ca.cert.pem), and a replacement for the catalog.crt file (catalog.demo.cert.pem). Put both in the certs folder, and make sure SSLCertificateFile points to catalog.demo.cert.pem, and SSLCACertificateFile to ca.cert.pem.
 
 # Roxy
 Roxy (RObust XQuerY Framework) is a lightweight framework for quickly developing well-structured, easily maintained XQuery applications. Roxy was heavily inspired by Ruby On Rails and CakePHP.
