@@ -20,8 +20,8 @@
 
         <div class="row" ng-repeat="demo in model.spotlight">
           <div class="col-md-3"><input type="text" class="form-control" placeholder="Slogan"  ng-model="model.spotlight[$index].title"/></div>
-          <div class="col-md-2"><input type="text" class="form-control" placeholder="Demo" ng-model="model.spotlight[$index].demo" typeahead="choice.name for choice in model.demos | filter:$viewValue" required/></div>
-          <div class="col-md-6"><input type="text" class="form-control" placeholder="Attachment" ng-model="model.spotlight[$index].attachment" typeahead="choice.attachmentName for choice in model.attachments(model.spotlight[$index].demo, $viewValue)" typeahead-template-url="customTemplate.html" required/></div>
+          <div class="col-md-4"><input type="text" class="form-control" placeholder="Demo" ng-model="model.spotlight[$index].demo" typeahead="choice.name for choice in model.demos | filter:$viewValue" required/></div>
+          <div class="col-md-4"><input type="text" class="form-control" placeholder="Attachment" ng-model="model.spotlight[$index].attachment" typeahead="choice.attachmentName for choice in model.attachments(model.spotlight[$index].demo, $viewValue)" typeahead-template-url="customTemplate.html" required/></div>
           <div class="col-md-1 icon">
             <a class="btn btn-danger btn-xs" ng-click="model.removeSpotlightLink($index)">
               <span class="glyphicon glyphicon-trash icon-white"></span>

@@ -19,7 +19,7 @@
     <div class="container-fluid content" ng-view=""></div>
     <footer ng-class="{true: 'footer loggedout', false: 'footer loggedin'}[user == unauthenticated]">
       <div class="container-fluid">
-        <p class="text-muted pull-left">Copyright &copy; 2014 MarkLogic Corporation. All Rights Reserved.</p>
+        <p class="text-muted pull-left">Copyright &copy; 2015 MarkLogic Corporation. All Rights Reserved.</p>
         <img src="/images/marklogic-poweredby.png" class="pull-right"/>
       </div>
     </footer>
@@ -40,14 +40,16 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 
     <script src="bower_components/ml-common-ng/dist/ml-common-ng.min.js"></script>
-    <script src="bower_components/ml-search-ng/dist/ml-search-ng.js"></script>
+    <!-- fixed bug in annotateActiveFacets: -->
+      <!--script src="bower_components/ml-search-ng/dist/ml-search-ng.js"></script-->
+      <script src="search/ml-search-ng.js"></script>
     <script src="bower_components/ml-search-ng/dist/ml-search-ng-tpls.min.js"></script>
     <script src="bower_components/ml-utils/ml-utils.min.js"></script>
     <script src="bower_components/ng-ckeditor/ng-ckeditor.js"></script>
     <script src="bower_components/ng-file-upload/angular-file-upload.min.js"></script>
     <script src="bower_components/ng-file-upload-shim/angular-file-upload-shim.min.js"></script>
     <script src="bower_components/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js"></script>
-    <!-- endbuild -->
+      <!-- endbuild -->
 
     <!-- build:js scripts/scripts.js -->
     <script src="scripts/app.js"></script>
