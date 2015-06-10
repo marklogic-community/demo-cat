@@ -442,6 +442,9 @@
         </element-attribute-word-lexicon>
 -->
       </element-attribute-word-lexicons>
+      <word-lexicons>
+        <word-lexicon>http://marklogic.com/collation/</word-lexicon>
+      </word-lexicons>
     </database>
     <!--Create Application Modules Database-->
     <database>
