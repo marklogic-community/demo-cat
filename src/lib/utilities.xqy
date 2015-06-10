@@ -32,7 +32,7 @@ declare function utilities:send-notification(
           <em:adrs>no-reply@catalog.demo.marklogic.com</em:adrs>
         </em:Address>
       </rf:from>
-      <rf:to>{
+      <rf:to>
         <em:Group>
           <em:name>recipients</em:name>
           {
@@ -45,8 +45,8 @@ declare function utilities:send-notification(
               </em:Address>
           }
         </em:Group>
-      }</rf:to>
-      <rf:cc>{
+      </rf:to>
+      <rf:cc>
         <em:Group>
           <em:name>cc</em:name>
           {
@@ -59,7 +59,7 @@ declare function utilities:send-notification(
               </em:Address>
           }
         </em:Group>
-      }</rf:cc>
+      </rf:cc>
       <em:content>
         <html xmlns="http://www.w3.org/1999/xhtml">
           <head>
