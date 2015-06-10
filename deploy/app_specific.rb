@@ -49,7 +49,7 @@ class ServerConfig
     if (@properties["ml.external-security"] != "")
       if (@properties["ml.ldap-user"] == "") then
         if STDIN.respond_to?(:noecho)
-        print "Enter an LDAP user: "
+        print "Enter the full name of any domain user: "
         @properties["ml.ldap-user"] = STDIN.noecho(&:gets).chomp
         print "\n"
         else
@@ -59,7 +59,7 @@ class ServerConfig
 
       if (@properties["ml.ldap-password"] == "") then
         if STDIN.respond_to?(:noecho)
-        print "Enter an LDAP password: "
+        print "Enter the domain password for above user: "
         @properties["ml.ldap-password"] = STDIN.noecho(&:gets).chomp
         print "\n"
         else
