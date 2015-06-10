@@ -73,7 +73,7 @@ declare function demo:notify-comment(
     
   (: send message :)
   return
-    demo:notify($demo, $subject, $message, fn:true())
+    demo:notify($demo, $subject, $message, fn:true(), fn:false())
 };
 
 declare function demo:notify-bug(
@@ -103,7 +103,7 @@ declare function demo:notify-bug(
     
   (: send message :)
   return
-    demo:notify($demo, $subject, $message, fn:false())
+    demo:notify($demo, $subject, $message, fn:false(), fn:true())
 };
 
 declare function demo:notify-update(
@@ -132,9 +132,11 @@ declare function demo:notify-update(
       $recipient-emails
     else
       "vanguard@marklogic.com"
-  for $recipient-email in $recipient-emails
+  let $recipient-names :=
+    for $i in $recipient-emails
+    return $recipient-name
   return
-    demo:send-email($recipient-name, $recipient-email, $subject, $message)
+    demo:send-email($recipient-names, $recipient-emails, $subject, $message, (), ())
 };
 
 declare function demo:notify-broken(
@@ -159,14 +161,15 @@ declare function demo:notify-broken(
   
   (: send message :)
   return
-    demo:notify($demo, $subject, $message, fn:false())
+    demo:notify($demo, $subject, $message, fn:false(), fn:true())
 };
 
 declare function demo:notify(
   $demo as element(jbasic:json),
   $subject as  xs:string,
   $message as item(),
-  $business-owners-first as xs:boolean
+  $business-owners-first as xs:boolean,
+  $cc-vanguard as xs:boolean
 ) as empty-sequence() {
   
   (: get receipients :)
@@ -184,28 +187,35 @@ declare function demo:notify(
     else
       <vanguard/>
   
-  for $recipient in $recipients
-  
-  let $recipient-name as xs:string := (
-    $recipient/jbasic:name,
-    "Vanguard"
-  )[1]
-  let $recipient-email as xs:string := (
-    $recipient/jbasic:email[. ne ""],
-    "vanguard@marklogic.com"
-  )[1]
+  let $recipient-names as xs:string :=
+    for $recipient in $recipients
+    return (
+      $recipient/jbasic:name,
+      "Vanguard"
+    )[1]
+  let $recipient-emails as xs:string :=
+    for $recipient in $recipients
+    return (
+      $recipient/jbasic:email[. ne ""],
+      "vanguard@marklogic.com"
+    )[1]
   
   return
-    demo:send-email($recipient-name, $recipient-email, $subject, $message)
+    demo:send-email($recipient-names, $recipient-emails, $subject, $message,
+      if ($cc-vanguard) then "Vanguard" else (),
+      if ($cc-vanguard) then "vanguard@marklogic.com" else ()
+    )
 };
 
 declare function demo:send-email(
-  $recipient-name as xs:string,
-  $recipient-email as xs:string,
+  $recipient-names as xs:string*,
+  $recipient-emails as xs:string*,
   $subject as  xs:string,
-  $message as item()
+  $message as item(),
+  $cc-names as xs:string*,
+  $cc-emails as xs:string*
 ) as empty-sequence() {
-  util:send-notification($recipient-name, $recipient-email, "[Demo-Cat] "||$subject, $message)
+  util:send-notification($recipient-names, $recipient-emails, "[Demo-Cat] "||$subject, $message, $cc-names, $cc-emails)
 };
 
 (: low-level access :)
