@@ -28,17 +28,22 @@
       <label class="col-sm-2 control-label restricted">Restriction</label>
       <div class="col-sm-3">
         <label class="checkbox-inline restricted">
-          <input type="checkbox" ng-model="model.demo.restricted">Access Restricted
+          <input type="checkbox" name="restricted" ng-model="model.demo.restricted">Access Restricted
         </label>
       </div>
     </div>
     <div class="form-group" ng-if="model.demo.restricted">
-      <label class="col-sm-2 control-label text-danger restricted">Restriction Details</label>
+      <label class="col-sm-2 control-label required text-danger restricted">Restriction Details<span>*</span></label>
       <div class="col-sm-8">
-        <textarea class="form-control" ckeditor="editorOptions" ng-model="model.demo.restrictionDetails"></textarea>
+        <textarea class="form-control" ckeditor="editorOptions" name="restrictionDetails" ng-model="model.demo.restrictionDetails" required></textarea>
       </div>
       <div class="info">
         <span class="glyphicon glyphicon-info-sign" popover="Provide details here regarding the restrictions associated with this demo." popover-placement="bottom" popover-trigger="mouseenter"></span>
+      </div>
+    </div>
+    <div class="row form-error" ng-if="model.demo.restricted">
+      <div class="col-md-8 col-md-offset-2" ng-show="createForm.$submitted || createForm.restricted.$touched || createForm.restrictionDetails.$touched">
+        <alert ng-show="createForm.restrictionDetails.$error.required" type="danger" close="">Restriction Details are required.</alert>
       </div>
     </div>
     <div class="form-group">
