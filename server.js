@@ -140,7 +140,7 @@ exports.buildExpress = function(options) {
           password: password
         };
         response.on('data', function(chunk) {
-          console.log('chunk: ' + chunk);
+          //console.log('chunk: ' + chunk);
           var json = JSON.parse(chunk);
           req.session.user.profile = {};
 
