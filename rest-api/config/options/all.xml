@@ -5,7 +5,7 @@
   <term apply="term">
     <empty apply="all-results"/>
     <term-option>punctuation-insensitive</term-option>
-    <term-option>stemmed</term-option>
+    <term-option>wildcarded</term-option>
   </term>
   <grammar>
     <quotation>"</quotation>
@@ -25,7 +25,10 @@
     <joiner strength="50" apply="constraint" compare="GE" tokenize="word">GE</joiner>
     <joiner strength="50" apply="constraint" compare="NE" tokenize="word">NE</joiner>
   </grammar>
-
+  <default-suggestion-source>
+    <word-lexicon/>
+  </default-suggestion-source>
+  
   <!-- ML7 / JSONXML -->
   
   <constraint name="ml7_domain">
