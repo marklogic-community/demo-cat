@@ -2,6 +2,15 @@
   'use strict';
   angular.module('demoCat.home', []);
   angular.module('demoCat.home')
+    .filter('timezone', function() {
+      return function(timezone) {
+        if (timezone === 0) {
+          return 'Z';
+        } else {
+          return (timezone > 0 ? '+' : '-') + ('0' + Math.floor(Math.abs(timezone))).slice(-2) + ':' + ('0' + (Math.abs(timezone) * 60) % 60).slice(-2);
+        }
+      };
+    })
     .factory('HomeModel', [
       function() {
         return {
@@ -99,6 +108,7 @@
           });
           showModal('/views/modals/edit-dont-touch.html', 'Edit Don\'t Touch', {
             donttouch: donttouch,
+            clientTimezone: new Date().getTimezoneOffset() / -60,
             users: users,
             demos: demos,
             addDontTouchLink: function() {

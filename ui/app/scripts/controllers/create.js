@@ -174,9 +174,13 @@
       });
       
       function validate(model) {
-        return contactsValid(model.demo.persons) && versionValid(model.demo.version) && attachmentsValid(model.scriptFiles);
+        return restrictionValid(model.demo.restricted, model.demo.restrictionDetails) && contactsValid(model.demo.persons) && versionValid(model.demo.version) && attachmentsValid(model.scriptFiles);
       }
       
+      function restrictionValid(restricted, details) {
+        return (!restricted || !isEmpty(details));
+      }
+
       function contactsValid(field) {
         return (!isEmpty(field) && field.length > 0);
       }

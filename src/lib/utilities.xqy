@@ -5,10 +5,21 @@ module namespace utilities = "http://marklogic.com/demo-cat/utilities";
 declare option xdmp:mapping "false";
 
 declare function utilities:send-notification(
-  $recipient-name as xs:string,
-  $recipient-email as xs:string,
+  $recipient-names as xs:string*,
+  $recipient-emails as xs:string*,
   $subject as  xs:string,
   $message as item()
+) as empty-sequence() {
+  utilities:send-notification($recipient-names, $recipient-emails, $subject, $message, (), ())
+};
+
+declare function utilities:send-notification(
+  $recipient-names as xs:string*,
+  $recipient-emails as xs:string*,
+  $subject as  xs:string,
+  $message as item(),
+  $cc-names as xs:string*,
+  $cc-emails as xs:string*
 ) as empty-sequence() {
   xdmp:email(
     <em:Message
@@ -22,11 +33,33 @@ declare function utilities:send-notification(
         </em:Address>
       </rf:from>
       <rf:to>
-        <em:Address>
-          <em:name>{$recipient-name}</em:name>
-          <em:adrs>{$recipient-email}</em:adrs>
-        </em:Address>
+        <em:Group>
+          <em:name>recipients</em:name>
+          {
+            for $email at $x in $recipient-emails
+            let $name := $recipient-names[$x]
+            return
+              <em:Address>
+                <em:name>{$name}</em:name>
+                <em:adrs>{$email}</em:adrs>
+              </em:Address>
+          }
+        </em:Group>
       </rf:to>
+      <rf:cc>
+        <em:Group>
+          <em:name>cc</em:name>
+          {
+            for $email at $x in $cc-emails
+            let $name := $cc-names[$x]
+            return
+              <em:Address>
+                <em:name>{$name}</em:name>
+                <em:adrs>{$email}</em:adrs>
+              </em:Address>
+          }
+        </em:Group>
+      </rf:cc>
       <em:content>
         <html xmlns="http://www.w3.org/1999/xhtml">
           <head>
@@ -35,8 +68,8 @@ declare function utilities:send-notification(
           <body>{$message}</body>
         </html>
       </em:content>
-    </em:Message>)
-
+    </em:Message>
+  )
 };
 
 (:

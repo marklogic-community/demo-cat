@@ -66,13 +66,17 @@
         </div>
         <div ng-if="model.demo.url">
           <h4>Accessible at</h4>
-          <span><a ng-href="{{model.demo.url}}" target="_blank">{{model.demo.url}}</a>
-          (<span class="value">{{model.demo.urlType}}</span>)</span>
+          <span>
+            <a ng-href="{{model.demo.url}}" target="_blank">{{model.demo.url}}</a>
+            <span ng-if="model.demo.urlType">(<span class="value">{{model.demo.urlType}}</span>)</span>
+          </span>
         </div>
         <div ng-if="model.demo.host">
           <h4>Hosted at</h4>
-          <span><a ng-href="http://{{model.demo.host}}:8001" target="_blank">{{model.demo.host}}</a>
-          (<span class="value">{{model.demo.accessibility}}</span>)</span>
+          <span>
+            <a ng-href="http://{{model.demo.host}}:8001" target="_blank">{{model.demo.host}}</a>
+            <span ng-if="model.demo.accessibility">(<span class="value">{{model.demo.accessibility}}</span>)</span>
+          </span>
         </div>
         <div ng-if="model.demo.credentials.length">
           <h4>Credentials</h4>
@@ -82,19 +86,21 @@
         </div>
         <div ng-if="model.demo.domains.length">
           <h4>Domains</h4>
-          <span ng-repeat="domain in model.demo.domains">{{domain}}</span>
+          <div ng-repeat="domain in model.demo.domains">{{domain}}</div>
         </div>
       </div>
     </div>
   </div><!-- /end of left col.-->
   <!-- Center well -->
   <div class="col-md-6">
-    <h2>{{model.demo.name}}<a ng-show="model.user.isWriter()" class="btn btn-primary btn-xs btn-editDemo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a>
-      <a class="btn btn-success btn-xs btn-follow" data-toggle="tooltip" title="Receive emails when this demo is updated" ng-hide="isFollowing()" ng-click="follow()">
+    <h2>
+      <a ng-show="model.user.isAdmin()" class="btn btn-danger btn-xs btn-demo" ng-click="deleteDemo()" ><span class="glyphicon glyphicon-trash"></span> Delete</a>
+      <a class="btn btn-success btn-xs btn-demo" data-toggle="tooltip" title="Receive emails when this demo is updated" ng-hide="isFollowing()" ng-click="follow()">
         <i class="fa fa-envelope"></i> Follow this demo</a>
-      <a class="btn btn-danger btn-xs btn-follow"  data-toggle="tooltip" title="Stop receiving emails when this demo is updated" ng-show="isFollowing()" ng-click="unfollow()">
+      <a class="btn btn-danger btn-xs btn-demo"  data-toggle="tooltip" title="Stop receiving emails when this demo is updated" ng-show="isFollowing()" ng-click="unfollow()">
         <i class="fa fa-envelope"></i> Unfollow this demo</a>
-        <a ng-show="model.user.isAdmin()" class="btn btn-danger btn-xs btn-editDemo" ng-click="deleteDemo()" ><span class="glyphicon glyphicon-trash"></span> Delete</a>
+      <a ng-show="model.user.isWriter()" class="btn btn-primary btn-xs btn-demo" ng-href="/edit{{model.uri}}" ><span class="glyphicon glyphicon-edit"></span> Edit</a>
+      {{model.demo.name}}
     </h2>
     <div class="col-md-8">
       <alert type="danger" ng-show="model.followError"> You must have an email set in your account to follow a demo. <a href="/profile">Set one up now.</a></alert>
@@ -162,10 +168,10 @@
               <option ng-repeat="browser in model.browserChoices" value="{{browser}}">  {{browser}}</option>
             </select>
           </div>
-          <div class="form-group">
+          <!--div class="form-group">
             <label>Assignee</label>
             <autocomplete ng-model="model.additionalBug.assignee" data="model.users" click- activation="true"></autocomplete>
-          </div>
+          </div-->
           <div class="form-group">
             <a class="btn btn-default btn-xs" href ng-click="resetBugForm(); showBugForm =  false">Cancel</a>
             <a class="btn btn-primary btn-xs" ng-click="addBug(model.additionalBug)">  Add</a>
@@ -183,10 +189,10 @@
               <label>Type:</label>
               <span class="value">{{bug.type}}</span>
             </li>
-            <li class="bug-status" ng-if="bug.assignee">
+            <!--li class="bug-status" ng-if="bug.assignee">
               <label>Assigned to:</label>
               <span class="value">{{bug.assignee}}</span>
-            </li>
+            </li-->
             <li class="bug-dateTime">
               <label>Created by</label> {{bug.username}} on {{bug.dateTime | date:'short' }}</li>
             <li class="bug-browser" ng-if="bug.browser">
