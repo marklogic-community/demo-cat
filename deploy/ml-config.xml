@@ -587,9 +587,38 @@
         </privilege-->
       </privileges>
       <external-names>
+        <external-name>CN=AU-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=DE-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=FR-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
         <external-name>CN=NL-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
-        <external-name>CN=Unassigned-US-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=SE-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=UK-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=IN-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Tokyo-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=PH-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Chicago-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
         <external-name>CN=HQ-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=mm-us-staff,OU=MarkmailAliases,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=NYC-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Texas-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Tysons-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Unassigned-US-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Unassigned-Employees,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=AU-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=DE-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=FR-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=NL-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=SE-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=UK-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=IN-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Tokyo-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=PH-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Unassigned-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Chicago-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=HQ-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=NYC-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Texas-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
+        <external-name>CN=Tysons-Contractors,OU=Groups,OU=CORP,DC=marklogic,DC=com</external-name>
       </external-names>
     </role>
     <role>
