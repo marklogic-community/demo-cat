@@ -587,9 +587,38 @@
         </privilege-->
       </privileges>
       <external-names>
+        <external-name>CN=AU-Employees,***REMOVED***</external-name>
+        <external-name>CN=DE-Employees,***REMOVED***</external-name>
+        <external-name>CN=FR-Employees,***REMOVED***</external-name>
         <external-name>CN=NL-Employees,***REMOVED***</external-name>
-        <external-name>CN=Unassigned-US-Employees,***REMOVED***</external-name>
+        <external-name>CN=SE-Employees,***REMOVED***</external-name>
+        <external-name>CN=UK-Employees,***REMOVED***</external-name>
+        <external-name>CN=IN-Employees,***REMOVED***</external-name>
+        <external-name>CN=Tokyo-Employees,***REMOVED***</external-name>
+        <external-name>CN=PH-Employees,***REMOVED***</external-name>
+        <external-name>CN=Chicago-Employees,***REMOVED***</external-name>
         <external-name>CN=HQ-Employees,***REMOVED***</external-name>
+        <external-name>CN=mm-us-staff,***REMOVED***</external-name>
+        <external-name>CN=NYC-Employees,***REMOVED***</external-name>
+        <external-name>CN=Texas-Employees,***REMOVED***</external-name>
+        <external-name>CN=Tysons-Employees,***REMOVED***</external-name>
+        <external-name>CN=Unassigned-US-Employees,***REMOVED***</external-name>
+        <external-name>CN=Unassigned-Employees,***REMOVED***</external-name>
+        <external-name>CN=AU-Contractors,***REMOVED***</external-name>
+        <external-name>CN=DE-Contractors,***REMOVED***</external-name>
+        <external-name>CN=FR-Contractors,***REMOVED***</external-name>
+        <external-name>CN=NL-Contractors,***REMOVED***</external-name>
+        <external-name>CN=SE-Contractors,***REMOVED***</external-name>
+        <external-name>CN=UK-Contractors,***REMOVED***</external-name>
+        <external-name>CN=IN-Contractors,***REMOVED***</external-name>
+        <external-name>CN=Tokyo-Contractors,***REMOVED***</external-name>
+        <external-name>CN=PH-Contractors,***REMOVED***</external-name>
+        <external-name>CN=Unassigned-Contractors,***REMOVED***</external-name>
+        <external-name>CN=Chicago-Contractors,***REMOVED***</external-name>
+        <external-name>CN=HQ-Contractors,***REMOVED***</external-name>
+        <external-name>CN=NYC-Contractors,***REMOVED***</external-name>
+        <external-name>CN=Texas-Contractors,***REMOVED***</external-name>
+        <external-name>CN=Tysons-Contractors,***REMOVED***</external-name>
       </external-names>
     </role>
     <role>
