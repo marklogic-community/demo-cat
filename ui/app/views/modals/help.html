@@ -11,55 +11,98 @@
         Q: What credentials do I use to login?  Do my old Demo-Cat credentials work?
       </dt>
       <dd>
-        A: Old Demo-Cat credentials will no longer work. The new Demo-Cat authenticates against the MarkLogic LDAP, meaning everyone should be able to login with their MarkLogic Domain credentials.
+        A: Old Demo-Cat credentials will no longer work. The new Demo-Cat authenticates against the MarkLogic LDAP, which means everyone should be able to login with their MarkLogic Domain credentials.
       </dd>
       <dt>
         Q: What do I do if my credentials don’t work?
       </dt>
       <dd>
-        A: Contact <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Cannot access">Vanguard@marklogic.com</a>
+        A: Contact <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Cannot access Demo-Cat">Vanguard@marklogic.com</a>
       </dd>
       <dt>
         Q: What are the different roles and permissions?
       </dt>
       <dd>
-        A: We distinguish reader, writer, and admin role. Admin is for Vanguard only. Anyone related to Sales engineering should have writer access. Anyone else reader access. Contact Vanguard if you think you should have more permissions.
+        A: We have 3 unique roles:
+        <ul>
+          <li>Admin - for Vanguard only.</li>
+          <li>Write - for anyone in Sales Engineering (SE).</li>
+          <li>Read - for everyone else (not in Vanguard or SE).</li>
+        </ul>
+        Please contact <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Question about Demo-Cat roles">Vanguard@marklogic.com</a> if you have questions or feel that you don't have the correct permissions.
       </dd>
       <dt>
-        Q: Is there a “Help” section?
+        Q: After I login, how can I see all of the demos?
       </dt>
       <dd>
-        A: Yes. A lot of inline help in the shape of descriptive error messages and popover messages is available throughout the application. You also have this Q&A section available through the Help button on the top of the screen.
+        A: Click the “Show all demos” button to get a <em>search all</em> view of the demos.
+You can also conduct a specific search by entering the title of a demo. 
       </dd>
       <dt>
         Q: How do I request server space to build a demo?
       </dt>
       <dd>
-        A: Demos with limited amounts of data can be deployed on one of the Vanguard demo servers. You can contact Vanguard about this. Or request a dedicated demo server, with a limited life-span, from IT. 
+        A: Demos with limited amounts of data can be deployed on one of the Vanguard demo servers. You can contact <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Hosting a demo on Vanguard servers">Vanguard@marklogic.com</a> about this. 
       </dd>
       <dt>
         Q: How do I add an existing demo to DC?
       </dt>
       <dd>
-        A: You need writer or admin role. If you have you should see a Create button in the header bar of Demo-Cat. Click it, fill in as many fields as possible, and click Save at the bottom. You can add memos after creation.
-      </dd>
-      <dt>
-        Q: How do I search for existing demos?
-      </dt>
-      <dd>
-        A: Use the search bar in the header of Demo-Cat.
+        A: You need admin or write permissions:
+        <ul>
+          <li>If you have one of these permissions, you will see a “Create” button in the header bar of Demo-Cat.</li>
+          <li>Click the “Create” button and fill in the required fields and as many optional fields as possible.</li>
+          <li>Click “Save” at the end of the page.</li>
+        </ul>
+        If you do not have Admin or Write permissions, please contact <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Cannot add a demo">Vanguard@marklogic.com</a> and we will add it for you. 
       </dd>
       <dt>
         Q: What does “Follow this demo” do?
       </dt>
       <dd>
-        A: It will apply alerting to changes to that particular demo. You will be notified through email. Make sure you have edited your personal profile through the Account link on the top-right of Demo-Cat, and have added a valid email address. Make sure to click the + button next to the email address field to append it to the list of emails. You can have multiple. Also make sure to click Submit to persist your profile changes.
+        A: It will apply alerting to changes to that particular demo:
+        <ul>
+          <li>You will be notified via email every time the demo is edited.</li>
+          <li>Make sure you have edited your personal profile through the Account link on the top-right of Demo-Cat, and have added a valid email address.</li>
+          <li>Make sure to click the (+) button next to the email address field to append it to the list of emails (you are allowed to enter multiple email addresses).</li>
+          <li>Make sure to click “Submit” to persist your profile changes.</li>
+        </ul>
       </dd>
       <dt>
-        Q: When I add a bug or RFE, where does it go?
+        Q: How do I de-select facets to go back to the original search results?
       </dt>
       <dd>
-        A: All data is recorded inside the Demo-Cat database. That includes demo details, but also bugs, RFEs, comments, memos, links to media, and any attachment that was uploaded.
+        A: Click the trash icon next to each facet and you will get back to the original search results.
+      </dd>
+      <dt>
+        Q: What is the small “i” icon when I add a demo?
+      </dt>
+      <dd>
+        A: If you hover over the “i” icon, it will give you a pop-up describing the field.
+      </dd>
+      <dt>
+        Q: When I’m adding a new demo, how do I use the (+) sign?  (i.e. When adding Features)
+      </dt>
+      <dd>
+        A: After typing your entry in the field, click the (+) sign to add it to the list.
+      </dd>
+      <dt>
+        Q: Why am I getting an error message when trying to upload a “Demo Attachment”?
+      </dt>
+      <dd>
+        A: The upload size of the attachment is capped at 5MB per file.  If you have an attachment larger than 5MB, please contact <a href="mailto:Vanguard@marklogic.com?subject=[Demo-Cat] Cannot upload attachment">Vanguard@marklogic.com</a> for assistance. 
+      </dd>
+      <dt>
+        Q: When I add an entry for “Open Bug or Enhancements”, where does it go?
+      </dt>
+      <dd>
+        A: All entries are recorded inside the Demo-Cat database. That includes demo details, but also bugs, RFEs, comments, memos, links to media, and any attachment that was uploaded.
+      </dd>
+      <dt>
+        Q: What does “Access Restricted” mean?
+      </dt>
+      <dd>
+        A: When a demo or the data associated with the demo cannot be shown to the public.  Please read the “Restriction Details” for more information.
       </dd>
     </dl>
     </div>
