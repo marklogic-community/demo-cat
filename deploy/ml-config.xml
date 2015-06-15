@@ -637,9 +637,7 @@
       </privileges>
       <external-names>
         <external-name>CN=SE,***REMOVED***</external-name>
-        <!-- to be removed after User Panel testing -->
-        <external-name>CN=Marketing,***REMOVED***</external-name>
-        <external-name>CN=Engineers,***REMOVED***</external-name>
+        <external-name>CN=PreSales-Europe,***REMOVED***</external-name>
       </external-names>
     </role>
     <role>
