@@ -35,8 +35,8 @@ class ServerConfig
       return (
         $uri,
         xdmp:document-set-permissions($uri, (
-          xdmp:permission("demo-cat-read-role", "read"),
-          xdmp:permission("demo-cat-execute-role", "execute")
+          xdmp:permission("#{@properties["ml.app-name"]}-read-role", "read"),
+          xdmp:permission("#{@properties["ml.app-name"]}-execute-role", "execute")
         ))
       )
     },
