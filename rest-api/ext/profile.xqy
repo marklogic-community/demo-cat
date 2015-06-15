@@ -3,7 +3,9 @@ xquery version "1.0-ml";
 module namespace profile = "http://marklogic.com/rest-api/resource/profile";
 
 import module namespace json="http://marklogic.com/xdmp/json"
-     at "/MarkLogic/json/json.xqy";
+  at "/MarkLogic/json/json.xqy";
+import module namespace user = "http://marklogic.com/demo-cat/user-model"
+  at "/lib/user-model.xqy";
 
 declare namespace roxy = "http://marklogic.com/roxy";
 
@@ -57,4 +59,18 @@ declare private function profile:get-webroles-for-user() {
   else if (xdmp:get-current-roles() = xdmp:role($ROLE_READER))
   then "reader"
   else ()
+};
+
+declare function profile:put(
+  $context as map:map,
+  $params  as map:map,
+  $input   as document-node()*
+) as document-node()?
+{
+  map:put($context, "output-types", "application/json"),
+  let $username := xdmp:get-current-user()
+  let $profile :=
+    user:convert($input)
+  let $_ := user:put($username, $profile)
+  return document{ '"ok"' }
 };

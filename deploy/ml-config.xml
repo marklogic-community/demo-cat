@@ -667,6 +667,9 @@
         <privilege>
           <privilege-name>xdmp:email</privilege-name>
         </privilege>
+        <privilege>
+          <privilege-name>users-uri</privilege-name>
+        </privilege>
       </privileges>
     </role>
   </roles>
@@ -746,6 +749,49 @@
       <db-name>@ml.app-modules-db</db-name>
       <role-name>@ml.app-name-amp-role</role-name>
     </amp>
+    <!-- allow reader role to do specific updates as well -->
+    <amp>
+      <namespace>http://marklogic.com/rest-api/resource/comment</namespace>
+      <local-name>post</local-name>
+      <doc-uri>/marklogic.rest.resource/comment/assets/resource.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-update-role</role-name>
+    </amp>
+    <amp>
+      <namespace>http://marklogic.com/rest-api/resource/comment</namespace>
+      <local-name>delete</local-name>
+      <doc-uri>/marklogic.rest.resource/comment/assets/resource.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-update-role</role-name>
+    </amp>
+    <amp>
+      <namespace>http://marklogic.com/rest-api/resource/follow</namespace>
+      <local-name>post</local-name>
+      <doc-uri>/marklogic.rest.resource/follow/assets/resource.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-update-role</role-name>
+    </amp>
+    <amp>
+      <namespace>http://marklogic.com/rest-api/resource/follow</namespace>
+      <local-name>delete</local-name>
+      <doc-uri>/marklogic.rest.resource/follow/assets/resource.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-update-role</role-name>
+    </amp>
+    <amp>
+      <namespace>http://marklogic.com/rest-api/resource/profile</namespace>
+      <local-name>put</local-name>
+      <doc-uri>/marklogic.rest.resource/profile/assets/resource.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-update-role</role-name>
+    </amp>
+    <amp>
+      <namespace>http://marklogic.com/demo-cat/demo-model</namespace>
+      <local-name>update-change-tracking</local-name>
+      <doc-uri>/lib/demo-model.xqy</doc-uri>
+      <db-name>@ml.app-modules-db</db-name>
+      <role-name>@ml.app-name-update-role</role-name>
+    </amp>
   </amps>
   <privileges xmlns="http://marklogic.com/xdmp/security">
 <!--
@@ -756,14 +802,11 @@
       <kind>execute</kind>
     </privilege>
 -->
-<!--
-    Sample URI privilege.
     <privilege>
       <privilege-name>users-uri</privilege-name>
       <action>/users/</action>
       <kind>uri</kind>
     </privilege>
--->
     <privilege>
       <privilege-name>demos-uri</privilege-name>
       <action>/demos/</action>
