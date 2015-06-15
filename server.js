@@ -561,20 +561,22 @@ exports.buildExpress = function(options) {
     }
   });
 
+  app.put('/v1/resources/profile', function(req, res){
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
   app.put('/v1*', isWriter, function(req, res){
     var user = req.session.user;
-    var escapedUserName = (user && user.name) ? user.name.replace(/([\(\)[{*+.$^\\|?\-])/g, '\\$1') : '';
     if (user === undefined) {
       res.status(401).send('Unauthorized');
-    } else if (req.path === '/v1/documents' &&
-      req.query.uri.match('/users/') &&
-      req.query.uri.match(new RegExp('/users/[^(' + escapedUserName + ')]+.json'))) {
+    } else if (req.path === '/v1/documents' && req.query.uri.match('/users/')) {
       // The user is try to PUT to a profile document other than his/her own. Not allowed.
       res.status(403).send('Forbidden');
     } else {
-      if (req.path === '/v1/documents' && req.query.uri.match('/users/')) {
-        // TODO: The user is updating the profile. Update the session info.
-      }
       proxy(req, res);
     }
   });
@@ -607,6 +609,14 @@ exports.buildExpress = function(options) {
     }
   });
 
+  app.post('/v1/resources/follow', function(req, res){
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
   app.post('/v1*', isWriter, function(req, res){
     if (req.session.user === undefined) {
       res.status(401).send('Unauthorized');
@@ -615,7 +625,15 @@ exports.buildExpress = function(options) {
     }
   });
 
-  app.delete('/v1/resources/follow*', function(req, res){
+  app.delete('/v1/resources/follow', function(req, res){
+    if (req.session.user === undefined) {
+      res.status(401).send('Unauthorized');
+    } else {
+      proxy(req, res);
+    }
+  });
+
+  app.delete('/v1/resources/comment', function(req, res){
     if (req.session.user === undefined) {
       res.status(401).send('Unauthorized');
     } else {

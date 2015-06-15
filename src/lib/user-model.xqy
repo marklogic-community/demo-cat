@@ -21,7 +21,9 @@ declare function user:replace($profile as element(jbasic:json), $properties as e
     $profile/@*,
     $profile/(* except $profile/jbasic:user),
     element jbasic:user {
-      $profile/jbasic:user/@*,
+      attribute type { "object"},
+      $profile/jbasic:user/(@* except @type),
+      
       $profile/jbasic:user/(* except $properties),
       $new-properties
     }
