@@ -218,6 +218,37 @@ declare function demo:send-email(
   util:send-notification($recipient-names, $recipient-emails, "[Demo-Cat] "||$subject, $message, $cc-names, $cc-emails)
 };
 
+(: triggers :)
+
+declare function demo:update-change-tracking($uri as xs:string) as empty-sequence()
+{
+  let $demo := demo:read($uri)
+  let $new-demo :=
+    demo:replace($demo, $demo/(jbasic:lastModifiedBy, jbasic:lastModifiedAt), (
+      if (fn:empty($demo/jbasic:createdBy)) then
+        element { fn:QName("http://marklogic.com/xdmp/json/basic", "createdBy") } {
+          attribute type { "string" },
+          xdmp:get-current-user()
+        }
+      else (),
+      if (fn:empty($demo/jbasic:createdAt)) then
+        element { fn:QName("http://marklogic.com/xdmp/json/basic", "createdAt") } {
+          attribute type { "string" },
+          fn:current-dateTime()
+        }
+      else (),
+      element { fn:QName("http://marklogic.com/xdmp/json/basic", "lastModifiedBy") } {
+        attribute type { "string" },
+        xdmp:get-current-user()
+      },
+      element { fn:QName("http://marklogic.com/xdmp/json/basic", "lastModifiedAt") } {
+        attribute type { "string" },
+        fn:current-dateTime()
+      }
+    ))
+  return demo:save($uri, $new-demo)
+};
+
 (: low-level access :)
 
 declare function demo:uri($id as xs:string) as xs:string {
