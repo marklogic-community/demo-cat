@@ -10,29 +10,5 @@ declare option xdmp:mapping "false";
 
 declare variable $trgr:uri as xs:string external;
 
-let $demo := demo:read($trgr:uri)
-let $new-demo :=
-  demo:replace($demo, $demo/(jbasic:lastModifiedBy, jbasic:lastModifiedAt), (
-    if (fn:empty($demo/jbasic:createdBy)) then
-      element { fn:QName("http://marklogic.com/xdmp/json/basic", "createdBy") } {
-        attribute type { "string" },
-        xdmp:get-current-user()
-      }
-    else (),
-    if (fn:empty($demo/jbasic:createdAt)) then
-      element { fn:QName("http://marklogic.com/xdmp/json/basic", "createdAt") } {
-        attribute type { "string" },
-        fn:current-dateTime()
-      }
-    else (),
-    element { fn:QName("http://marklogic.com/xdmp/json/basic", "lastModifiedBy") } {
-      attribute type { "string" },
-      xdmp:get-current-user()
-    },
-    element { fn:QName("http://marklogic.com/xdmp/json/basic", "lastModifiedAt") } {
-      attribute type { "string" },
-      fn:current-dateTime()
-    }
-  ))
-let $_ := demo:save($trgr:uri, $new-demo)
+let $_ := demo:update-change-tracking($trgr:uri)
 return xdmp:log(fn:concat("Updated change tracking for ", $trgr:uri))
