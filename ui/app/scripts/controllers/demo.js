@@ -62,9 +62,9 @@
     return model;
   }
 
-  DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$sce', 'ModalService', 'demoService', '$sanitize', 'DemoModel'];
+  DemoCtrl.$inject = ['$scope', 'MLRest', '$location', '$routeParams', 'demo', 'user', '$sce', 'ModalService', 'demoService', '$sanitize', 'DemoModel', 'youtubeEmbedUtils'];
 
-  function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $sce, modal, demoService, $sanitize, model) {
+  function DemoCtrl($scope, mlRest, $location, $routeParams, demo, user, $sce, modal, demoService, $sanitize, model, youtubeEmbedUtils) {
     var uri = $routeParams.uri;
     model.uri = $routeParams.uri;
     model.user = user;
@@ -416,9 +416,12 @@
       },
       showMediaModal: function (media) {
         modal
-        .show('/views/modals/show-media.html', 'Media Viewer', media);
+        .show('/views/modals/show-media.html', 'Media Viewer', media, null, { windowClass: 'democat-media-modal-window'});
       },
-      trustUrl: $sce.trustAsResourceUrl
+      trustUrl: $sce.trustAsResourceUrl,
+      youTubeThumbnail: function(ytUrl) {
+        return $sce.trustAsResourceUrl('//img.youtube.com/vi/' + youtubeEmbedUtils.getIdFromURL(ytUrl) + '/default.jpg');
+      }
     });
 
     function validateMemo(memo) {
