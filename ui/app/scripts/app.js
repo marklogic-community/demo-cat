@@ -15,7 +15,8 @@
     'ml.search.tpls',
     'angularFileUpload',
     'ml.utils',
-    'http-auth-interceptor'
+    'http-auth-interceptor',
+    'youtube-embed'
   ])
     .config(AppConfig)
     .run(AppRun);
