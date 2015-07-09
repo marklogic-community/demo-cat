@@ -603,6 +603,7 @@
         <external-name>CN=Texas-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Tysons-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Unassigned-US-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Unassigned-nonUS-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Unassigned-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=AU-Contractors,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=DE-Contractors,@ml.ldap-group-base-dn</external-name>
@@ -619,6 +620,7 @@
         <external-name>CN=NYC-Contractors,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Texas-Contractors,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Tysons-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Unassigned-nonUS-Contractors,@ml.ldap-group-base-dn</external-name>
       </external-names>
     </role>
     <role>
