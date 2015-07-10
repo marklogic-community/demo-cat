@@ -587,40 +587,41 @@
         </privilege-->
       </privileges>
       <external-names>
-        <external-name>CN=AU-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=DE-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=FR-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=NL-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=SE-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=UK-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=IN-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Tokyo-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=PH-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Chicago-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=HQ-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=mm-us-staff,@ml.ldap-mm-group-base-dn</external-name>
-        <external-name>CN=NYC-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Texas-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Tysons-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Unassigned-US-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Unassigned-nonUS-Employees,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Unassigned-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=AU-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=DE-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=FR-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=NL-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=SE-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=UK-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=IN-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Tokyo-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=PH-Contractors,@ml.ldap-group-base-dn</external-name>
-        <external-name>CN=Unassigned-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=AU-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Chicago-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Chicago-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=DE-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=DE-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=FR-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=FR-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=HQ-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=HQ-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=IN-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=IN-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=mm-us-staff,@ml.ldap-mm-group-base-dn</external-name>
+        <external-name>CN=NL-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=NL-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=NYC-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=NYC-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=PH-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=PH-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=SE-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=SE-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Texas-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Texas-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Tokyo-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Tokyo-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Tysons-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Tysons-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=UK-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=UK-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Unassigned-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Unassigned-Employees,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=Unassigned-nonUS-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Unassigned-nonUS-Employees,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Unassigned-US-Contractors,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Unassigned-US-Employees,@ml.ldap-group-base-dn</external-name>
       </external-names>
     </role>
     <role>
@@ -640,6 +641,7 @@
       <external-names>
         <external-name>CN=SE,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=PreSales-Europe,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=PreSales-Central-Europe,@ml.ldap-group-base-dn</external-name>
       </external-names>
     </role>
     <role>
