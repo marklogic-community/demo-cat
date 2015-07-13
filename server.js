@@ -163,7 +163,7 @@ exports.buildExpress = function(options) {
     login.end();
 
     login.on('socket', function (socket) {
-      socket.setTimeout(1000);
+      socket.setTimeout(10000);
       socket.on('timeout', function() {
         console.log('timeout..');
         login.abort();
