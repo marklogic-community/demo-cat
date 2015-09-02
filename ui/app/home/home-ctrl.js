@@ -23,9 +23,11 @@
     ])
     .controller('HomeCtrl', ['HomeModel', '$scope', '$modal', '$sce', 'user', 'users', 'demos', 'MLRest', 'demoService', '$filter',
       function(model, $scope, $modal, $sce, user, users, demos, mlRest, demoService, $filter) {
+        var clientTimezone = new Date().getTimezoneOffset() / -60;
         model.user = user;
         angular.extend($scope, {
           model: model,
+          clientTimezone: clientTimezone,
           editVanguard: editVanguard,
           editDontTouch: editDontTouch,
           editSpotlight: editSpotlight
@@ -48,12 +50,15 @@
           }).then(function(response) {
             var now = new Date();
             var donttouch = response.data['dont-touch'] || [];
+            // move date/time to local timezone for display and editing
             angular.forEach(donttouch, function(event, index) {
-              event.start = new Date(event.start);
+              event.startLocal = fixTimezone(event.start, clientTimezone);
             });
             // automatically remove past events
             donttouch = donttouch.filter(function(event) {
-              if (event.start > now) {
+              var end = new Date(event.start);
+              end.setTime(end.getTime() + event.duration * 60000);
+              if (end > now) {
                 return event;
               }
             });
@@ -101,6 +106,30 @@
           });
         }
 
+        function fixTimezone(date, timezone) {
+          if (angular.isUndefined(timezone)) {
+            timezone = clientTimezone;
+          }
+          if (timezone === 0) {
+            if (angular.isDate(date)) {
+              return date.toISOString();
+            } else {
+              // assume ISO string
+              return date;
+            }
+          } else {
+            var newTimezone = $filter('timezone')(timezone);
+            if (angular.isDate(date)) {
+              var newDate = new Date();
+              newDate.setTime(date.getTime() + clientTimezone * 3600000);
+              return newDate.toISOString().replace('Z','') + newTimezone;
+            } else {
+              // assume ISO string
+              return date.replace(/(Z|[+\-]\d\d:\d\d)$/, '') + newTimezone;
+            }
+          }
+        }
+
         function editDontTouch() {
           var donttouch = angular.copy(model.donttouch);
           var isOpen = donttouch.map(function() {
@@ -139,10 +168,17 @@
               if (!event.title) {
                 event.title = event.demo;
               }
+              // move edited start date/time to event timezone
+              event.start = fixTimezone(event.startLocal, event.timezone);
             });
             model.donttouch = donttouch;
+            // clone internal model, and get rid of temp properties before sending to server
+            donttouch = angular.copy(donttouch);
+            angular.forEach(donttouch, function(event, index) {
+              delete event.startLocal;
+            });
             mlRest.updateDocument({
-              'dont-touch': model.donttouch
+              'dont-touch': donttouch
             }, {
               uri: '/dont-touch.json',
               format: 'json'

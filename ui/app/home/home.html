@@ -23,11 +23,11 @@
           <div class="hp-content">
             <ul ng-repeat="event in model.donttouch">
               <li><a ng-href="/detail{{event.uri}}"><strong>{{event.title}}</strong></a></li>
-              <li><strong>Presenter:</strong> {{event.presenter}}</li>
-              <li><strong>Date:</strong> {{event.start | date:'shortDate' }}</li>
-              <li><strong>Start time:</strong> {{event.start | date:'shortTime' }}</li>
-              <li><strong>Timezone:</strong> {{event.timezone | timezone }}</li>
-              <li><strong>Duration:</strong> {{event.duration}} minutes</li>
+              <li><label>Presenter:</label> {{event.presenter}}</li>
+              <li><label>Date:</label> {{event.startLocal | date:'shortDate'}}<span class="client-date" ng-hide="event.timezone == clientTimezone"> ({{event.start | date:'shortDate'}})</span></li>
+              <li><label>Start time:</label> {{event.startLocal | date:'shortTime'}}<span class="client-date" ng-hide="event.timezone == clientTimezone"> ({{event.start | date:'shortTime'}})</span></li>
+              <li><label>Timezone:</label> {{event.timezone | timezone}}<span class="client-date" ng-hide="event.timezone == clientTimezone"> ({{clientTimezone | timezone}})</span></li>
+              <li><label>Duration:</label> {{event.duration}} minutes</li>
             </ul>
         </div>
         <button ng-show="model.user.isWriter()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editDontTouch()">
