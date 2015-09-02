@@ -23,11 +23,20 @@
           <div class="hp-content">
             <ul ng-repeat="event in model.donttouch">
               <li><a ng-href="/detail{{event.uri}}"><strong>{{event.title}}</strong></a></li>
-              <li><strong>Presenter:</strong> {{event.presenter}}</li>
-              <li><strong>Date:</strong> {{event.start | date:'shortDate' }}</li>
-              <li><strong>Start time:</strong> {{event.start | date:'shortTime' }}</li>
-              <li><strong>Timezone:</strong> {{event.timezone | timezone }}</li>
-              <li><strong>Duration:</strong> {{event.duration}} minutes</li>
+              <li><label>Presenter:</label> {{event.presenter}}</li>
+              <li><label>Date:</label><span
+                popover="Date in your timezone: {{event.start | date:'shortDate'}}"
+                popover-trigger="{{(clientTimezone == event.timezone) ? '' : 'mouseenter'}}"
+                popover-placement="right"> {{event.startNoTimezone | date:'shortDate'}}</span></li>
+              <li><label>Start time:</label><span
+                popover="Start time in your timezone: {{event.start | date:'shortTime'}}"
+                popover-trigger="{{(clientTimezone == event.timezone) ? '' : 'mouseenter'}}"
+                popover-placement="right"> {{event.startNoTimezone | date:'shortTime'}}</span></li>
+              <li><label>Timezone:</label><span
+                popover="Your timezone: {{clientTimezone | timezone}}"
+                popover-trigger="{{(clientTimezone == event.timezone) ? '' : 'mouseenter'}}"
+                popover-placement="right"> {{event.timezone | timezone}}</span></li>
+              <li><label>Duration:</label> {{event.duration}} minutes</li>
             </ul>
         </div>
         <button ng-show="model.user.isWriter()" type="button" class="btn btn-default btn-xs pull-right" ng-click="editDontTouch()">
