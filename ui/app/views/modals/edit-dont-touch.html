@@ -19,7 +19,7 @@
           <div class="col-md-3" ng-init="model.donttouch[$index].timezone = model.donttouch[$index].timezone ? model.donttouch[$index].timezone : model.clientTimezone">
             <!--input type="datetime-local" class="form-control" placeholder="Start date/time"  ng-model="model.donttouch[$index].start" required/-->
             <div class="input-group">
-              <input type="text" class="form-control" datetime-picker="short" ng-model="model.donttouch[$index].startLocal" is-open="model.isOpen[$index]" />
+              <input type="text" class="form-control" datetime-picker="short" ng-model="model.donttouch[$index].startNoTimezone" is-open="model.isOpen[$index]" />
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="model.toggleCalendar($event, $index)"><i class="fa fa-calendar"></i></button>
               </span>

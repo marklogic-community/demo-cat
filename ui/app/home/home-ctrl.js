@@ -52,7 +52,7 @@
             var donttouch = response.data['dont-touch'] || [];
             // move date/time to local timezone for display and editing
             angular.forEach(donttouch, function(event, index) {
-              event.startLocal = fixTimezone(event.start, clientTimezone);
+              event.startNoTimezone = fixTimezone(event.start, clientTimezone);
             });
             // automatically remove past events
             donttouch = donttouch.filter(function(event) {
@@ -169,13 +169,13 @@
                 event.title = event.demo;
               }
               // move edited start date/time to event timezone
-              event.start = fixTimezone(event.startLocal, event.timezone);
+              event.start = fixTimezone(event.startNoTimezone, event.timezone);
             });
             model.donttouch = donttouch;
             // clone internal model, and get rid of temp properties before sending to server
             donttouch = angular.copy(donttouch);
             angular.forEach(donttouch, function(event, index) {
-              delete event.startLocal;
+              delete event.startNoTimezone;
             });
             mlRest.updateDocument({
               'dont-touch': donttouch
