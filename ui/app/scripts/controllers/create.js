@@ -193,7 +193,7 @@
       function attachmentsValid(files) {
         var result = true;
         angular.forEach(files, function(file) {
-          if (file.size > 5242880) {
+          if (file.size > 10485760) {
             result = false;
           }
         });
