@@ -1,5 +1,16 @@
 <div class="row">
-  <ml-facets class="col-sm-2" facets="model.search.facets" toggle="toggleFacet(facet, value)" template="search/facets-dir.html"></ml-facets>
+  <div class="col-sm-2">
+    <div class="row facet-list">
+      <div class="col-sm-12 facet" ng-repeat="q in model.quick">
+        <label class="checkbox-inline restricted">
+          <input type="checkbox" name="q.label" ng-model="q.checked" ng-change="addQuery()"><a ng-click="q.checked = !q.checked; addQuery();">{{ q.label }}</a>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <ml-facets class="col-sm-12" facets="model.search.facets" toggle="toggleFacet(facet, value)" template="search/facets-dir.html"></ml-facets>
+    </div>
+  </div>
   <div class="col-sm-10">
     <h3 ng-if="model.search.total === 0">No results to show</h3>
 
