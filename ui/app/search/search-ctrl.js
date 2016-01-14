@@ -13,12 +13,14 @@
         mlSearch: mlSearch
       };
     }])
-    .controller('SearchCtrl', ['$scope', 'SearchModel', '$location', 'MLRemoteInputService', function ($scope, model, $location, remoteInput) {
+    .controller('SearchCtrl', ['$scope', 'SearchModel', '$location', 'MLRemoteInputService', 'MLRest', function ($scope, model, $location, remoteInput, mlRest) {
       var mlSearch = model.mlSearch;
+
+      model.quick = [];
 
       (function init() {
         model.qtext = model.qtext || '';
-        
+
         // wire up remote input subscription
         remoteInput.initCtrl($scope, model, mlSearch, search);
 
@@ -45,6 +47,10 @@
         });
 
         search();
+
+        mlRest.getDocument('/config/quick-filter.json', { format: 'json' }).then(function(response) {
+          model.quick = response.data.quickFilter;
+        });
       })();
 
       function updateSearchResults(data) {
@@ -55,6 +61,23 @@
           remoteInput.setInput( model.qtext );
         }
         $location.search( mlSearch.getParams() );
+      }
+
+      function addQuery() {
+        // as documented in https://docs.marklogic.com/guide/search-dev/structured-query#id_59265
+        var combinedQuery = {'and-query': {'queries': []}};
+        mlSearch.clearAdditionalQueries();
+        model.quick.forEach(function(entry) {
+          if (entry.checked) {
+            if (entry.query) {
+              combinedQuery['and-query'].queries.push(entry.query);
+            } else if (entry.equery) {
+              combinedQuery['and-query'].queries.push(eval('(' + entry.equery + ')'));
+            }
+          }
+        })
+        mlSearch.addAdditionalQuery(combinedQuery);
+        search();
       }
 
       function search(qtext) {
@@ -104,7 +127,8 @@
             .setPage(1)
             .search()
             .then(updateSearchResults);
-        }
+        },
+        addQuery: addQuery
       });
 
     }]);
