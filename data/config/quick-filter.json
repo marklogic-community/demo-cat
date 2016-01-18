@@ -58,8 +58,8 @@
          }
       },
       {
-         "label":"Create in last 3 months",
-         "equery":"{\"range-query\":{\"type\":\"dateTime\",\"json-property\":\"lastModifiedAt\",\"value\":new Date(new Date().setMonth(new Date().getMonth()-3)),\"range-operator\":\"GE\"}}"
+         "label":"Created in last 3 months",
+         "equery":"{\"range-query\":{\"type\":\"dateTime\",\"json-property\":\"createdAt\",\"value\":new Date(new Date().setMonth(new Date().getMonth()-3)),\"range-operator\":\"GE\"}}"
       }
    ]
 }
