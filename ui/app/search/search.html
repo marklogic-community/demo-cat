@@ -1,10 +1,12 @@
 <div class="row">
   <div class="col-sm-2">
     <div class="row facet-list">
-      <div class="col-sm-12 facet" ng-repeat="q in model.quick">
-        <label class="checkbox-inline restricted">
-          <input type="checkbox" name="q.label" ng-model="q.checked" ng-change="addQuery()"><a ng-click="q.checked = !q.checked; addQuery();">{{ q.label }}</a>
-        </label>
+      <div class="col-sm-12 facet">
+        <div ng-repeat="q in model.quick">
+          <label class="checkbox-inline restricted">
+            <input type="checkbox" name="q.label" ng-model="q.checked" ng-change="addQuery()"><a ng-click="q.checked = !q.checked; addQuery();">{{ q.label }}</a>
+          </label>
+        </div>
       </div>
     </div>
     <div class="row">
