@@ -326,6 +326,14 @@ footer .text-muted {
   }
 }
 /* Facets*/
+.facet.primary-facet {
+  h3, div, a {
+    color: #d9534f;
+  }
+  h3 {
+    border-bottom-color: #d9534f;
+  }
+}
 .facet-selected {
   font-weight: bold;
   background-color: #d9534f !important;
@@ -341,11 +349,16 @@ footer .text-muted {
   background: #fff;
   padding: 5px;
 }
-.facet > :nth-child(2) {
+.facet > div:nth-child(2),
+.facet > div:nth-child(3) {
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
 }
-.facet > :last-child {
+.facet.primary-facet > div:nth-child(3) {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+.facet > div:last-child {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 }
@@ -492,12 +505,3 @@ span.dateTime {
 @import "login.less";
 @import "header.less";
 @import "homepage.less";
-
-.primary-facet {
-  h3, div, a {
-    color: #d9534f;
-  }
-  h3 {
-    border-bottom-color: #d9534f;
-  }
-}
