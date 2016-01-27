@@ -623,9 +623,12 @@
         separator: ':',
         qtext: 'q',
         facets: 'f',
+        negatedFacets: 'n',
         sort: 's',
-        page: 'p'
-        //TODO: queryOptions?
+        page: 'p',
+        prefix: null,
+        prefixSeparator: null
+        // TODO: queryOptions?
       }
     },
 
@@ -964,6 +967,42 @@
       return this.options.params;
     },
 
+    /**
+     * Gets the key of the enabled URL params
+     * @method MLSearchContext#getParamsKeys
+     *
+     * @return {Array<String>} URL params keys
+     */
+    getParamsKeys: function getParamsKeys() {
+      var prefix = this.getParamsPrefix();
+      return _.chain( this.options.params )
+        .omit(['separator', 'prefix', 'prefixSeparator'])
+        .map(function(value) {
+          return prefix + value;
+        })
+        .compact()
+        .value();
+    },
+
+    /**
+     * Gets the URL params prefix
+     * @method MLSearchContext#getParamsPrefix
+     *
+     * @return {String} the defined params prefix + separator
+     */
+    getParamsPrefix: function getParamsPrefix() {
+      var prefix = '';
+
+      if ( this.options.params.prefix !== null ) {
+        prefix = this.options.params.prefix + (
+                   this.options.params.prefixSeparator ||
+                   this.options.params.separator
+                 );
+      }
+
+      return prefix;
+    },
+
     //TODO: setParamsConfig ?
 
     /************************************************************/
@@ -1222,6 +1261,36 @@
     },
 
     /**
+     * Gets the current search related URL params (excluding any params not controlled by {@link MLSearchContext})
+     * @method MLSearchContext#getCurrentParams
+     *
+     * @param {Object} [params] - URL params (defaults to `$location.search()`)
+     * @return {Object} search-related URL params
+     */
+    getCurrentParams: function getCurrentParams(params) {
+      var prefix = this.getParamsPrefix();
+
+      params = _.pick(
+        params || $location.search(),
+        this.getParamsKeys()
+      );
+
+      _.chain(this.options.params)
+      .pick(['facets', 'negatedFacets'])
+      .values()
+      .each(function(key) {
+        var name = prefix + key;
+
+        if ( params[ name ] ) {
+          params[ name ] = asArray(params[ name ]);
+        }
+      })
+      .value();
+
+      return params;
+    },
+
+    /**
      * Update the current state based on the provided URL query params object
      *
      * @param {params} a URL query params object
@@ -1306,18 +1375,18 @@
      *
      * @return a {Promise} resolved after calling {this.fromParams} (if a new search is needed)
      */
-    locationChange: function locationChange(newUrl, oldUrl) {
-      var d = $q.defer(),
-          samePage = pathsEqual(newUrl, oldUrl),
-          sameQuery = _.isEqual( this.getParams(), $location.search() );
+    locationChange: function locationChange(newUrl, oldUrl, params) {
+      params = this.getCurrentParams( params );
 
-      if ( samePage && !sameQuery ) {
-        this.fromParams().then(d.resolve);
-      } else {
-        d.reject();
+      // still on the search page, but there's a new query
+      var shouldUpdate = pathsEqual(newUrl, oldUrl) &&
+                         !_.isEqual( this.getParams(), params );
+
+      if ( !shouldUpdate ) {
+        return $q.reject();
       }
 
-      return d.promise;
+      return this.fromParams(params);
     },
 
     /************************************************************/
