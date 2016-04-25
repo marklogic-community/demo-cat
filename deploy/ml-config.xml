@@ -878,7 +878,7 @@
       <ldap-server-uri>@ml.ldap-server</ldap-server-uri>
       <ldap-base>@ml.ldap-base</ldap-base>
       <ldap-attribute>@ml.ldap-attribute</ldap-attribute>
-      <ldap-default-user>CN=@ml.ldap-user,@ml.ldap-base</ldap-default-user>
+      <ldap-default-user>CN=@ml.ldap-user,@ml.ldap-emp-base</ldap-default-user>
       <ldap-password>@ml.ldap-password</ldap-password>
       <ldap-bind-method>simple</ldap-bind-method>
     </external-security>

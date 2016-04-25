@@ -99,22 +99,22 @@ You probably also want to unwrap ssl.conf from the <VirtualHost>
 
 Make sure you have both of these enabled:
 
-NameVirtualHost *:80
-NameVirtualHost *:443
+    NameVirtualHost *:80
+    NameVirtualHost *:443
 
 And then insert the following at the end:
 
-<VirtualHost *:80>
-  ServerName catalog-new.demo.marklogic.com
-  Redirect permanent / https://catalog-new.demo.marklogic.com/
-</VirtualHost>
-<VirtualHost *:443>
-  SSLEngine on
-  ServerName catalog-new.demo.marklogic.com
-  RewriteEngine On
-  RewriteCond %{HTTPS} on
-  RewriteRule ^(.*)$ http://localhost:4000$1 [P]
-</VirtualHost>
+    <VirtualHost *:80>
+      ServerName catalog-new.demo.marklogic.com
+      Redirect permanent / https://catalog-new.demo.marklogic.com/
+    </VirtualHost>
+    <VirtualHost *:443>
+      SSLEngine on
+      ServerName catalog-new.demo.marklogic.com
+      RewriteEngine On
+      RewriteCond %{HTTPS} on
+      RewriteRule ^(.*)$ http://localhost:4000$1 [P]
+    </VirtualHost>
 
 You can verify httpd config with:
 
