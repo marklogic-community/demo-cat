@@ -10,13 +10,12 @@
         search: {},
         user: null,
         selected: [],
-        mlSearch: mlSearch
+        mlSearch: mlSearch,
+        quick: null
       };
     }])
     .controller('SearchCtrl', ['$scope', 'SearchModel', '$location', 'MLRemoteInputService', 'MLRest', function ($scope, model, $location, remoteInput, mlRest) {
       var mlSearch = model.mlSearch;
-
-      model.quick = [];
 
       (function init() {
         model.qtext = model.qtext || '';
@@ -24,33 +23,42 @@
         // wire up remote input subscription
         remoteInput.initCtrl($scope, model, mlSearch, search);
 
-        if (!model.search.results) {
-          // capture initial URL params in mlSearch and ctrl model
+        var oldParams = mlSearch.getParams();
+        var newParams = mlSearch.getCurrentParams();
+
+        // restore params, if we have cached results, and no params provided
+        if (model.search.results && _.isEqual( {}, newParams )) {
+
+          $location.search( oldParams );
+
+        } else {
+
+          // capture URL params in mlSearch and ctrl model
           mlSearch.fromParams().then(function() {
-            // if there was remote input, capture it instead of param
-            if (model.qtext && model.qtext.length)  {
-              mlSearch.setText(model.qtext);
+
+            // and run search if no cached results, or params changed
+            if (!model.search.results || !_.isEqual( oldParams, newParams )) {
+              search();
             }
-            updateSearchResults({});
+
           });
+
         }
 
         // capture URL params (forward/back, etc.)
         $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl){
           if (newUrl !== oldUrl) {
             mlSearch.locationChange( newUrl, oldUrl ).then(function() {
-              mlSearch
-                .search()
-                .then(updateSearchResults);
+              search();
             });
           }
         });
 
-        search();
-
-        mlRest.getDocument('/config/quick-filter.json', { format: 'json' }).then(function(response) {
-          model.quick = response.data.quickFilter;
-        });
+        if (!model.quick) {
+          mlRest.getDocument('/config/quick-filter.json', { format: 'json' }).then(function(response) {
+            model.quick = response.data.quickFilter;
+          });
+        }
       })();
 
       function updateSearchResults(data) {
@@ -75,7 +83,7 @@
               combinedQuery['and-query'].queries.push(eval('(' + entry.equery + ')'));
             }
           }
-        })
+        });
         mlSearch.addAdditionalQuery(combinedQuery);
         search();
       }
@@ -84,6 +92,9 @@
         if ( arguments.length ) {
           model.qtext = qtext;
         }
+
+        model.qtext = model.qtext || mlSearch.getText();
+        model.page = model.page || mlSearch.getPage();
 
         mlSearch
           .setText(model.qtext)
