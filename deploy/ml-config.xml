@@ -252,6 +252,13 @@
           <range-value-positions>false</range-value-positions>
         </range-element-index>
 
+        <range-element-index>
+          <scalar-type>dateTime</scalar-type>
+          <namespace-uri/>
+          <localname>createdAt</localname>
+          <range-value-positions>false</range-value-positions>
+        </range-element-index>
+
       </range-element-indexes>
       <range-element-attribute-indexes>
 <!--
@@ -684,6 +691,7 @@
         <external-name>CN=SE,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=PreSales-Europe,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=PreSales-Central-Europe,@ml.ldap-group-base-dn</external-name>
+        <external-name>CN=Vanguard,@ml.ldap-group-base-dn</external-name>
         <external-name>CN=WW-SA,@ml.ldap-group-base-dn</external-name>
       </external-names>
     </role>
@@ -870,7 +878,7 @@
       <ldap-server-uri>@ml.ldap-server</ldap-server-uri>
       <ldap-base>@ml.ldap-base</ldap-base>
       <ldap-attribute>@ml.ldap-attribute</ldap-attribute>
-      <ldap-default-user>CN=@ml.ldap-user,@ml.ldap-base</ldap-default-user>
+      <ldap-default-user>CN=@ml.ldap-user,@ml.ldap-emp-base</ldap-default-user>
       <ldap-password>@ml.ldap-password</ldap-password>
       <ldap-bind-method>simple</ldap-bind-method>
     </external-security>

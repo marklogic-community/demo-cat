@@ -1,0 +1,91 @@
+{
+  "attachments": [
+    {
+      "attachmentName": "situational-wareness-sm.png",
+      "mimeType": "image/png",
+      "size": 47228,
+      "uri": "/demo-attachments/16645507772582938133.png"
+    },
+    {
+      "attachmentName": "Situational Awareness - Demo script.docx",
+      "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "size": 133079,
+      "uri": "/demo-attachments/15246370631269593986.docx"
+    },
+    {
+      "attachmentName": "Situational Awareness screenshots.pptx",
+      "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "size": 4894880,
+      "uri": "/demo-attachments/5213575251759879592.pptx"
+    },
+    {
+      "attachmentName": "sight-demo-screenshots.zip",
+      "mimeType": "application/zip",
+      "size": 10310736,
+      "uri": "/demo-attachments/952282978991123142.zip"
+    }
+  ],
+  "browsers": [
+    "Chrome",
+    "Firefox"
+  ],
+  "bugs": [],
+  "comments": [],
+  "createdAt": "2015-05-01T13:57:25.77337+02:00",
+  "createdBy": "gjosten",
+  "credentials": [
+    {
+      "$$hashKey": "object:276",
+      "password": "bobspassword",
+      "username": "bob"
+    }
+  ],
+  "demoStatus": {
+    "lastStatusTimestamp": "2016-04-18T10:48:24.969Z",
+    "status": "Working",
+    "statusDetails": ""
+  },
+  "description": null,
+  "domains": [
+    "Intel",
+    "EMEA"
+  ],
+  "features": [
+    "Alerting",
+    "Content Enrichment",
+    "Faceted Navigation",
+    "Full text search",
+    "Geospatial search",
+    "Google Maps display",
+    "Object Based Intelligence"
+    ],
+    "host": "",
+    "hostType": "internal",
+    "languages": [],
+    "lastModifiedAt": "2016-04-18T03:48:26.964586-07:00",
+    "lastModifiedBy": "gjosten",
+    "media": [],
+    "name": "Sight - Dutch Police (OBI)",
+    "persons": [
+      {
+        "$$hashKey": "object:262",
+        "email": "geert.josten@marklogic.com",
+        "personName": "Geert Josten",
+        "role": "Technical Contact"
+      }
+    ],
+    "repo": "https://marklogic.unfuddle.com/a#/projects/1212/repositories/280/browse",
+    "restricted": false,
+    "restrictionDetails": "",
+    "shortdesc": "Catch the perpetrator in the Golden Hour!",
+    "technologies": [
+      "AngularJS",
+      "NodeJS",
+      "Keylines",
+      "Highcharts",
+      "Object Based Intelligence - OBI"
+    ],
+    "url": "http://sight.demo.marklogic.com",
+    "urlType": "internal",
+    "version": "7.0"
+}

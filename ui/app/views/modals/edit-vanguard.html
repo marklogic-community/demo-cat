@@ -14,7 +14,7 @@
 
         <div class="row" ng-repeat="news in model.vanguard.news track by $index">
           <div class="col-md-5"><input type="text" class="form-control" placeholder="title"  ng-model="news.title" maxlength="90" required/></div>
-          <div class="col-md-6"><input type="url" class="form-control" placeholder="url"  ng-model="news.link" required/></div>
+          <div class="col-md-6"><input type="text" pattern="(https?://.+|/search\?.*)" class="form-control" placeholder="url"  ng-model="news.link" required/></div>
           <div class="col-md-1 icon">
             <a class="btn btn-danger btn-xs" ng-click="model.removeVanguardNewsLink($index)">
               <span class="glyphicon glyphicon-trash icon-white"></span>
