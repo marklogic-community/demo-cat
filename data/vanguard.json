@@ -1,0 +1,32 @@
+{
+  "vanguard": {
+    "news": [
+      {
+        "link": "https://wiki.marklogic.com/pages/viewpage.action?pageId=41027353",
+        "title": "[NEWEST DEMOS] Find the latest and greatest Demos/PoC's created by the Vanguard Team!"
+      },
+      {
+        "link": "https://wiki.marklogic.com/display/CS/Open+Datasets",
+        "title": "[OPEN DATASETS] Find Awesome Open Datasets in a variety of categories for your Demos!"
+      },
+      {
+        "link": "https://github.com/marklogic/slush-marklogic-node/wiki/Explaining-the-stack",
+        "title": "[HOW VANGUARD BUILDS DEMOS]  Learn more about how the Vanguard Team builds Demos!"
+      },
+      {
+        "link": "https://catalog.demo.marklogic.com/search?f=feature:%22Visualization%20widgets%22",
+        "title": "[VISUALIZATION WIDGETS]  List of Demos that have nice Visualization Widgets!"
+      }
+    ],
+    "services": [
+      {
+        "link": "mailto:Vanguard@marklogic.com?subject=[Demo-Cat] I need access",
+        "title": "Tell us if you need server access for a demo!"
+      },
+      {
+        "link": "mailto:Sid.Doshi@marklogic.com?subject=[Demo-Cat] I have a question",
+        "title": "Need Vanguard services or have questions? Contact Sid Doshi."
+      }
+    ]
+  }
+}
