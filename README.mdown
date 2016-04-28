@@ -1,17 +1,18 @@
 # Demo Catalog
 
-    $ npm install
-    $ bower install
-    $ ./ml local bootstrap
-    $ ./ml local deploy modules
-    $ gulp server
+    npm install
+    bower install
+    ./ml local bootstrap
+    ./ml local deploy modules
+    ./ml local deploy content
+    gulp
 
 If the app-port specified in build.properties is already occupied and you want to change it for your local environment, do the follow:
 
 * create and edit deploy/local.properties and set app-port to the port where you want it (you may need to change xcc-port as well)
-* pass --ml-port=???? to the grunt server command. So if you set the port to 8123, run "gulp server --ml-port=8123"
+* pass --ml-port=???? to the gulp server command. So if you set the port to 8123, run "gulp --ml-port=8123"
 
-Likewise, if you are running MarkLogic on a different host than where you are running the user interface, pass --ml-host to the grunt server command.
+Likewise, if you are running MarkLogic on a different host than where you are running the user interface, pass --ml-host to the gulp server command.
 
 ## Data
 You can find the sample data set at ssh.marklogic.com:/home/dcassel/projects/demo-cat/demo-cat.zip. Load it with:
