@@ -18,7 +18,7 @@
       var mlSearch = model.mlSearch;
 
       (function init() {
-        model.qtext = model.qtext || '';
+        model.qtext = model.qtext || $location.search().q || '';
 
         // wire up remote input subscription
         remoteInput.initCtrl($scope, model, mlSearch, search);
