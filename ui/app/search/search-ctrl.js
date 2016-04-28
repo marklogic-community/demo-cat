@@ -93,7 +93,6 @@
           model.qtext = qtext;
         }
 
-        model.qtext = model.qtext || mlSearch.getText();
         model.page = model.page || mlSearch.getPage();
 
         mlSearch
