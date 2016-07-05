@@ -16,11 +16,11 @@ let $_ := xdmp:log(fn:concat("Start adding scraped data for ", $trgr:uri))
 let $doc := doc($trgr:uri)
 
 let $attachments := $doc//attachments
-
+let $validtypes := ("officedocument", "application/pdf")
 let $convert := for $attachment in $attachments
   (:check type:)
   let $convertible :=
-    if (contains($attachment/mimeType/data(), "officedocument"))
+    if (contains($attachment/mimeType/data(), "officedocument") or $attachment/mimeType/data() = "application/pdf")
     then (
       let $attachmentdoc := doc($attachment/uri/data())
       let $converted :=
@@ -29,7 +29,20 @@ let $convert := for $attachment in $attachments
         if (not(empty($attachmentdoc)) and empty($attachment/filtered/data()))
           then (
             (:if no filter yet, do filter then save to document:)
-            let $filtered := fn:string(xdmp:document-filter($attachmentdoc))
+            let $filtered :=
+              if ($attachment/mimeType/data() = "application/pdf")
+              then (
+                fn:string(
+                  xdmp:pdf-convert(
+                     $attachmentdoc,
+                     $attachment/attachmentName
+                  )
+                  )
+                )
+              else (
+                fn:string(xdmp:document-filter($attachmentdoc))
+                )
+
             let $_ := xdmp:log('$attachment/uri: ' || $attachment/uri/data())
             let $node := object-node {"filtered": $filtered }/filtered
             let $insert :=
