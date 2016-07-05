@@ -26,30 +26,22 @@
         var oldParams = mlSearch.getParams();
         var newParams = mlSearch.getCurrentParams();
 
-        // restore params, if we have cached results, and no params provided
-        if (model.search.results && _.isEqual( {}, newParams )) {
+        // capture URL params in mlSearch and ctrl model
+        mlSearch.fromParams().then(function() {
 
-          $location.search( oldParams );
+          // and run search if no cached results, or params changed
+          if (!model.search.results || !_.isEqual( oldParams, newParams )) {
+            search(model.mlSearch.getCurrentParams().q);
+          }
 
-        } else {
-
-          // capture URL params in mlSearch and ctrl model
-          mlSearch.fromParams().then(function() {
-
-            // and run search if no cached results, or params changed
-            if (!model.search.results || !_.isEqual( oldParams, newParams )) {
-              search();
-            }
-
-          });
-
-        }
+        });
 
         // capture URL params (forward/back, etc.)
         $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl){
           if (newUrl !== oldUrl) {
             mlSearch.locationChange( newUrl, oldUrl ).then(function() {
-              search();
+              //TODO: how do we reflect it back to the directive?
+              search(model.mlSearch.getCurrentParams().q);
             });
           }
         });
@@ -87,10 +79,11 @@
         mlSearch.addAdditionalQuery(combinedQuery);
         search();
       }
-
+      
       function search(qtext) {
         if ( arguments.length ) {
           model.qtext = qtext;
+          $location.search().q = qtext;
         }
 
         model.page = model.page || mlSearch.getPage();
