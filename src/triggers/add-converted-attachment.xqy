@@ -36,7 +36,7 @@ let $convert := for $attachment in $attachments
                   xdmp:pdf-convert(
                      $attachmentdoc,
                      $attachment/attachmentName
-                  )
+                  )[2]
                   )
                 )
               else (
