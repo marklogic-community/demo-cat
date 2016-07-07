@@ -28,7 +28,7 @@ let $convert := for $attachment in $attachments
         (: node replacement keeps retriggering the trigger :)
         if (not(empty($attachmentdoc)) and empty($attachment/filtered/data()))
           then (
-            (:if no filter yet, do filter then save to document:)
+            (:if no filter yet, do filter then save to document as a new memo:)
             let $filtered :=
               if ($attachment/mimeType/data() = "application/pdf")
               then (
@@ -44,9 +44,17 @@ let $convert := for $attachment in $attachments
                 )
 
             let $_ := xdmp:log('$attachment/uri: ' || $attachment/uri/data())
-            let $node := object-node {"filtered": $filtered }/filtered
+            let $node := object-node {
+                "title": $attachment/uri/data(),
+                "body": $filtered
+              }
+
             let $insert :=
-                xdmp:node-insert-child($attachment, $node)
+              xdmp:node-insert-child(
+                $doc/array-node("memos"),
+                $node
+              )
+
             return ()
           )
           else ()
