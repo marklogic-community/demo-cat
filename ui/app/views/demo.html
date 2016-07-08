@@ -130,7 +130,7 @@
       <h4>Memos</h4>
       <button class="btn btn-primary btn-sm" ng-show="model.user.isWriter()" ng-click="addMemo()">Add</button>
       <ul>
-        <li ng-repeat="memo in model.demo.memos">
+        <li ng-repeat="memo in model.demo.memos track by $index">
           <a ng-click="showMemo(memo)">{{memo.title}}</a>
           <a class="remove-memo glyphicon glyphicon-trash" ng-click="removeMemo($index)"></a>
         </li>
