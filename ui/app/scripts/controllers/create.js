@@ -132,12 +132,17 @@
         statusChanged: function() {
           model.demo.demoStatus.lastStatusTimestamp = new Date().toJSON();
         },
-        deleteAttachment: function(attachent, index) {
-          demoService.deleteAttachment($routeParams.uri, attachent).then(
+        deleteAttachment: function(attachment, index) {
+          demoService.deleteAttachment($routeParams.uri, attachment).then(
             function() {
               model.demo.attachments.splice(index, 1);
             }
           );
+          for (var i = 0; i < model.demo.memos.length; i++) {
+              if (model.demo.memos[i].title === attachment.attachmentName) {
+                model.demo.memos.splice(i, 1);
+              }
+          }
         },
         versionValid: versionValid,
         attachmentsValid: attachmentsValid,
@@ -172,11 +177,11 @@
           }
         }
       });
-      
+
       function validate(model) {
         return restrictionValid(model.demo.restricted, model.demo.restrictionDetails) && contactsValid(model.demo.persons) && versionValid(model.demo.version) && attachmentsValid(model.scriptFiles);
       }
-      
+
       function restrictionValid(restricted, details) {
         return (!restricted || !isEmpty(details));
       }
@@ -189,7 +194,7 @@
         //return !isEmpty(field) && startsWithNumber(field);
         return isEmpty(field) || startsWithNumber(field);
       }
-      
+
       function attachmentsValid(files) {
         var result = true;
         angular.forEach(files, function(file) {
@@ -199,15 +204,15 @@
         });
         return result;
       }
-      
+
       function isEmpty(field) {
         var result = (field === null || field === undefined || field === '');
         return result;
       }
-      
+
       function startsWithNumber(field) {
         return field && field.match(/^\d/);
       }
-      
+
     }
 }());
