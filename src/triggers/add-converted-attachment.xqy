@@ -31,24 +31,25 @@ let $convert := for $attachment in $attachments
         if (not(empty($attachmentdoc)) and empty(($doc/array-node("memos"))/object-node()[title=$attachment/attachmentName/data()]))
           then (
             (:if no filter yet, do filter then save to document as a new memo:)
-            let $filtered :=
+            let $filtered := xdmp:quote(
               if ($attachment/mimeType/data() = "application/pdf")
               then (
-                fn:string(
                   xdmp:pdf-convert(
                      $attachmentdoc,
                      $attachment/attachmentName
                   )[2]
                   )
-                )
               else (
-                fn:string(xdmp:document-filter($attachmentdoc))
+                (xdmp:document-filter($attachmentdoc)
                 )
+              )
+            )
 
             let $_ := xdmp:log('$attachment/attachmentName: ' || $attachment/attachmentName/data())
             let $node := object-node {
                 "title": $attachment/attachmentName/data(),
-                "body": $filtered
+                "body": $filtered,
+                "converted": "true"
               }
             let $insert :=
             if (empty($doc/array-node("memos")))

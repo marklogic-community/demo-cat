@@ -132,7 +132,7 @@
       <ul>
         <li ng-repeat="memo in model.demo.memos track by $index">
           <a ng-click="showMemo(memo)">{{memo.title}}</a>
-          <a class="remove-memo glyphicon glyphicon-trash" ng-click="removeMemo($index)"></a>
+          <a class="remove-memo glyphicon glyphicon-trash" ng-click="removeMemo($index)" ng-if="!memo.converted"></a>
         </li>
       </ul>
     </div>
