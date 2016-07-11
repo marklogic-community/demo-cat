@@ -20,7 +20,9 @@ let $validtypes := ("officedocument", "application/pdf")
 let $convert := for $attachment in $attachments
   (:check type:)
   let $convertible :=
-    if (contains($attachment/mimeType/data(), "officedocument") or $attachment/mimeType/data() = "application/pdf")
+    if (contains($attachment/mimeType/data(), "officedocument")
+      or $attachment/mimeType/data() = "application/pdf"
+      or (contains($attachment/mimeType/data(), "application/octet-stream") and fn:ends-with($attachment/attachmentName/data(), ".docx", "http://marklogic.com/collation/en/S1")))
     then (
       let $attachmentdoc := doc($attachment/uri/data())
       let $converted :=
