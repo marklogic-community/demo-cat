@@ -16,7 +16,17 @@ let $_ := xdmp:log(fn:concat("Start adding scraped data for ", $trgr:uri))
 let $doc := doc($trgr:uri)
 
 let $attachments := $doc//attachments
-let $validtypes := ("officedocument", "application/pdf")
+
+let $map := xdmp:from-json($doc)
+let $memos := if (empty($doc/array-node("memos")))
+  then (
+    let $_ := map:put($map, "memos", array-node {})
+    return map:get($map, "memos")
+  )
+  else (map:get($map, "memos"))
+
+let $memo_sequence := json:array-values(fn:data($memos))
+
 let $convert := for $attachment in $attachments
   (:check type:)
   let $convertible :=
@@ -51,25 +61,23 @@ let $convert := for $attachment in $attachments
                 "body": $filtered,
                 "converted": "true"
               }
-            let $insert :=
-            if (empty($doc/array-node("memos")))
-            then (
-              let $items := xdmp:from-json($doc)
-              let $put := map:put($items, "memos", array-node {($node)})
-              return xdmp:document-insert($trgr:uri, xdmp:to-json($items))
-            )
-            else (
-              xdmp:node-insert-child(
-                $doc/array-node("memos"),
-                $node
-              )
-            )
 
-            return ()
+            return $node
           )
           else ()
-      return ())
+        return $converted
+      )
     else ()
-  return ()
+  return $convertible
+
+let $_ := if (fn:not(fn:empty($convert)))
+  then (
+    let $_ := map:put($map, "memos", json:to-array((($memo_sequence),($convert))))
+    return xdmp:document-insert($trgr:uri,
+      xdmp:to-json($map),
+      xdmp:document-get-permissions($trgr:uri),
+      xdmp:document-get-collections($trgr:uri))
+  )
+  else ()
 
 return xdmp:log(fn:concat("End adding scraped data for ", $trgr:uri))
