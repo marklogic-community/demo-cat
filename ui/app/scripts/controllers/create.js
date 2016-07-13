@@ -138,10 +138,12 @@
               model.demo.attachments.splice(index, 1);
             }
           );
-          for (var i = 0; i < model.demo.memos.length; i++) {
-              if (model.demo.memos[i].title === attachment.attachmentName) {
-                model.demo.memos.splice(i, 1);
-              }
+          if (model.demo.memos) {
+            for (var i = 0; i < model.demo.memos.length; i++) {
+                if (model.demo.memos[i].title === attachment.attachmentName) {
+                  model.demo.memos.splice(i, 1);
+                }
+            }
           }
         },
         versionValid: versionValid,
