@@ -138,7 +138,7 @@
       <facet-option>limit=25</facet-option>
       <facet-option>frequency-order</facet-option>
       <facet-option>descending</facet-option>
-      <facet-option>any</facet-option>
+      <facet-option>document</facet-option>
     </custom>
     <annotation>
       <range type="xs:string" facet="true" collation="http://marklogic.com/collation/codepoint">
@@ -184,29 +184,16 @@
           <match pattern="application/rtf"/>
           <match pattern="application/x-xywrite"/>
           <match pattern="application/x-mass11"/>
-          <match pattern="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
-          <match pattern="application/vnd.openxmlformats-officedocument.wordprocessingml.template"/>
-          <match pattern="application/vnd.ms-word.document.macroEnabled.12"/>
-          <match pattern="application/vnd.ms-word.template.macroEnabled.12"/>
+          <match pattern="application/vnd.openxmlformats-officedocument.wordprocessingml*"/>
+          <match pattern="application/vnd.ms-word*"/>
         </group>
         <group label="Spreadsheets">
-          <match pattern="application/vnd.ms-excel"/>
-          <match pattern="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
-          <match pattern="application/vnd.openxmlformats-officedocument.spreadsheetml.template"/>
-          <match pattern="application/vnd.ms-excel.sheet.macroEnabled.12"/>
-          <match pattern="application/vnd.ms-excel.template.macroEnabled.12"/>
-          <match pattern="application/vnd.ms-excel.addin.macroEnabled.12"/>
-          <match pattern="application/vnd.ms-excel.sheet.binary.macroEnabled.12"/>
+          <match pattern="application/vnd.ms-excel*"/>
+          <match pattern="application/vnd.openxmlformats-officedocument.spreadsheetml*"/>
         </group>
         <group label="Presentations">
-          <match pattern="application/vnd.ms-powerpoint"/>
-          <match pattern="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
-          <match pattern="application/vnd.openxmlformats-officedocument.presentationml.template"/>
-          <match pattern="application/vnd.openxmlformats-officedocument.presentationml.slideshow"/>
-          <match pattern="application/vnd.ms-powerpoint.addin.macroEnabled.12"/>
-          <match pattern="application/vnd.ms-powerpoint.presentation.macroEnabled.12"/>
-          <match pattern="application/vnd.ms-powerpoint.template.macroEnabled.12"/>
-          <match pattern="application/vnd.ms-powerpoint.slideshow.macroEnabled.12"/>
+          <match pattern="application/vnd.ms-powerpoint*"/>
+          <match pattern="application/vnd.openxmlformats-officedocument.presentationml*"/>
         </group>
         <group label="Other Documents">
           <match pattern="application/acad"/>
@@ -224,9 +211,11 @@
           <match pattern="application/EML"/>
           <match pattern="application/mbox"/>
         </group>
-        <group label="Others">
-          <match pattern=".+"/>
-        </group>
+        <!-- 
+          There is no accurate pattern to match "Other" attachment types
+          and the show-remaining would include documents without attachments.
+          Current limitation of ml-constraints. 
+          -->
       </config>
     </annotation>
   </constraint>

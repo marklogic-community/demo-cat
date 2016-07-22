@@ -398,4 +398,13 @@ class ServerConfig
       },
      { :db_name => @properties["ml.content-db"] }
    end
+   
+   #integrate mlpm
+   def deploy_packages
+      system %Q!mlpm deploy -u #{ @properties['ml.user'] } \
+         -p #{ @properties['ml.password'] } \
+         -H #{ @properties['ml.server'] } \
+         -P #{ @properties['ml.app-port'] }!
+   end
 end
+
