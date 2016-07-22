@@ -130,6 +130,95 @@
       <facet-option>frequency-order</facet-option>
     </range>
   </constraint>
+  <constraint name="attachment">
+    <custom>
+      <parse apply="parse-structured" ns="http://marklogic.com/grouping-constraint" at="/ext/mlpm_modules/ml-constraints/grouping-constraint.xqy"/>
+      <start-facet apply="start" ns="http://marklogic.com/grouping-constraint" at="/ext/mlpm_modules/ml-constraints/grouping-constraint.xqy"/>
+      <finish-facet apply="finish" ns="http://marklogic.com/grouping-constraint" at="/ext/mlpm_modules/ml-constraints/grouping-constraint.xqy"/>
+      <facet-option>limit=25</facet-option>
+      <facet-option>frequency-order</facet-option>
+      <facet-option>descending</facet-option>
+      <facet-option>document</facet-option>
+    </custom>
+    <annotation>
+      <range type="xs:string" facet="true" collation="http://marklogic.com/collation/codepoint">
+        <field name="attachment-type"/>
+      </range>
+      <!-- 
+        The MIME types specified here are those that exist in the ENRON data set (for the purposes of demoing).
+        A possible better approach is to enrich content-type with a group or category based on a master list 
+        of popular or pertinent MIME types.
+      -->
+      <config>
+        <group label="Images">
+            <match pattern="image/*"/>
+        </group>
+        <group label="Audio">
+          <match pattern="audio/*"/>
+        </group>
+        <group label="Video">
+          <match pattern="video/*"/>
+          <match pattern="application/vnd.rn-realmedia"/>
+          <match pattern="youtube"/>
+        </group>
+        <group label="Archive Files">
+          <match pattern="application/vnd.ms-cab-compressed"/>
+          <match pattern="application/*zip"/>
+        </group>
+        <group label="Binaries / Apps">
+          <match pattern="application/x-exe"/>
+          <match pattern="application/x-shockwave-flash"/>
+          <match pattern="application/octet-stream"/>
+        </group>
+        <group label="Database Files">
+          <match pattern="application/dBASEIII"/>
+          <match pattern="application/x-paradox-db"/>
+          <match pattern="application/x-microsoft-access"/>
+        </group>
+        <group label="Documents">
+          <match pattern="application/msword"/>
+          <match pattern="application/vnd.wordperfect"/>
+          <match pattern="application/x-wordstar"/>
+          <match pattern="application/pdf"/>
+          <match pattern="application/postscript"/>
+          <match pattern="application/rtf"/>
+          <match pattern="application/x-xywrite"/>
+          <match pattern="application/x-mass11"/>
+          <match pattern="application/vnd.openxmlformats-officedocument.wordprocessingml*"/>
+          <match pattern="application/vnd.ms-word*"/>
+        </group>
+        <group label="Spreadsheets">
+          <match pattern="application/vnd.ms-excel*"/>
+          <match pattern="application/vnd.openxmlformats-officedocument.spreadsheetml*"/>
+        </group>
+        <group label="Presentations">
+          <match pattern="application/vnd.ms-powerpoint*"/>
+          <match pattern="application/vnd.openxmlformats-officedocument.presentationml*"/>
+        </group>
+        <group label="Other Documents">
+          <match pattern="application/acad"/>
+          <match pattern="application/ms-project"/>
+          <match pattern="application/ms-works"/>
+          <match pattern="application/vnd.ms-works"/>
+          <match pattern="application/vnd.visio"/>
+          <match pattern="application/x-microsoft-publisher"/>
+          <match pattern="application/x-uniplex"/>
+        </group>
+        <group label="Business Cards">
+          <match pattern="text/x-vcard"/>
+        </group>
+        <group label="Email &amp; Mailboxes">
+          <match pattern="application/EML"/>
+          <match pattern="application/mbox"/>
+        </group>
+        <!-- 
+          There is no accurate pattern to match "Other" attachment types
+          and the show-remaining would include documents without attachments.
+          Current limitation of ml-constraints. 
+          -->
+      </config>
+    </annotation>
+  </constraint>
 
   <values name="domains">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint">

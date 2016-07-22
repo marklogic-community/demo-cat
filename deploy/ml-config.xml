@@ -173,10 +173,18 @@
         </fragment-parent>
       </fragment-parents>
 -->
-<!--
+
       <fields>
         <field>
-          <field-name/>
+          <field-name>attachment-type</field-name>
+          <field-path>
+            <path>/attachments/mimeType</path>
+            <weight>1.0</weight>
+          </field-path>
+          <field-path>
+            <path>/media/mediaType</path>
+            <weight>1.0</weight>
+          </field-path>
           <include-root>true</include-root>
           <fast-case-sensitive-searches>false</fast-case-sensitive-searches>
           <fast-diacritic-sensitive-searches>false</fast-diacritic-sensitive-searches>
@@ -192,20 +200,11 @@
           <value-searches>false</value-searches>
           <word-searches>false</word-searches>
           <word-lexicons/>
-          <included-elements>
-            <included-element>
-              <namespace-uri>http://ns.com</namespace-uri>
-              <localname>blah</localname>
-              <weight>1.0</weight>
-              <attribute-namespace-uri/>
-              <attribute-localname/>
-              <attribute-value/>
-            </included-element>
-          </included-elements>
+          <included-elements/>
           <excluded-elements/>
         </field>
       </fields>
--->
+
       <range-element-indexes>
         <!--
         Sample for:
@@ -277,14 +276,12 @@
 -->
       </range-element-attribute-indexes>
       <range-field-indexes>
-<!--
         <range-field-index>
-          <scalar-type>date</scalar-type>
-          <field-name>sample</field-name>
-          <collation/>
+          <scalar-type>string</scalar-type>
+          <field-name>attachment-type</field-name>
+          <collation>http://marklogic.com/collation/codepoint</collation>
           <range-value-positions>false</range-value-positions>
         </range-field-index>
--->
       </range-field-indexes>
 
       <path-namespaces>
