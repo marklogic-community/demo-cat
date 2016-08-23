@@ -3,11 +3,11 @@
       <h3 class="modal-title">{{title}}: {{model.mediaName}}</h3>
   </div>
   <div ng-cloak class="modal-body text-center">
-    <div ng-if="!(model.mediaUrl.indexOf('youtu.be') > -1 || model.mediaUrl.indexOf('youtube.com/') > -1)">
+    <div class="row" ng-if="!(model.mediaUrl.indexOf('youtu.be') > -1 || model.mediaUrl.indexOf('youtube.com/') > -1)">
       <img height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="model.mediaType === 'image'" class="object-fit-cover" ng-src="{{trustUrl(model.mediaUrl)}}" />
       <video height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="model.mediaType === 'video'" controls  ng-src="{{trustUrl(model.mediaUrl)}}">
       </video>
-      <object height="{{model.mediaHeight}}" width="{{model.mediaWidth}}" class="col-sm-12" ng-if="!model.mediaType || model.mediaType === 'application'" data="{{trustUrl(model.mediaUrl)}}"></object>
+      <pdf height="model.mediaHeight" width="model.mediaWidth" class="col-sm-12" ng-if="!model.mediaType || model.mediaType === 'application'" src="trustUrl(model.mediaUrl)" type="model.contentType"></pdf>
     </div>
     <div ng-if="model.mediaUrl.indexOf('youtu.be') > -1 || model.mediaUrl.indexOf('youtube.com/') > -1 || model.mediaType === 'youtube'">
       <youtube-video video-url="model.mediaUrl"></youtube-video>

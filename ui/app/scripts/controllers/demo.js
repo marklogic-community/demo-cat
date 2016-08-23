@@ -91,7 +91,8 @@
             mediaName: attachment.attachmentName,
             mediaUrl: '/demo/attachment?uri='+attachment.uri,
             mediaType: mediaType,
-            contentType: mediaType + '/' + extension
+            contentType: mediaType + '/' + extension,
+            mediaHeight: '600px'
           });
         }
       });

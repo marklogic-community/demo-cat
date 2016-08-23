@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('demoCat')
-    .service('demoService', DemoService);
+    .service('demoService', ['$http', '$upload', 'MLRest', DemoService]);
 
   function DemoService($http, $upload, MLRest) {
 
