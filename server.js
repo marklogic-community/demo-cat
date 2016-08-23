@@ -79,7 +79,11 @@ exports.buildExpress = function(options) {
       headers: req.headers,
       auth: getAuth(options, req.session)
     }, function(response) {
-      res.status(response.statusCode);
+      // [GJo] (#67) forward all headers from MarkLogic
+      for (var header in response.headers) {
+        res.header(header, response.headers[header]);
+      }
+
       response.on('data', function(chunk) {
         res.write(chunk);
       });
@@ -88,12 +92,13 @@ exports.buildExpress = function(options) {
       });
     });
 
-    if (req.body !== undefined) {
-      mlReq.write(JSON.stringify(req.body));
+    req.pipe(mlReq);
+    req.on('end', function() {
       mlReq.end();
-    }
+    });
 
     mlReq.on('error', function(e) {
+      res.status(500).send("Internal Server Error");
       console.log('Problem with request: ' + e.message);
     });
   }
