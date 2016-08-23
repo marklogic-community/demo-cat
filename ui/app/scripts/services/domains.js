@@ -2,22 +2,24 @@
   'use strict';
 
   angular.module('demoCat')
-    .service('domainsService', DomainsService);
+    .service('domainsService', ['AuthenticationService', 'MLRest', DomainsService]);
 
-  function DomainsService(MLRest) {
+  function DomainsService(AuthenticationService, MLRest) {
 
     var service = {
       list: listFeatures
     };
 
     function listFeatures() {
-      return MLRest.values('domains', { options: 'all', format: 'json' }).then(function(resp) {
-        if (resp.data['values-response']['distinct-value']) {
-          return resp.data['values-response']['distinct-value'].map(function(value) {
-            return value._value;
-          });
-        }
-      });
+      if (AuthenticationService.getUser().authenticated) {
+        return MLRest.values('domains', { options: 'all', format: 'json' }).then(function(resp) {
+          if (resp.data['values-response']['distinct-value']) {
+            return resp.data['values-response']['distinct-value'].map(function(value) {
+              return value._value;
+            });
+          }
+        });
+      }
     }
     return service;
   }

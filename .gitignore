@@ -14,3 +14,6 @@ dist
 *.pid
 *.sublime-project
 *.sublime-workspace
+uploads/
+bak/
+serve-local.sh
