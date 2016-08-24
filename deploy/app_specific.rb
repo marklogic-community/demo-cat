@@ -278,7 +278,7 @@ class ServerConfig
           trgr:trigger-data-event(
             trgr:directory-scope("/demos/", "infinity"),
             trgr:document-content("create"),
-            trgr:post-commit()
+            trgr:pre-commit()
           ),
           trgr:trigger-module(xdmp:database("#{@properties['ml.modules-db']}"), "/", "/triggers/add-converted-attachment.xqy"),
           fn:true(),
