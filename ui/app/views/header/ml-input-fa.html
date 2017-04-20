@@ -2,7 +2,7 @@
   <div class="input-group">
     <input ng-model="qtext" type="text" class="form-control" placeholder="Search..." autocomplete="off"
         typeahead="suggestion for suggestion in suggest({ val: $viewValue })" typeahead-suggest-on-select="true" typeahead-loading="loadingSuggestions"/>
-    <a ng-show="qtext" ng-click="qtext = ''; clear()" class="input-group-addon search-input-icon search-input-clear">
+    <a ng-show="qtext" ng-click="qtext=''; $emit('showAll', {})" class="input-group-addon search-input-icon search-input-clear">
       <i class="glyphicon glyphicon-trash"></i>
     </a>
     <!--span ng-show="loadingSuggestions" class="search-input-icon search-loading form-control-feedback">
