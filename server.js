@@ -91,6 +91,11 @@ exports.buildExpress = function(options) {
         res.end();
       });
     });
+    
+    if (req.body) {
+      console.log('writing body: ' + JSON.stringify(req.body));
+      mlReq.write(JSON.stringify(req.body));
+    }
 
     req.pipe(mlReq);
     req.on('end', function() {
