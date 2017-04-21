@@ -187,13 +187,13 @@ declare function demo:notify(
     else
       <vanguard/>
   
-  let $recipient-names as xs:string :=
+  let $recipient-names as xs:string* :=
     for $recipient in $recipients
     return (
       $recipient/jbasic:name,
       "Vanguard"
     )[1]
-  let $recipient-emails as xs:string :=
+  let $recipient-emails as xs:string* :=
     for $recipient in $recipients
     return (
       $recipient/jbasic:email[. ne ""],
