@@ -2,22 +2,22 @@
   "name": "demoCat",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "1.3.15",
-    "angular-route": "1.3.15",
-    "angular-cookies": "1.3.15",
-    "angular-animate": "1.3.15",
+    "angular": "1.5.8",
+    "angular-route": "1.5.8",
+    "angular-cookies": "1.5.8",
+    "angular-animate": "1.5.8",
     "font-awesome": "4.3.0",
     "bootstrap": "3.3.4",
     "jquery": "2.1.3",
     "ckeditor": "4.4.7",
     "ng-ckeditor": "latest",
     "ng-json-explorer": "*",
-    "angular-bootstrap": "0.12.1",
+    "angular-bootstrap": "2.5.0",
     "angular-highlightjs": "0.4.1",
-    "angular-sanitize": "1.3.15",
+    "angular-sanitize": "1.5.8",
     "highlightjs": "8.4.0",
     "ml-utils": "withjam/ml-utils",
-    "ml-search-ng": "0.0.10",
+    "ml-search-ng": "0.2.8",
     "lodash": "3.6.0",
     "angular-http-auth": "1.2.2",
     "ng-file-upload": "3.2.4",
@@ -26,11 +26,11 @@
     "angular-youtube-mb": "~1.0.2"
   },
   "devDependencies": {
-    "angular-mocks": "1.3.15",
-    "angular-scenario": "1.3.15"
+    "angular-mocks": "1.5.8",
+    "angular-scenario": "1.5.8"
   },
   "resolutions": {
-    "angular": "1.3.15",
+    "angular": "1.5.8",
     "lodash": "3.6.0"
   }
 }

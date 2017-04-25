@@ -21,8 +21,8 @@
         };
       }
     ])
-    .controller('HomeCtrl', ['HomeModel', '$scope', '$modal', '$sce', 'user', 'users', 'demos', 'MLRest', 'demoService', '$filter',
-      function(model, $scope, $modal, $sce, user, users, demos, mlRest, demoService, $filter) {
+    .controller('HomeCtrl', ['HomeModel', '$scope', '$uibModal', '$sce', 'user', 'users', 'demos', 'MLRest', 'demoService', '$filter',
+      function(model, $scope, $uibModal, $sce, user, users, demos, mlRest, demoService, $filter) {
         var clientTimezone = new Date().getTimezoneOffset() / -60;
         model.user = user;
         angular.extend($scope, {
@@ -247,9 +247,9 @@
         }
 
         function showModal(template, title, model, validate) {
-          return $modal.open({
+          return $uibModal.open({
             templateUrl: template + '',
-            controller: function($scope, $modalInstance, title, model, validate, user) {
+            controller: function($scope, $uibModalInstance, title, model, validate, user) {
               $scope.title = title;
               $scope.model = model;
               $scope.user = user;
@@ -259,11 +259,11 @@
                   $scope.alerts = validate($scope.model);
                 }
                 if (!$scope.modal.$invalid && $scope.alerts.length === 0) {
-                  $modalInstance.close($scope.model);
+                  $uibModalInstance.close($scope.model);
                 }
               };
               $scope.cancel = function() {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
               };
               $scope.encodeURIComponent = encodeURIComponent;
               $scope.trustUrl = $sce.trustAsResourceUrl;

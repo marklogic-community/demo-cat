@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('demoCat')
-  .service('ModalService', ['$modal', '$sce', 'AuthenticationService', ModalService]);
+  .service('ModalService', ['$uibModal', '$sce', 'AuthenticationService', ModalService]);
 
-  function ModalService($modal, $sce, AuthenticationService) {
+  function ModalService($uibModal, $sce, AuthenticationService) {
 
     var service = {
       show: showModal
@@ -13,10 +13,10 @@
     return service;
 
     function showModal(template, title, model, validate, modalOptions) {
-      return $modal.open(
+      return $uibModal.open(
         angular.extend({
           templateUrl: template+'',
-          controller: function ($scope, $modalInstance, title, model, validate, user) {
+          controller: function ($scope, $uibModalInstance, title, model, validate, user) {
             $scope.title = title;
             $scope.model = model;
             $scope.user = user;
@@ -26,11 +26,11 @@
                 $scope.alerts = validate($scope.model);
               }
               if ($scope.alerts.length === 0) {
-                $modalInstance.close($scope.model);
+                $uibModalInstance.close($scope.model);
               }
             };
             $scope.cancel = function () {
-              $modalInstance.dismiss('cancel');
+              $uibModalInstance.dismiss('cancel');
             };
             $scope.encodeURIComponent = encodeURIComponent;
             $scope.trustUrl = $sce.trustAsResourceUrl;
