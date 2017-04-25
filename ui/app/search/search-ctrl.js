@@ -19,12 +19,18 @@
 
       (function init() {
         model.qtext = model.qtext || $location.search().q || '';
-
+        
         // wire up remote input subscription
         remoteInput.initCtrl($scope, model, mlSearch, search);
 
         var oldParams = mlSearch.getParams();
         var newParams = mlSearch.getCurrentParams();
+        
+        if ($location.search().clear == 'true') {
+        	model.search.results = null;
+        	model.qtext= "";
+        	//TODO: set the search box's text to empty.
+        }
 
         // restore params, if we have cached results, and no params provided
         if (model.search.results && _.isEqual( {}, newParams )) {

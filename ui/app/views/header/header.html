@@ -15,7 +15,7 @@
     <div class="navbar-form navbar-left">
       <ml-remote-input template="/views/header/ml-input-fa.html"></ml-remote-input>
     </div>
-    <a class="btn btn-danger btn-sm btn-create pull-left" ng-href="/search?q=">Show all demos</a>
+    <a class="btn btn-danger btn-sm btn-create pull-left" ng-click="showAll()">Show all demos</a>
     
     <ul class="nav navbar-nav navbar-right">
       <li ng-show="user.isWriter()"><form><a class="btn btn-danger btn-sm btn-create" ng-href="/create">Create</a></form></li>
