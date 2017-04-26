@@ -11,6 +11,7 @@
         user: null,
         selected: [],
         mlSearch: mlSearch,
+        negated : {},
         quick: null
       };
     }])
@@ -108,6 +109,12 @@
         toggleFacet: function toggleFacet(facetName, value) {
           mlSearch
             .toggleFacet( facetName, value )
+            .search()
+            .then(updateSearchResults);
+        },
+        toggleNegatedFacet : function toggleNegatedFacet(facetName, value) {
+          mlSearch
+            .toggleFacet( facetName, value, true )
             .search()
             .then(updateSearchResults);
         },

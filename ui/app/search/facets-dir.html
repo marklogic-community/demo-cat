@@ -1,20 +1,32 @@
-<div class="facet-list" ng-init="initLimit = 5; maxLimit = 9999; limits = {}">
-  <div class="facet" ng-if="facet.facetValues.length" ng-repeat="(index, facet) in facets | object2Array">
+<div class="facet-list" ng-init="initLimit = 5; maxLimit = 9999; limits = {}; mlSearch=$parent.model.mlSearch" >
+  <div class="facet" ng-if="facet.facetValues.length || mlSearch.activeFacets[facet.__key] != null" ng-repeat="(index, facet) in facets | object2Array">
     <h3>{{ facet.__key }}</h3>
     <div ng-if="facet.facetValues.length > initLimit" class="pull-right">
       <button class="btn btn-default btn-xs" ng-show="limits[facet.__key] !== maxLimit" ng-click="limits[facet.__key] = maxLimit">more</button>
       <button class="btn btn-default btn-xs" ng-show="limits[facet.__key] && limits[facet.__key] !== initLimit" ng-click="limits[facet.__key] = initLimit">less</button>
     </div>
     <div ng-repeat="value in facet.facetValues | filter:{selected: true}">
-      <div class="btn btn-danger btn-xs facet-selected">
+      <div class="btn btn-success btn-xs facet-selected" style="background-color:#5cb85c!important">
+        <span class="fa fa-plus"></span>
         <span title="{{ value.name }}" ng-click="toggle({facet: facet.__key, value: value.name})">{{ value.name | truncate:20 }}</span>
         <span class="glyphicon glyphicon-trash icon-white" ng-click="toggle({facet: facet.__key, value: value.name})"></span>
       </div>
     </div>
+    <div ng-repeat="item in mlSearch.activeFacets[facet.__key].values | filter:{negated : true}">
+      <div class="btn btn-danger btn-xs facet-selected">
+        <span class="fa fa-minus"></span> 
+        <span title="{{ item.value }}" ng-click="negate({facet: facet.__key, value: item.value})">{{ item.value | truncate:20 }}</span>
+        <span class="glyphicon glyphicon-trash icon-white" ng-click="negate({facet: facet.__key, value: item.value})"></span>
+      </div>
+    </div>
     <div ng-repeat="value in facet.facetValues | filter:{selected: '!'+true} | limitTo:limits[facet.__key] || initLimit">
-      <a ng-click="toggle({facet: facet.__key, value: value.name})" title="{{ value.name }}">
+      <span ng-click="toggle({facet: facet.__key, value: value.name})" class="fa fa-plus"></span>
+      <span> / </span>
+      <span ng-click="negate({facet: facet.__key, value: value.name})" class="fa fa-minus"></span>
+      <span> - </span>
+      <span title="{{ value.name }}">
         {{ value.name | truncate:20 }} ({{ value.count }})
-      </a>
+      </span>
     </div>
   </div>
 </div>

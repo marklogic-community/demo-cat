@@ -91,7 +91,7 @@
         password: password
       }, {
         ignoreAuthModule: true
-      }).success(function(data) {
+      }).then(function(data) {
         return setUser(data);
       });
     }
