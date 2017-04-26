@@ -113,19 +113,6 @@
             .then(updateSearchResults);
         },
         toggleNegatedFacet : function toggleNegatedFacet(facetName, value) {
-          // ml-search-ng doesn't provide built in means to track negated facets.
-          var values = model.negated[facetName];
-          if (values == null) {
-            values = [];
-          }
-          var idx = values.indexOf(value);
-          if (idx >= 0) {
-            values.splice(idx, 1);
-          } else {
-            values.push(value);
-          }
-          model.negated[facetName] = values;
-          
           mlSearch
             .toggleFacet( facetName, value, true )
             .search()
