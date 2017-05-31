@@ -95,6 +95,14 @@
   </tuples>
 
   <!-- ML8 / JSON -->
+  <constraint name="status">
+    <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
+      <path-index>demoStatus/status</path-index>
+      <facet-option>frequency-order</facet-option>
+      <bucket name="Working" lt="Workinh" ge="Working">Working</bucket>
+      <bucket name="Retired" lt="Retiree" ge="Retired">Retired</bucket>
+    </range>
+  </constraint>
   <constraint name="domain">
     <range type="xs:string" collation="http://marklogic.com/collation/codepoint" facet="true">
       <path-index>domains</path-index>
